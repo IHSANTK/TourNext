@@ -25,6 +25,7 @@ import PlacesAdd from './components/Admin/PlacesAdd';
 
 import Packages from './components/User/PackagesPage/Packages';
 import Packagedetiels from './components/User/PackagesPage/Packagedetiels';
+import BookingDetails from './components/User/PackagesPage/BookingDetails';
 
 
 
@@ -51,14 +52,15 @@ function App() {
           <Route path="bookings" element={<ProtectedRoute><Bookings /></ProtectedRoute>} />
           <Route path="states" element={<ProtectedRoute><States /></ProtectedRoute>} />
           <Route path="statesAdd" element={<ProtectedRoute><StatesAdd /></ProtectedRoute>} />
-
           <Route path="states/:stateId/places" element={<ProtectedRoute><Places /></ProtectedRoute>} />
           <Route path="placesAdd/:stateId" element={<ProtectedRoute><PlacesAdd /></ProtectedRoute>} />
+          <Route path="bannerManagement" element={<ProtectedRoute><BannerManagement /></ProtectedRoute>} />
+
 
           <Route path="tourPackagelist" element={<ProtectedRoute><Tourpackaegeslist /></ProtectedRoute>} />
           <Route path="tourPackageAdd" element={<ProtectedRoute><TourPackageAddForm /></ProtectedRoute>} />
 
-          <Route path="bannerManagement" element={<ProtectedRoute><BannerManagement /></ProtectedRoute>} />
+
 
 
 
@@ -72,6 +74,10 @@ function App() {
           <Route path="signup" element={<Signup />} />
           <Route path='Packages' element={<Packages/>} />
           <Route path='packagedetails/:pkgId' element={< Packagedetiels/>} />
+          <Route path="bookingdetiles" element={<BookingDetails/>} />
+
+
+          
         </Route>
       </Routes>
     </Router>

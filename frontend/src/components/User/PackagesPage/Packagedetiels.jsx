@@ -40,7 +40,7 @@ export default function Packagedetiels() {
 
   const handleImageClick = (img, index) => {
     setMainImage(img);
-    setSelectedImageIndex(index + 1); // Adjust for slice offset
+    setSelectedImageIndex(index + 1); 
   };
 
   const handleInputChange = (e) => {
@@ -86,7 +86,7 @@ export default function Packagedetiels() {
               seats
             }, { withCredentials: true });
             console.log("Order saved:", saveOrderResponse.data);
-            window.location.href = '/orders'; 
+            window.location.href = '/user/bookingdetiles'; 
           } catch (error) {
             console.error('Error saving order:', error);
           }

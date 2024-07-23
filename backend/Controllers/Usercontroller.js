@@ -170,6 +170,78 @@ exports.saveorder = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
+exports.bookingditels = async (req,res)=>{
+   
+  try {
+    const userId = req.user; 
+    const user = await User.findById(userId).populate('bookings.packageId');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user.bookings);
+  } catch (error) {
+    console.error('Error fetching user bookings:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+exports.cancelBooking = async (req, res) => {
+  try {
+    const { bookingId } = req.body;
+    const userId = req.user;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.bookings = user.bookings.filter(
+      (booking) => booking._id.toString() !== bookingId
+    );
+
+    await user.save();
+    res.json({ message: 'Booking cancelled successfully' });
+  } catch (error) {
+    console.error('Error cancelling booking:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+exports.updateBookingReview = async (req, res) => {
+  try {
+    const { bookingId, rating, review } = req.body;
+    const userId = req.user;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const booking = user.bookings.find(
+      (booking) => booking._id.toString() === bookingId
+    );
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    booking.rating = rating;
+    booking.review = review;
+
+    await user.save();
+    res.json({ message: 'Review updated successfully' });
+  } catch (error) {
+    console.error('Error updating review:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 exports.logout = (req, res) => {
   res.clearCookie('user_refreshToken')
      .clearCookie('user_accessToken')

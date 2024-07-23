@@ -11,7 +11,7 @@ const generateRazorpay = (pkgId, total) => {
     try {
         return new Promise((resolve, reject) => {
             const options = {
-                amount: total ,
+                amount: total*100,
                 currency: "INR",
                 receipt: pkgId 
             };
