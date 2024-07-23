@@ -110,7 +110,7 @@ export default function Login() {
   };
 
   const handleGoogleFailure = (error) => {
-    console.error("Google login failed:", error);
+    console.error("Google login failed ok:", error);
   };
 
   const handleOtpEmailSubmit = async (email) => {
