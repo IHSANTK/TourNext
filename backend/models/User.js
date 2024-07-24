@@ -12,9 +12,10 @@ const bookingSchema = new mongoose.Schema({
     username: String,
     phoneNumber:Number,
     email:String,
-    seats:String,
+    seats:Number,
+    tripDate:String,
     packageId:String,
-    totalprice:String,
+    totalprice:Number,
     
     status: { type: String, required: true },
    

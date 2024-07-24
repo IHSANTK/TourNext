@@ -1,63 +1,104 @@
-// OtpModal.jsx
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "../../../api";
 import { useNavigate } from "react-router-dom";
 
 export default function OtpModal({ show, handleClose, email, formData, totalPrice, seats, Id }) {
-  const [otp, setOtp] = useState("");
+  console.log('otpmodal', show, handleClose, email, formData, totalPrice, seats, Id);
+
+  const [otp, setOtp] = useState(Array(6).fill(""));
   const [otpError, setOtpError] = useState("");
+  const inputRefs = useRef([]);
   const navigate = useNavigate();
 
-  const handleOtpChange = (e) => {
-    setOtp(e.target.value);
+  const handleOtpChange = (e, index) => {
+    const { value } = e.target;
+    if (/^[0-9]$/.test(value) || value === "") {
+      const newOtp = [...otp];
+      newOtp[index] = value;
+      setOtp(newOtp);
+      if (value !== "" && index < 5) {
+        inputRefs.current[index + 1].focus();
+      }
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace" && otp[index] === "" && index > 0) {
+      inputRefs.current[index - 1].focus();
+    }
+  };
+
+  const validate = () => {
+    if (otp.includes('')) {
+      setOtpError('Please enter the OTP');
+      return false;
+    }
+    return true;
   };
 
   const handleOtpSubmit = async () => {
-    try {
-      const response = await axios.post("/verifyOtp", { email, otp }, { withCredentials: true });
+    if (validate()) {
+      const otpString = otp.join('');
+      console.log("Total price in modal component", totalPrice);
+      console.log("FormData", formData);
+      console.log(otpString);
 
-      if (response.data.message === "OTP verified successfully") {
-        setOtpError("");
-        // Proceed to save the order and open Razorpay
-        const orderResponse = await axios.post(
-          "/saveOrder",
-          { formData, totalPrice, seats, Id },
+      try {
+        const response = await axios.post(
+          "/booking",
+          { formData, totalPrice, Id, otp: otpString },
           { withCredentials: true }
         );
-        const options = {
-          key: "rzp_test_TPQY5ImiSwC8ZK",
-          amount: totalPrice * 100,
-          currency: "INR",
-          name: "YourAppName",
-          description: "Test Transaction",
-          image: "/your_logo.png",
-          order_id: orderResponse.data.id,
-          handler: function (response) {
-            alert(response.razorpay_payment_id);
-            alert(response.razorpay_order_id);
-            alert(response.razorpay_signature);
-            navigate("/success");
-          },
-          prefill: {
-            name: formData.name,
-            email: formData.email,
-            contact: formData.phone,
-          },
-          notes: {
-            address: "Your address",
-          },
-          theme: {
-            color: "#3399cc",
-          },
-        };
-        const rzp1 = new window.Razorpay(options);
-        rzp1.open();
-      } else {
-        setOtpError("Invalid OTP. Please try again.");
+
+        console.log("Response:", response.data);
+        if (response.data.message === "Invalid OTP") {
+          console.log('Fail');
+          setOtpError(response.data.message);
+        } else {
+          console.log('Success');
+          const { razorpayResponse } = response.data;
+
+          const options = {
+            key: 'rzp_test_97NF7SboryYNH9',
+            amount: razorpayResponse.amount,
+            currency: razorpayResponse.currency,
+            order_id: razorpayResponse.id,
+            name: 'TourNext',
+            description: 'Payment for your order',
+            handler: async function (response) {
+              console.log("Payment successful");
+              try {
+                const saveOrderResponse = await axios.post('/saveorder', {
+                  formData,
+                  totalPrice,
+                  Id,
+                  seats
+                }, { withCredentials: true });
+                console.log("Order saved:", saveOrderResponse.data);
+                const message  = saveOrderResponse.data.message
+                navigate(`/user/bookingdetiles/${message}`); 
+              } catch (error) {
+                console.error('Error saving order:', error);
+              }
+            },
+            prefill: {
+              name: formData.name,
+              email: formData.email,
+              contact: formData.phone
+            },
+            theme: {
+              color: '#F37254' 
+            }
+          };
+
+          const rzp = new Razorpay(options);
+          rzp.open();
+
+          handleClose()
+        }
+      } catch (error) {
+        console.error('Error in form submission:', error);
       }
-    } catch (error) {
-      setOtpError("An error occurred. Please try again.");
-      console.error("Error in OTP submission:", error);
     }
   };
 
@@ -65,19 +106,21 @@ export default function OtpModal({ show, handleClose, email, formData, totalPric
     <>
       {show && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl font-bold mb-4">Enter OTP</h2>
-            <div className="mb-4">
-              <label htmlFor="otp" className="block text-gray-700 mb-2">
-                OTP
-              </label>
-              <input
-                type="text"
-                id="otp"
-                value={otp}
-                onChange={handleOtpChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg mx-4 sm:mx-auto">
+            <h2 className="text-2xl font-bold mb-4">Enter Confirmation OTP</h2>
+            <div className="mb-4 flex justify-center space-x-2">
+              {otp.map((digit, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  value={digit}
+                  onChange={(e) => handleOtpChange(e, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  maxLength="1"
+                  className="w-10 p-2 border border-gray-300 rounded-md text-center"
+                />
+              ))}
             </div>
             {otpError && <p className="text-red-500 mb-4">{otpError}</p>}
             <button

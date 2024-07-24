@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const Destinations = require('../models/Destination');
 const Packages = require('../models/Packages')
 const helpers = require("../helpers/razorpay");
+const otpService = require("../services/otpService");
 
 
 const jwtSecret = process.env.USER_JWT_SECRET;
@@ -80,20 +81,42 @@ exports.dashboarddatas = async (req,res)=>{
 
 }
 
-exports.getallpackages = async (req,res)=>{
-   try{
-     
-    console.log('ook');
-    const pakages = await Packages.find()
-    console.log(pakages);
+exports.getAllpackages = async (req, res) => {
+  try {
+    const {
+      searchTerm = '',
+      minPrice = 0,
+      maxPrice = 10000,
+      page = 1,
+      limit = 9
+    } = req.query;
 
-    res.status(200).json(pakages)
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
 
-   }catch(error){
+    const query = {
+      packageName: { $regex: searchTerm, $options: 'i' },
+      price: { $gte: minPrice, $lte: maxPrice }
+    };
+
+    const packages = await Packages.find(query)
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber);
+
+    const totalPackages = await Packages.countDocuments(query);
+
+    res.status(200).json({
+      packages,
+      totalPages: Math.ceil(totalPackages / limitNumber),
+      currentPage: pageNumber
+    });
+
+  } catch (error) {
     console.error(error);
-    res.status(500).json('internal servel err')
-   }
-}
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 exports.getpkdbyid = async (req,res)=>{
   const pkgID = req.params.id
       const userId = req.user;
@@ -113,10 +136,12 @@ exports.getpkdbyid = async (req,res)=>{
 
 exports.booking = async (req, res) => {
   const userID = req.user;
-  const { formData, totalprice, Id } = req.body;
+  const { formData, totalPrice, Id,otp } = req.body;
 
   console.log('userID', userID);
-  console.log('formData, totalprice, Id', formData, totalprice, Id);
+  console.log('email, totalprice, Id', formData.email, totalPrice, Id);
+  console.log('OTP', otp);
+
 
   try {
       const user = await User.findById(userID);
@@ -125,8 +150,14 @@ exports.booking = async (req, res) => {
       }
 
       console.log("Found user:", user);
+      const isOTPValid = otpService.verifyOTP(formData.email, otp);
+ 
+      if (!isOTPValid) {
+        console.log('otperrrr');
+         return res.json({ message: "Invalid OTP" });
+      }
 
-      const razorpayResponse = await helpers.generateRazorpay(user._id, totalprice);
+      const razorpayResponse = await helpers.generateRazorpay(user._id, totalPrice);
 
       console.log("Razorpay response:", razorpayResponse);
 
@@ -136,38 +167,75 @@ exports.booking = async (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
   }
 }
+exports.sendOtpforBooking = async (req, res) => {
+  const { email } = req.body;
+  console.log("email:", email);
+  try{
+
+    const otp = otpService.generateOTP();
+    console.log(otp);
+    otpService.otpMap.set(email, otp.toString());
+    await otpService.sendOTP(email, otp);
+
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+
+
+
 
 exports.saveorder = async (req, res) => {
   const userId = req.user; 
-  const { formData,totalprice, seats, Id } = req.body;
-  console.log('llllllllllllllllllllllllllllllllllllllllllll');
+  const { formData, totalPrice, seats, Id } = req.body;
+  console.log('Order Details:', formData, totalPrice, seats, Id);
+
   try {
-      const user = await User.findById(userId);
-      console.log(user);
-      if (!user) {
-          return res.status(404).json({ message: 'User not found' });
-      }
+    const user = await User.findById(userId);
+    console.log('User:', user);
 
-      const newBooking ={
-          username: formData.name,
-          phoneNumber: formData.phone,
-          email: formData.email,
-          seats: seats,
-          packageId:Id,
-          totalprice:totalprice,
-          status: 'Pending' 
-      };
-      console.log('user',user);
-      console.log('bookingdda',newBooking);
-      
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-      user.bookings.push(newBooking);
-      await user.save();
+    const pakage = await Packages.findById(Id);
+    console.log('Package:', pakage);
 
-      res.status(200).json({ message: 'Booking saved successfully' });
+    if (!pakage) {
+      return res.status(404).json({ message: 'Package not found' });
+    }
+
+    if (pakage.seats < seats) {
+      return res.status(400).json({ message: 'Not enough seats available' });
+    }
+
+    pakage.seats -= seats; 
+    await pakage.save(); 
+
+    const newBooking = {
+      username: formData.name,
+      phoneNumber: formData.phone,
+      email: formData.email,
+      seats: seats,
+      packageId: Id,
+      totalprice: totalPrice,
+      tripDate:pakage.startDate,
+      status: 'Booked'
+    };
+    console.log('New Booking:', newBooking);
+
+    user.bookings.push(newBooking);
+    await user.save();
+
+    res.status(200).json({ message: 'Booking successfull' });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -200,9 +268,15 @@ exports.cancelBooking = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    user.bookings = user.bookings.filter(
-      (booking) => booking._id.toString() !== bookingId
+    const booking = user.bookings.find(
+      (booking) => booking._id.toString() === bookingId
     );
+
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    booking.status = 'cancelled';
 
     await user.save();
     res.json({ message: 'Booking cancelled successfully' });

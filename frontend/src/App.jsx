@@ -74,7 +74,7 @@ function App() {
           <Route path="signup" element={<Signup />} />
           <Route path='Packages' element={<Packages/>} />
           <Route path='packagedetails/:pkgId' element={< Packagedetiels/>} />
-          <Route path="bookingdetiles" element={<BookingDetails/>} />
+          <Route path="bookingdetiles/:message" element={<BookingDetails/>} />
 
 
           

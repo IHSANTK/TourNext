@@ -5,7 +5,7 @@ const otpService = {
     otpMap: new Map(),
 
     generateOTP: function () {
-        return Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
+        return Math.floor(100000 + Math.random() * 900000); 
     },
 
     sendOTP: async function (email, otp) {
@@ -13,8 +13,8 @@ const otpService = {
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                    user: 'ihsantk786313@gmail.com', // Your Gmail email address
-                    pass: 'rdfz ebfk dwag foab' // Your Gmail password
+                    user: 'ihsantk786313@gmail.com', 
+                    pass: 'rdfz ebfk dwag foab' 
                 }
             });
 

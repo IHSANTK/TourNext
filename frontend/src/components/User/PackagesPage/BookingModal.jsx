@@ -28,6 +28,8 @@ export default function BookingModal({ showModal, handleCloseModal, pkg, seats, 
   };
 
   const handleSubmit = (e) => {
+
+    console.log('bookingmodal');
     e.preventDefault();
     const formErrors = validateForm();
     setErrors(formErrors);
