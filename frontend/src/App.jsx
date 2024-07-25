@@ -27,6 +27,7 @@ import Packages from './components/User/PackagesPage/Packages';
 import Packagedetiels from './components/User/PackagesPage/Packagedetiels';
 import BookingDetails from './components/User/PackagesPage/BookingDetails';
 import Alldestinations from './components/User/Destinations/Alldestinations';
+import DestinationDetails from './components/User/Destinations/Destinationditeils';
 
 
 
@@ -73,7 +74,8 @@ function App() {
           <Route path='packagedetails/:pkgId' element={< Packagedetiels/>} />
           <Route path="bookingdetiles/:message" element={<BookingDetails/>} />
           <Route path='Alldestinations' element={<Alldestinations/>} />
-
+         
+          <Route path='destinationDetails/:destId' element={<DestinationDetails/>} />
 
 
 

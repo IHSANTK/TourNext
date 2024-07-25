@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {Link} from 'react-router-dom'
 import Navbar from '../Navbar';
 import axios from '../../../api';
 
@@ -77,8 +78,9 @@ const Alldestinations = () => {
             <div className="space-y-8">
               {destinations.map((destination, index) => (
                 <div key={index} className={`flex flex-col lg:flex-row ${index % 2 === 0 ? '' : 'lg:flex-row-reverse'} items-center`}>
-                  <div className="lg:w-1/2 mb-4 lg:mb-0">
-                    <img src={destination.images[0]} alt={destination.name} className="w-full h-auto rounded-lg" />
+                  <div className="lg:w-1/2 mb-4 lg:mb-0 ">
+                   <Link to={`/user/destinationDetails/${destination._id}`} ><img src={destination.images[0]} alt={destination.name} className="w-full h-auto " />
+                   </Link>
                   </div>
                   <div className="lg:w-1/2 lg:pl-4 text-center lg:text-left">
                     <h3 className="text-xl font-semibold">{destination.name}</h3>

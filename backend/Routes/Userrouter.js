@@ -22,6 +22,7 @@ router.post('/cancelBooking',authenticate,UserController.cancelBooking);
 router.post('/updateBookingReview',authenticate,UserController.updateBookingReview);
 
 router.get('/getAllDestinations',authenticate,UserController.gellAlldestinatons)
+router.get('/getdestinationdetails/:id',authenticate,UserController.getdestinationdetiles)
 
 
 

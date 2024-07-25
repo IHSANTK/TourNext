@@ -350,6 +350,22 @@ console.log('kkkkkkkkkkkkkkkk');
   }
 }
 
+exports.getdestinationdetiles = async (req,res)=>{
+   
+  const destId = req.params.id
+  try{
+            console.log('ok',destId);
+
+            const pakage = await Destinations.findById(destId)
+            console.log(pakage);
+
+            res.status(200).json(pakage)
+
+  }catch(error){
+    console.error(error);
+    res.status(500).json({message:'internal server error'})
+  }
+}
 
 
 
