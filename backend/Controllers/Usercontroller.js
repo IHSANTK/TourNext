@@ -203,19 +203,20 @@ exports.saveorder = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const pakage = await Packages.findById(Id);
-    console.log('Package:', pakage);
+    const package = await Packages.findById(Id);
+   
 
-    if (!pakage) {
+    if (!package) {
       return res.status(404).json({ message: 'Package not found' });
     }
 
-    if (pakage.seats < seats) {
+    if (package.seats < seats) {
       return res.status(400).json({ message: 'Not enough seats available' });
     }
 
-    pakage.seats -= seats; 
-    await pakage.save(); 
+    package.seats -= seats; 
+
+    console.log(package);
 
     const newBooking = {
       username: formData.name,
@@ -224,12 +225,16 @@ exports.saveorder = async (req, res) => {
       seats: seats,
       packageId: Id,
       totalprice: totalPrice,
-      tripDate:pakage.startDate,
+      packageName:package.packageName,
+      image:package.images[0],
+      tripDate:package.startDate,
       status: 'Booked'
     };
     console.log('New Booking:', newBooking);
 
     user.bookings.push(newBooking);
+
+    await package.save(); 
     await user.save();
 
     res.status(200).json({ message: 'Booking successfull' });
@@ -319,6 +324,33 @@ exports.updateBookingReview = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+exports.gellAlldestinatons = async (req,res)=>{
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const startIndex = (page - 1) * limit;
+console.log('kkkkkkkkkkkkkkkk');
+  try {
+    const destinations = await Destinations.find()
+      .skip(startIndex)
+      .limit(limit)
+      .exec();
+    const count = await Destinations.countDocuments();
+
+
+    console.log(destinations);
+    res.json({
+      destinations,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+
 
 
 exports.logout = (req, res) => {

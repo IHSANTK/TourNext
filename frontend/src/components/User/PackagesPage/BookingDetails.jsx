@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from '../../../api';
 import Navbar from '../Navbar';
 import { ToastContainer, toast } from 'react-toastify';
@@ -143,9 +143,10 @@ export default function BookingDetails() {
             >
               <div className="md:w-2/3">
                 <h2 className="text-2xl font-bold mb-2 text-gray-800">
-                  {booking.packageId.packageName}
+                  {booking.packageName}
                 </h2>
-                <p className="text-gray-700 mb-2">Trip Date: {booking.tripDate}</p>
+               <Link to={`/user/packagedetails/${booking.packageId}`} ><img src={booking.image} className='w-2/4 mt-2'/></Link>
+                <p className="text-gray-700 mb-2 mt-3">Trip Date: {booking.tripDate}</p>
                 <p className="text-gray-700 mb-2">Seats: {booking.seats}</p>
                 <p className="text-gray-700 mb-2">Total Price: ₹{booking.totalprice}</p>
                 <p className="text-gray-700 mb-2">Status: {booking.status}</p>

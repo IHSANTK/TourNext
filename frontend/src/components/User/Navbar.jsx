@@ -71,7 +71,7 @@ export default function Navbar() {
             <Link to="/" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
                 Home
               </Link>
-              <Link to="user/Alldestinations" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
+              <Link to="/user/Alldestinations" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
                Destinations
               </Link>
               <Link to="/user/Packages" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">

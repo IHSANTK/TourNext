@@ -18,6 +18,8 @@ const bookingSchema = new mongoose.Schema({
     totalprice:Number,
     reviewrate:Number,
     status: { type: String, required: true },
+    packageName:String,
+    image:String
    
 });
 

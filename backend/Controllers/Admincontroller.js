@@ -612,25 +612,55 @@ exports.getAllpackages = async (req,res)=>{
   }
 }
 
-exports.getallbookings = async (req,res)=>{
+exports.getallbookings = async (req, res) => {
   try {
     const allBookings = await User.aggregate([
-      { $unwind: '$bookings' }, 
+      { $unwind: '$bookings' }, // Unwind the bookings array
       { 
         $project: { 
-          userId: '$_id', 
-          booking: '$bookings' 
+          userId: '$_id', // Include the userId in the results
+          booking: '$bookings' // Include the bookings in the results
         } 
-      } 
+      }
     ]);
 
-    console.log(allBookings);
+    console.log('allllboookkkiiinnnfggg',allBookings);
 
-    res.status(200).json(allBookings);
+    res.status(200).json(allBookings); // Send the aggregated results to the client
   } catch (error) {
     console.error('Error fetching all bookings:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+};
+
+exports.changebookingstatus = async (req,res)=>{
+
+
+  try {
+    const { userId, bookingId } = req.params;
+    const { status } = req.body;
+
+    console.log(userId, bookingId);
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const booking = user.bookings.id(bookingId);
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    booking.status = status;
+
+    await user.save();
+
+    res.json({ message: 'Booking status updated successfully' });
+  } catch (error) {
+    console.error('Error updating booking status:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+
 }
 // exports.getallbanners = async (req,res)=>{
 

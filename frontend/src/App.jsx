@@ -26,6 +26,7 @@ import PlacesAdd from './components/Admin/PlacesAdd';
 import Packages from './components/User/PackagesPage/Packages';
 import Packagedetiels from './components/User/PackagesPage/Packagedetiels';
 import BookingDetails from './components/User/PackagesPage/BookingDetails';
+import Alldestinations from './components/User/Destinations/Alldestinations';
 
 
 
@@ -37,7 +38,7 @@ function App() {
     <Router>
       <Routes>
         
-        <Route path="/" element={<Homepage />} /> {/* Default route */}
+        <Route path="/" element={<Homepage />} /> 
 
         {/* Admin routes */}
         <Route path="/admin" element={<AdminLayout />}>
@@ -61,10 +62,6 @@ function App() {
           <Route path="tourPackageAdd" element={<ProtectedRoute><TourPackageAddForm /></ProtectedRoute>} />
 
 
-
-
-
-
         </Route>
 
         {/* User routes */}
@@ -75,6 +72,9 @@ function App() {
           <Route path='Packages' element={<Packages/>} />
           <Route path='packagedetails/:pkgId' element={< Packagedetiels/>} />
           <Route path="bookingdetiles/:message" element={<BookingDetails/>} />
+          <Route path='Alldestinations' element={<Alldestinations/>} />
+
+
 
 
           
