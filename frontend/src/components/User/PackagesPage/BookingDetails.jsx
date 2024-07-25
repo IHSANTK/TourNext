@@ -4,12 +4,15 @@ import axios from '../../../api';
 import Navbar from '../Navbar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import StarRating from './StarRating'
+
 
 export default function BookingDetails() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const { message } = useParams();
   const [reviewStates, setReviewStates] = useState({});
+  const [submittedReviews, setSubmittedReviews] = useState({});
 
   useEffect(() => {
     if (message === "Booking successful") {
@@ -36,13 +39,16 @@ export default function BookingDetails() {
 
   const initializeReviewStates = (bookings) => {
     const initialState = {};
+    const initialSubmittedReviews = {};
     bookings.forEach((booking) => {
       initialState[booking._id] = {
-        rating: 0,
+        rating: booking.reviewrate || 0,
         reviewText: "",
       };
+      initialSubmittedReviews[booking._id] = !!booking.reviewrate;
     });
     setReviewStates(initialState);
+    setSubmittedReviews(initialSubmittedReviews);
   };
 
   const handleCancelBooking = async (bookingId) => {
@@ -84,13 +90,15 @@ export default function BookingDetails() {
     }));
   };
 
-  const handleReviewSubmit = async (bookingId) => {
+  const handleReviewSubmit = async (bookingId, packageid) => {
     const { rating, reviewText } = reviewStates[bookingId];
+
     try {
       await axios.post(
-        '/submitReview',
+        '/updateBookingReview',
         {
           bookingId,
+          packageid,
           rating,
           review: reviewText,
         },
@@ -100,9 +108,13 @@ export default function BookingDetails() {
       setReviewStates((prevState) => ({
         ...prevState,
         [bookingId]: {
-          rating: 0,
+          ...prevState[bookingId],
           reviewText: "",
         },
+      }));
+      setSubmittedReviews((prevState) => ({
+        ...prevState,
+        [bookingId]: true,
       }));
     } catch (error) {
       console.error('Error submitting review:', error);
@@ -146,36 +158,44 @@ export default function BookingDetails() {
                 </button>
               </div>
               <div className="mt-4 md:mt-0 md:w-2/3 md:ml-6">
-                <h3 className="text-xl font-bold mb-2 text-gray-800">Add Review</h3>
-                <div className="flex space-x-2 mb-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <svg
-                      key={star}
-                      onClick={() => handleStarClick(booking._id, star)}
-                      className={`h-6 w-6 cursor-pointer ${
-                        star <= reviewStates[booking._id]?.rating ? 'text-yellow-500' : 'text-gray-400'
-                      } transition-colors duration-200`}
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
+                {submittedReviews[booking._id] ? (
+                  <div>
+                    <h3 className="text-xl font-bold mb-2 text-gray-800">Your Review</h3>
+                    <StarRating rating={reviewStates[booking._id].rating} />
+                  </div>
+                ) : (
+                  <>
+                    <h3 className="text-xl font-bold mb-2 text-gray-800">Add Review</h3>
+                    <div className="flex space-x-2 mb-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <svg
+                          key={star}
+                          onClick={() => handleStarClick(booking._id, star)}
+                          className={`h-6 w-6 cursor-pointer ${
+                            star <= reviewStates[booking._id]?.rating ? 'text-yellow-500' : 'text-gray-400'
+                          } transition-colors duration-200`}
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M12 .587l3.668 7.425 8.207 1.191-5.93 5.788 1.397 8.139L12 18.897l-7.342 3.864 1.397-8.139-5.93-5.788 8.207-1.191L12 .587z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <textarea
+                      value={reviewStates[booking._id]?.reviewText}
+                      onChange={(e) => handleReviewTextChange(booking._id, e.target.value)}
+                      placeholder="Write your review..."
+                      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+                    />
+                    <button
+                      onClick={() => handleReviewSubmit(booking._id, booking.packageId)}
+                      className="bg-blue-500 text-white py-2 px-4 rounded-md mt-2 transition hover:bg-blue-600"
                     >
-                      <path d="M12 .587l3.668 7.425 8.207 1.191-5.93 5.788 1.397 8.139L12 18.897l-7.342 3.864 1.397-8.139-5.93-5.788 8.207-1.191L12 .587z" />
-                    </svg>
-                  ))}
-                </div>
-                <textarea
-                  className="w-full p-2 border border-gray-300 rounded-md transition focus:border-blue-500 focus:outline-none"
-                  rows="3"
-                  placeholder="Write your review here..."
-                  value={reviewStates[booking._id]?.reviewText ||""}
-                  onChange={(e) => handleReviewTextChange(booking._id, e.target.value)}
-                />
-                <button
-                  onClick={() => handleReviewSubmit(booking._id)}
-                  className="bg-blue-500 text-white py-2 px-4 rounded-md mt-2 transition hover:bg-blue-600"
-                >
-                  Submit Review
-                </button>
+                      Submit Review
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           ))

@@ -16,7 +16,7 @@ const bookingSchema = new mongoose.Schema({
     tripDate:String,
     packageId:String,
     totalprice:Number,
-    
+    reviewrate:Number,
     status: { type: String, required: true },
    
 });

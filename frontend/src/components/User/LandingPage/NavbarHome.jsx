@@ -66,12 +66,12 @@ export default function Navbar() {
           </div>
           <div className="hidden sm:flex flex-1 justify-center">
             <div className="flex space-x-4 items-center h-full">
-              <a href="#" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
+              <Link to="#" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
                 Home
-              </a>
-              <a href="#" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
-                About
-              </a>
+              </Link>
+              <Link to="user/Alldestinations" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
+               Destinations
+              </Link>
               <Link to="/user/Packages" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
                 All Packages
               </Link>

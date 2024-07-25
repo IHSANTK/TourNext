@@ -43,9 +43,8 @@ const PackageSchema = new mongoose.Schema({
         required: true
       },
     reviews: [{
-      userId: { type: String, required: true },
-      images: [{ type: String }],
-      description: { type: String },
+      userName:String,
+      text:{ type: String },
       addedAt: {
         type: Date,
         default: Date.now

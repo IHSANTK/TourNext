@@ -289,28 +289,33 @@ exports.cancelBooking = async (req, res) => {
 
 exports.updateBookingReview = async (req, res) => {
   try {
-    const { bookingId, rating, review } = req.body;
+    const { bookingId, packageid, rating, review } = req.body;
     const userId = req.user;
 
+    console.log(packageid, rating, review, 'userid', userId);
+
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    const username = user.name;
+
+    const package = await Packages.findById(packageid);
+    if (!package) {
+      return res.status(404).json({ message: 'Package not found' });
     }
 
-    const booking = user.bookings.find(
-      (booking) => booking._id.toString() === bookingId
-    );
+    package.reviews.push({ rating, text: review, userName: username });
+
+    const booking = user.bookings.id(bookingId);
     if (!booking) {
       return res.status(404).json({ message: 'Booking not found' });
     }
-
-    booking.rating = rating;
-    booking.review = review;
+    booking.reviewrate = rating;
 
     await user.save();
-    res.json({ message: 'Review updated successfully' });
+    await package.save();
+
+    res.json({ message: 'Review submitted successfully' });
   } catch (error) {
-    console.error('Error updating review:', error);
+    console.error('Error submitting review:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };

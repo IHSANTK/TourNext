@@ -5,8 +5,10 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import BookingModal from "./BookingModal"; 
 import OtpModal from "./OtpModal";
+import StarRating from './StarRating'
 
-export default function Packagedetiels() {
+
+export default function Packagedetails() {
   const { pkgId } = useParams();
   const [pkg, setPkg] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
@@ -55,12 +57,10 @@ export default function Packagedetiels() {
 
   const handleformsubmit = async () => {
     const totalPrice = pkg.price * seats;
-  console.log('this is form submit page',formData.email);
+    console.log('this is form submit page',formData.email);
     try {
       setShowOtpModal(true);
       await axios.post("/sendOtp", { email: formData.email }, { withCredentials: true });
-
-      
     } catch (error) {
       console.error('Error in form submission:', error);
     }
@@ -89,7 +89,6 @@ export default function Packagedetiels() {
         <div className="flex flex-col lg:flex-row">
           <div className="lg:w-2/3">
             <div className="relative mt-5 ">
-            
               <div className="relative h-90 overflow-hidden rounded-lg shadow-md">
                 <img
                   className="w-full lg:h-[500px] object-fill"
@@ -181,7 +180,6 @@ export default function Packagedetiels() {
           </ul>
         </div>
 
-        {/* Reviews Section */}
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Reviews</h2>
           {pkg.reviews && pkg.reviews.length > 0 ? (
@@ -190,9 +188,9 @@ export default function Packagedetiels() {
                 key={index}
                 className="bg-white shadow-md rounded-lg p-4 mb-4"
               >
-                <p className="font-bold text-gray-900">{review.userName}</p>
-                <p className="text-gray-700">{review.comment}</p>
-                <p className="text-yellow-500">Rating: {review.rating} / 5</p>
+                <p className="font-bold text-gray-900 mb-2">{review.userName}</p>
+                <StarRating rating={review.rating} />
+                <p className="text-gray-700 mt-4">{review.text}</p>
               </div>
             ))
           ) : (
@@ -216,7 +214,7 @@ export default function Packagedetiels() {
         show={showOtpModal}
         handleClose={handleCloseOtpModal}
         email={formData.email}
-        formData ={formData}
+        formData={formData}
         totalPrice={pkg.price * seats}
         seats={seats}
         Id={pkg._id}

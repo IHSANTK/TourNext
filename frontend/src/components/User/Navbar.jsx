@@ -63,19 +63,20 @@ export default function Navbar() {
             </button>
           </div>
           <div className="flex flex-shrink-0 items-center sm:justify-center w-full sm:w-auto">
-            <h1 className="font-bold text-blue-900 text-2xl sm:text-3xl text-slate-800 font-serif ms-5">TourNext</h1>
+          <Link to='/'> <h1 className="font-bold text-blue-900 text-2xl sm:text-3xl text-slate-800 font-serif ms-5">TourNext</h1></Link>
+          
           </div>
           <div className="hidden sm:flex flex-1 justify-center">
             <div className="flex space-x-4 items-center h-full">
-              <a href="#" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
+            <Link to="/" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
                 Home
-              </a>
-              <a href="#" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
-                About
-              </a>
-              <a href="#" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
-                Contact
-              </a>
+              </Link>
+              <Link to="user/Alldestinations" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
+               Destinations
+              </Link>
+              <Link to="/user/Packages" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-800">
+                All Packages
+              </Link>
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
