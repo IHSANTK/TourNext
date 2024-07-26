@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Aboutsection() {
   return (
-    <div className="bg-gray-200 mx-auto p-4 mt-20 flex items-center justify-center min-h-screen mb-5">
+    <div className=" mx-auto p-4 mt-20 flex items-center justify-center min-h-screen mb-5">
       <div
         className="relative bg-cover bg-center w-full max-w-5xl h-96"
         style={{ backgroundImage: 'url(https://www.shutterstock.com/image-photo/india-photo-collage-famous-sights-260nw-1717188895.jpg)' }}

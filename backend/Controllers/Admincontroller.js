@@ -52,18 +52,29 @@ exports.adminLogin = async (req, res) => {
 
   exports.adminpanel = async (req, res) => {
     try {
+      console.log('admin panel');
       const [usersResult, bookingsResult, destinationCount, monthlyBookingCounts] = await Promise.all([
         User.aggregate([
           { $group: { _id: null, totalUsers: { $sum: 1 } } }
         ]),
         User.aggregate([
-          { $group: { _id: null, totalBookings: { $sum: { $size: '$bookings' } } } }
+          { 
+            $project: { 
+              bookingsSize: { $size: { $ifNull: ['$bookings', []] } } 
+            } 
+          },
+          { 
+            $group: { 
+              _id: null, 
+              totalBookings: { $sum: '$bookingsSize' } 
+            } 
+          }
         ]),
         Destination.countDocuments(),
         User.aggregate([
           {
             $match: {
-              bookings: { $exists: true, $ne: [] } 
+              bookings: { $exists: true, $ne: [] }
             }
           },
           {
@@ -81,12 +92,11 @@ exports.adminLogin = async (req, res) => {
         ])
       ]);
   
-      
       const monthlyBookingCountsData = {};
       monthlyBookingCounts.forEach(count => {
         const year = count._id.year;
         const month = count._id.month;
-        const monthName = new Date(Date.UTC(2000, month - 1, 1)).toLocaleDateString('en-US', { month: 'long' }); 
+        const monthName = new Date(Date.UTC(2000, month - 1, 1)).toLocaleDateString('en-US', { month: 'long' });
         if (!monthlyBookingCountsData[year]) {
           monthlyBookingCountsData[year] = {};
         }
@@ -106,9 +116,8 @@ exports.adminLogin = async (req, res) => {
       console.error('Error:', error);
       res.status(500).json({ error: 'Server error' });
     }
-
   };
-
+  
 
   exports.categorieadd = async (req, res) => {
     try {

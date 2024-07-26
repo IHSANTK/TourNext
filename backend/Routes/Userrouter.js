@@ -21,8 +21,8 @@ router.post('/sendOtp',UserController.sendOtpforBooking)
 router.post('/cancelBooking',authenticate,UserController.cancelBooking);
 router.post('/updateBookingReview',authenticate,UserController.updateBookingReview);
 
-router.get('/getAllDestinations',authenticate,UserController.gellAlldestinatons)
-router.get('/getdestinationdetails/:id',authenticate,UserController.getdestinationdetiles)
+router.get('/getAllDestinations',UserController.gellAlldestinatons)
+router.get('/getdestinationdetails/:id',UserController.getdestinationdetiles)
 
 
 

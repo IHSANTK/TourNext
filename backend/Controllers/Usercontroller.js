@@ -330,7 +330,7 @@ exports.gellAlldestinatons = async (req,res)=>{
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const startIndex = (page - 1) * limit;
-console.log('kkkkkkkkkkkkkkkk');
+console.log('kkkkkkk');
   try {
     const destinations = await Destinations.find()
       .skip(startIndex)
@@ -353,13 +353,13 @@ console.log('kkkkkkkkkkkkkkkk');
 exports.getdestinationdetiles = async (req,res)=>{
    
   const destId = req.params.id
-  try{
+  try{  
             console.log('ok',destId);
 
             const pakage = await Destinations.findById(destId)
             console.log(pakage);
 
-            res.status(200).json(pakage)
+       res.status(200).json(pakage)
 
   }catch(error){
     console.error(error);

@@ -1,19 +1,21 @@
-
-
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
-const ProtectedRoute = ({ children }) => {
-    console.log(" protector");
+const ProtectedRoute = ({ children, restricted }) => {
   const adminisAuthenticated = useSelector((state) => state.adminauth.adminisAuthenticated);
+  const location = useLocation();
 
-
-  if (!adminisAuthenticated) {
-    return <Navigate to="/admin/login" />;
+  if (adminisAuthenticated) {
+    if (restricted) {
+      return <Navigate to="/admin/dashboard" />;
+    }
+        return children;
   }
-  
-  
+
+  if (!adminisAuthenticated && !restricted) {
+    return <Navigate to="/admin/login"  />;
+  }
 
   return children;
 };

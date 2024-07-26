@@ -5,14 +5,14 @@ export default function LatestPackages({ latestpkgs }) {
   console.log('pkgs', latestpkgs);
 
   return (
-    <div className="container mx-auto px-4 mt-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="mx-auto  px-4 mt-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 ">
         {latestpkgs.map((pkg, index) => (
           <div
             key={index}
-            className="card-container max-w-xs rounded overflow-hidden m-3 bg-orange-100 transition-transform duration-700 ease-in-out transform hover:scale-105 hover:rotate-3 relative"
+            className="card-container  rounded overflow-hidden m-3  transition-transform duration-700 ease-in-out transform hover:scale-105 hover:rotate-3 relative"
           >
-            <div className="relative h-64 rounded-2xl overflow-hidden">
+            <Link to={`/user/packagedetails/${pkg._id}`}><div className="relative h-64 rounded-2xl overflow-hidden">
               <img
                 className="w-full h-full object-cover"
                 src={pkg.images[0]}
@@ -23,6 +23,7 @@ export default function LatestPackages({ latestpkgs }) {
                 <div className="font-bold text-white text-xl mb-2">{pkg.packageName}</div>
               </div>
             </div>
+            </Link>
           </div>
         ))}
         <div className="col-span-full flex justify-center mt-5">
