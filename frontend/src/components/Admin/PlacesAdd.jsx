@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { addStates } from '../../redux/statesSlice';
+import { useDispatch } from 'react-redux';
 import axios from '../../api';
 import Sidebar from './sidebar';
 
@@ -7,6 +9,7 @@ const PlacesAdd = () => {
   const { stateId } = useParams();
   const [districts, setDistricts] = useState([{ name: '' }]);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const handleAddDistrict = () => {
     setDistricts([...districts, { name: '' }]);
@@ -25,7 +28,9 @@ const PlacesAdd = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post(`/addplaces/${stateId}`, { districts });
+      const response = await axios.post(`/addplaces/${stateId}`, { districts });
+
+      dispatch(addStates(response.data.states))
       navigate(`/admin/states/${stateId}/places`);
     } catch (error) {
       console.error('Error:', error);

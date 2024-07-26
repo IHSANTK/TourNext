@@ -10,6 +10,8 @@ router.post('/logout', authenticateAdmin, adminController.adminLogout);
 router.post('/categoriadd',adminController.categorieadd)
 router.put('/editcategories/:id',adminController.categoryedit)
 router.delete('/deletecategories/:id',adminController.deltecategory)
+
+router.get('/getstates',adminController.gellallstates)
 router.post('/addstates',adminController.addstates)
 router.delete('/deltestate/:id',adminController.deletestate)
 

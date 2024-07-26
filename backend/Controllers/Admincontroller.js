@@ -190,6 +190,21 @@ exports.adminLogin = async (req, res) => {
     }
   };
 
+  exports.gellallstates = async (req,res)=>{
+     try{
+        console.log('ccalled');
+      const admin  = await Admin.findOne()
+      
+      const states = admin.States
+      console.log(states);
+      res.status(200).json(states)    
+    }catch(error){
+
+     console.error(error);
+      res.status(500).json('internal server error')
+    }
+  }
+
   exports.addstates = async (req, res) => {
     try {
       const { stateName } = req.body;
@@ -250,8 +265,10 @@ exports.adminLogin = async (req, res) => {
       if (!admin) {
         return res.status(404).json({ message: 'Admin or State not found' });
       }
-  
+    
+      const allStates = admin.States
       const state = admin.States.id(stateId);
+      console.log('exactsateadding state',allStates);
 
         const stateName = state.stateName;
   
@@ -261,7 +278,7 @@ exports.adminLogin = async (req, res) => {
   
       const districts = state.districts;
   
-      res.status(200).json({ districts,stateName });
+      res.status(200).json({ districts,stateName ,States:allStates});
     } catch (error) {
       console.error('Error fetching districts:', error);
       res.status(500).json({ message: 'Internal server error' });
@@ -281,6 +298,8 @@ exports.adminLogin = async (req, res) => {
       }
   
       const state = admin.States.id(stateId);
+
+      const states = admin.States
   
       if (!state) {
         return res.status(404).json({ message: 'State not found' });
@@ -292,7 +311,7 @@ exports.adminLogin = async (req, res) => {
   
       await admin.save();
   
-      res.status(200).json({ message: 'Districts added successfully', state });
+      res.status(200).json({ message: 'Districts added successfully', state,states:states });
     } catch (error) {
       console.error(error);
 
@@ -302,26 +321,33 @@ exports.adminLogin = async (req, res) => {
 
 
 
-exports.deletePlace = async (req, res) => {
-  try {
-    const { stateId, districtId } = req.params;
+  exports.deletePlace = async (req, res) => {
+    try {
+      const { stateId, districtId } = req.params;
+  
+      const result = await Admin.findOneAndUpdate(
+        { 'States._id': stateId },
+        { $pull: { 'States.$.districts': { _id: districtId } } },
+        { new: true, useFindAndModify: false }
+      );
+  
+      if (!result) {
+        return res.status(404).json({ message: 'State or District not found' });
+      }
+  
+      const admin = await Admin.findOne();
 
-    const result = await Admin.findOneAndUpdate(
-      { 'States._id': stateId },
-      { $pull: { 'States.$.districts': { _id: districtId } } },
-      { new: true, useFindAndModify: false }
-    );
+      const  allStates = admin.States
 
-    if (!result) {
-      return res.status(404).json({ message: 'State or District not found' });
+      console.log('while delting',allStates);
+
+  
+      res.status(200).json({ message: 'District deleted successfully',states: allStates });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
     }
-
-    res.status(200).json({ message: 'District deleted successfully', state: result });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+  };
 
 
 exports.updatePlace = async (req, res) => {

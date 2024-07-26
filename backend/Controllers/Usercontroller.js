@@ -326,29 +326,42 @@ exports.updateBookingReview = async (req, res) => {
 };
 
 
-exports.gellAlldestinatons = async (req,res)=>{
+exports.gellAlldestinatons = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const startIndex = (page - 1) * limit;
-console.log('kkkkkkk');
+
+  // Extract filter criteria from the request query
+  const { state, district, category } = req.query;
+
+  // Build the filter object based on the provided criteria
+  const filter = {};
+  if (state) filter.state = state;
+  if (district) filter.district = district;
+  if (category) filter.category = category;
+
+  console.log('Filter criteria:', filter);
+
   try {
-    const destinations = await Destinations.find()
+    const destinations = await Destinations.find(filter)
       .skip(startIndex)
       .limit(limit)
       .exec();
-    const count = await Destinations.countDocuments();
 
+    const count = await Destinations.countDocuments(filter);
 
-    console.log(destinations);
+    console.log('Filtered destinations:', destinations);
     res.json({
       destinations,
       totalPages: Math.ceil(count / limit),
       currentPage: page
     });
   } catch (error) {
+    console.error('Error fetching destinations:', error);
     res.status(500).json({ message: error.message });
   }
-}
+};
+
 
 exports.getdestinationdetiles = async (req,res)=>{
    

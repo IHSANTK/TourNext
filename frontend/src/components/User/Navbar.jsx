@@ -91,17 +91,17 @@ export default function Navbar() {
                 <div>
                   <button
                     type="button"
-                    className="relative flex rounded-full mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                    className="relative flex rounded-full mt-1 me-4 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                     id="user-menu-button"
                     aria-expanded={isProfileMenuOpen}
                     aria-haspopup="true"
-                    onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)} // Toggle dropdown
+                    onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)} 
                   >
                     <span className="absolute -inset-1.5"></span>
                     <span className="sr-only">Open user menu</span>
-                    <FaUserCircle className="h-8 w-8 rounded-full bg-gray-400 me-4" />
+                    <FaUserCircle className="h-8 w-8 rounded-full bg-gray-400 " />
                   </button>
-                  {/* Dropdown menu */}
+                
                   <div className={`${isProfileMenuOpen ? 'block' : 'hidden'} absolute right-0 z-10 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg`}>
                     <div className="py-1">
                       <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
@@ -119,13 +119,7 @@ export default function Navbar() {
                 </button>
               )}
             </div>
-                  {/* Dropdown menu */}
-                  <div className={`${isProfileMenuOpen ? 'block' : 'hidden'} absolute right-0 z-10 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg`}>
-                    <div className="py-1">
-                      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                      <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
-                    </div>
-                  </div>
+                 
                 </div>
        
       

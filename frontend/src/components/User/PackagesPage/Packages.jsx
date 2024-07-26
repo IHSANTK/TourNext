@@ -50,7 +50,7 @@ export default function Packages() {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto px-4 mt-16 flex flex-col lg:flex-row">
+      <div className=" mx-auto px-4 mt-16 flex flex-col lg:flex-row ">
         <div className="lg:w-1/4 lg:pr-8">
           <div className="sticky top-0 p-4 bg-white shadow-md rounded-md mt-5">
             <h2 className="text-xl font-bold mb-4">Filter Packages</h2>
@@ -97,7 +97,7 @@ export default function Packages() {
             </div>
           </div>
         </div>
-        <div className="lg:w-3/4 mt-8 lg:mt-9">
+        <div className="lg:w-4/4 mt-8 lg:mt-9 ">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {packages.map((pkg, index) => (
               <div

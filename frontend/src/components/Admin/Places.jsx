@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './sidebar';
 import axios from '../../api';
+import { addStates } from '../../redux/statesSlice';
+import { useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 
 const Places = () => {
   const { stateId } = useParams();
+  const dispatch = useDispatch()
   const [districts, setDistricts] = useState([]);
   const [stateName, setStateName] = useState('');
   const [editingDistrict, setEditingDistrict] = useState(null);
@@ -14,6 +17,7 @@ const Places = () => {
     const fetchDistricts = async () => {
       try {
         const response = await axios.post('/getplaces', { stateId });
+        
         setDistricts(response.data.districts);
         setStateName(response.data.stateName);
       } catch (error) {
@@ -26,8 +30,12 @@ const Places = () => {
 
   const handleDelete = async (districtId) => {
     try {
-      await axios.delete(`/deleteplace/${stateId}/${districtId}`);
+     const response =  await axios.delete(`/deleteplace/${stateId}/${districtId}`);
+
+     console.log(response.data);
+
       setDistricts(districts.filter(district => district._id !== districtId));
+      dispatch(addStates(response.data.states))
     } catch (error) {
       console.error('Error deleting district:', error);
     }

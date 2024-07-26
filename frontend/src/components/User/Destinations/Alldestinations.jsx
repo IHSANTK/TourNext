@@ -17,8 +17,10 @@ const Alldestinations = () => {
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
   const states = useSelector((state) => state.state.states);
+
+  console.log(states);
   const categories = useSelector((state) => state.category.categories);
-  const destinationsPerPage = 10;
+  const destinationsPerPage = 9;
 
   console.log(states);
   useEffect(() => {

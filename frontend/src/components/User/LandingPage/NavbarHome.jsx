@@ -87,7 +87,7 @@ export default function Navbar() {
                 <div>
                   <button
                     type="button"
-                    className="relative flex rounded-full mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                    className="relative flex rounded-full mt-3 me-4 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                     id="user-menu-button"
                     aria-expanded={isProfileMenuOpen}
                     aria-haspopup="true"
@@ -95,7 +95,7 @@ export default function Navbar() {
                   >
                     <span className="absolute -inset-1.5"></span>
                     <span className="sr-only">Open user menu</span>
-                    <FaUserCircle className="h-8 w-8 rounded-full bg-gray-400 me-4 mt-3" />
+                    <FaUserCircle className="h-8 w-8 rounded-full bg-gray-400  " />
                   </button>
                   {/* Dropdown menu */}
                   <div className={`${isProfileMenuOpen ? 'block' : 'hidden'} absolute right-0 z-10 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg`}>

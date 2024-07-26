@@ -9,6 +9,7 @@ const categorySlice = createSlice({
   initialState,
   reducers: {
     addcategories: (state, action) => {
+      console.log('add catgof',action.payload);
       state.categories = action.payload;
     },
     updateCategory: (state, action) => {

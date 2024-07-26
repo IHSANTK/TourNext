@@ -1,18 +1,39 @@
-import React,{useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './sidebar';
 import axios from '../../api';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteState } from '../../redux/statesSlice';
-import { Link } from 'react-router-dom';
+import { deleteState, addStates } from '../../redux/statesSlice';
+import { Link,useNavigate} from 'react-router-dom';
 
 const States = () => {
-  const states = useSelector((state) => state.state.states);
-
+  const [states, setStates] = useState([]); 
   const dispatch = useDispatch();
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchAllStates = async () => {
+      try {
+        const response = await axios.get('/getstates');
+
+        console.log(response.data);
+        const states = response.data; 
+
+        console.log("inital renser time ",states);
+        
+        setStates(states);
+        dispatch(addStates(states));
+       
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchAllStates();
+  },[]); 
 
   const handleDelete = async (state) => {
     try {
       await axios.delete(`/deltestate/${state._id}`);
+      setStates(states.filter(stat=>stat._id !== state._id))
       dispatch(deleteState(state._id));
     } catch (err) {
       console.error(err);
