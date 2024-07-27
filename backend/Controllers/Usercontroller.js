@@ -331,10 +331,8 @@ exports.gellAlldestinatons = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const startIndex = (page - 1) * limit;
 
-  // Extract filter criteria from the request query
   const { state, district, category } = req.query;
 
-  // Build the filter object based on the provided criteria
   const filter = {};
   if (state) filter.state = state;
   if (district) filter.district = district;
@@ -362,6 +360,49 @@ exports.gellAlldestinatons = async (req, res) => {
   }
 };
 
+
+exports.addtowishlist = async (req, res) => {
+  const { destinationId } = req.body;
+
+  console.log('get called', destinationId);
+  try {
+    const userId = req.user; // Assuming req.user contains the logged-in user ID
+    const user = await User.findById(userId);
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const isInWishlist = user.wishlist.includes(destinationId);
+
+    if (isInWishlist) {
+      user.wishlist = user.wishlist.filter(id => id.toString() !== destinationId);
+      await user.save();
+      res.status(200).json({ message: 'Removed from wishlist' });
+    } else {
+      user.wishlist.push(destinationId);
+      await user.save();
+      res.status(200).json({ message: 'Added to wishlist' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.getwhishlistdata = async (req,res)=>{
+
+  const { destinationId } = req.params;
+  const userID = req.user;
+  try {
+
+    const user = await User.findById(userID); 
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const isInWishlist = user.wishlist.includes(destinationId);
+    res.status(200).json({ isInWishlist });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+}
 
 exports.getdestinationdetiles = async (req,res)=>{
    

@@ -28,7 +28,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="absolute top-0 left-0 w-full z-10 bg-white shadow-lg ">
+    <nav className="absolute top-0 left-0 z-10  bg-gray-100  w-full bg-inherit shadow-xl shadow-neutral-500 " >
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-20 sm:h-24 items-center">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -70,14 +70,14 @@ export default function Navbar() {
           
           </div>
           <div className="hidden sm:flex flex-1 justify-center">
-            <div className="flex space-x-4 items-center h-full">
-            <Link to="/" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-500">
+            <div className="flex space-x-4 items-center h-full  z-10">
+            <Link to="/" className="rounded-md px-3 py-2  font-bold text-neutral-500">
                 Home
               </Link>
-              <Link to="/user/Alldestinations" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-500">
+              <Link to="/user/Alldestinations" className="rounded-md px-3 py-2  font-bold text-neutral-500">
                Destinations
               </Link>
-              <Link to="/user/Packages" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-500">
+              <Link to="/user/Packages" className="rounded-md px-3 py-2  font-bold text-neutral-500">
                 All Packages
               </Link>
             </div>
@@ -128,15 +128,15 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} sm:hidden`} id="mobile-menu">
+      <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} sm:hidden absolute left-0 z-10  w-40 bg-white   rounded-md shadow-lg`} id="mobile-menu">
         <div className="space-y-1 px-2 pb-3 pt-2 bg-white w-1/3 text-black">
-          <Link to={'/'} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-700 hover:text-white">
+          <Link to={'/'} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700  ">
             Home
           </Link>
-          <Link to="/user/Alldestinations" className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-700 hover:text-white">
+          <Link to="/user/Alldestinations" className="block rounded-md px-3 py-2 text-base font-medium text-gray-700  ">
            Destinations
           </Link>
-          <Link to="/user/Packages" className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-700 hover:text-white">
+          <Link to="/user/Packages" className="block rounded-md px-3 py-2 text-base font-medium text-gray-700  ">
            Packages
           </Link>
         </div>

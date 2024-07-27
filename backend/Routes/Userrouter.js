@@ -24,7 +24,8 @@ router.post('/updateBookingReview',authenticate,UserController.updateBookingRevi
 router.get('/getAllDestinations',UserController.gellAlldestinatons)
 router.get('/getdestinationdetails/:id',UserController.getdestinationdetiles)
 
-
+router.post('/addToWishlist',authenticate,UserController.addtowishlist)
+router.get('/checkWishlist/:destinationId',authenticate,UserController.getwhishlistdata)
 
 router.post('/userlogut',authenticate, UserController.logout);
 
