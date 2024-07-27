@@ -388,21 +388,22 @@ exports.addtowishlist = async (req, res) => {
   }
 };
 
-exports.getwhishlistdata = async (req,res)=>{
+exports.getwhishlistdata = async (req, res) => {
+  const destId = req.params.id; 
+  const userID = req.user; 
 
-  const { destinationId } = req.params;
-  const userID = req.user;
   try {
-
-    const user = await User.findById(userID); 
+    const user = await User.findById(userID);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const isInWishlist = user.wishlist.includes(destinationId);
+    const isInWishlist = user.wishlist.some(item => item._id.toString() === destId.toString());
+
     res.status(200).json({ isInWishlist });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
-}
+};
 
 exports.getdestinationdetiles = async (req,res)=>{
    

@@ -29,6 +29,7 @@ export default function DestinationDetails() {
         const wishlistResponse = await axios.get(`/getwhishlistdata/${destId}`, {
           withCredentials: true,
         });
+        console.log('whislsist resoponse',wishlistResponse);
         setIsWishlist(wishlistResponse.data.isInWishlist);
       } catch (err) {
         console.error(err);

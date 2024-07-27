@@ -34,9 +34,8 @@ const userSchema = new mongoose.Schema({
         
    
     wishlist: [{
-        destinationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-        image: [String],
-        Name: String,
+        destinationId: String,
+        
     
     }],
     bookings: [bookingSchema],
