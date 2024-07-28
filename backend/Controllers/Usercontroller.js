@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Destinations = require('../models/Destination');
 const Packages = require('../models/Packages')
+const cloudinary = require('../config/cloudinery');
 const helpers = require("../helpers/razorpay");
 const otpService = require("../services/otpService");
 
@@ -366,15 +367,21 @@ exports.addtowishlist = async (req, res) => {
 
   console.log('get called', destinationId);
   try {
-    const userId = req.user; // Assuming req.user contains the logged-in user ID
+    const userId = req.user; 
     const user = await User.findById(userId);
+
+    console.log('dsdfdfdf',userId,user);
 
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const isInWishlist = user.wishlist.includes(destinationId);
+    // const isInWishlist = user.wishlist.includes(destinationId);
+    const isInWishlist = user.wishlist.some(item => item._id.toString() === destinationId.toString());
+
+
+    console.log(isInWishlist);
 
     if (isInWishlist) {
-      user.wishlist = user.wishlist.filter(id => id.toString() !== destinationId);
+       user.wishlist = user.wishlist.filter(item => item._id.toString() !== destinationId.toString());
       await user.save();
       res.status(200).json({ message: 'Removed from wishlist' });
     } else {
@@ -404,6 +411,49 @@ exports.getwhishlistdata = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+exports.addBlog = async (req,res)=>{
+
+  console.log(req.body.formData);
+  const { destinationId, description, images, rating,text } = req.body;
+
+  const imageFiles = req.files;
+  console.log("iamges",imageFiles);
+   
+  const imageUrls  =[]
+  const userId = req.user
+  console.log('userid',userId);
+
+  console.log(destinationId, description, images, rating);
+
+  try {
+
+
+    for (const file of imageFiles) {
+      const result = await cloudinary.uploader.upload(file.path);
+      imageUrls.push(result.secure_url);
+    }
+    const destination = await Destinations.findById(destinationId);
+
+    const user = await User.findById(userId)
+
+    console.log('username',user);
+
+    if (!destination) {
+      return res.status(404).json({ message: 'Destination not found' });
+    }
+
+    destination.blogs.push({user,description, text,images:imageUrls, rating });
+
+    await destination.save();
+
+    res.status(200).json({ message: 'Blog added successfully', destination });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
 
 exports.getdestinationdetiles = async (req,res)=>{
    

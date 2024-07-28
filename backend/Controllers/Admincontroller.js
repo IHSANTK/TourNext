@@ -395,6 +395,8 @@ exports.getallstates = async (Req,res)=>{
 
 exports.addDestinations = async (req, res) => {
   const { name, description, state, district, category } = req.body;
+
+  console.log("fordatabody from",req.body.formData);
   const imageFiles = req.files;
   const imageUrls = [];
   

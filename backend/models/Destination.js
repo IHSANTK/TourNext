@@ -29,8 +29,9 @@ const DestinationSchema = new mongoose.Schema({
     default: Date.now
   },
   blogs: [{
-    userId: { type: String, required: true },
+    user:{},
     images: [{ type: String }],
+    text:String,
     description: { type: String },
     addedAt: {
       type: Date,

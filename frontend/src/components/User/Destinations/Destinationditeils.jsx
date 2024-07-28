@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../../api";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 import Navbar from '../Navbar';
 import Footer from "../Footer";
-import { FaHeart, FaShareAlt } from 'react-icons/fa'; 
+import { FaHeart, FaShareAlt } from 'react-icons/fa';
+import BlogForm from './BlogForm';
+import Blogpost from "./Blogpost";
 
 export default function DestinationDetails() {
+
+  const userisAuthenticated = useSelector((state) => state.userauth.userisAuthenticated);
+
   const { destId } = useParams();
   const [destination, setDestination] = useState(null);
   const [mainImage, setMainImage] = useState('');
-  const [mapUrl, setMapUrl] = useState('');
-  const [weather, setWeather] = useState(null);
-  const [chatOpen, setChatOpen] = useState(null);
   const [isWishlist, setIsWishlist] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+ 
 
   useEffect(() => {
     const fetchDestinationDetails = async () => {
@@ -20,6 +27,8 @@ export default function DestinationDetails() {
         const response = await axios.get(`/getdestinationdetails/${destId}`, {
           withCredentials: true,
         });
+
+        console.log('Destination Details:', response.data);
         setDestination(response.data);
 
         if (response.data.images && response.data.images.length > 0) {
@@ -29,7 +38,6 @@ export default function DestinationDetails() {
         const wishlistResponse = await axios.get(`/getwhishlistdata/${destId}`, {
           withCredentials: true,
         });
-        console.log('whislsist resoponse',wishlistResponse);
         setIsWishlist(wishlistResponse.data.isInWishlist);
       } catch (err) {
         console.error(err);
@@ -38,17 +46,38 @@ export default function DestinationDetails() {
     fetchDestinationDetails();
   }, [destId]);
 
-  const handleChatToggle = (index) => {
-    setChatOpen(chatOpen === index ? null : index);
-  };
+ 
 
   const handleAddToWishlist = async () => {
     try {
       const response = await axios.post('/addtowishlist', { destinationId: destId }, { withCredentials: true });
       if (response.data.message === 'Added to wishlist') {
+        Toastify({
+          text: response.data.message,
+          duration: 3000, 
+          gravity: 'top', 
+          position: 'right',
+          backgroundColor: 'green',
+        }).showToast();
         setIsWishlist(true);
       } else if (response.data.message === 'Removed from wishlist') {
+        Toastify({
+          text: response.data.message,
+          duration: 3000, 
+          gravity: 'top', 
+          position: 'right',
+          backgroundColor: 'lightblue',
+        }).showToast();
         setIsWishlist(false);
+      }else if(response.data.message === "Access denied. No token provided." ){
+      
+        Toastify({
+          text: 'Pls Login',
+          duration: 3000, 
+          gravity: 'top', 
+          position: 'right',
+          backgroundColor: 'red',
+        }).showToast();
       }
     } catch (err) {
       console.error(err);
@@ -59,7 +88,7 @@ export default function DestinationDetails() {
   const handleShare = () => {
     const shareData = {
       title: destination.name,
-      url: window.location.href
+      url: window.location.href,
     };
 
     if (navigator.share) {
@@ -71,165 +100,104 @@ export default function DestinationDetails() {
     }
   };
 
-  if (!destination) return <p>Loading...</p>;
+  const handleModalToggle = () => {
+  if(userisAuthenticated){
+    setModalOpen(!modalOpen);
+  }else{
+    Toastify({
+      text: 'Pls Login',
+      duration: 3000, 
+      gravity: 'top', 
+      position: 'right',
+      backgroundColor: 'red',
+    }).showToast();
+  }
+  };
+
 
   return (
     <>
       <Navbar />
-      <div className="container mx-auto p-6" style={{ marginTop: '100px' }}>
-        <div className="relative">
-          <h1 className="text-4xl font-bold mb-6">{destination.name}</h1>
-          <button
-            onClick={handleAddToWishlist}
-            className={`absolute top-4 right-16 text-2xl ${isWishlist ? 'text-red-600' : 'text-gray-600'}`}
-          >
-            <FaHeart />
-          </button>
-          <button
-            onClick={handleShare}
-            className="absolute top-4 right-4 text-2xl text-gray-600"
-          >
-            <FaShareAlt />
-          </button>
-        </div>
-        <div className="flex flex-col lg:flex-row lg:space-x-8">
-          <div className="flex-1">
-            {mainImage && (
-              <div className="relative w-full h-64 mb-4">
-                <img
-                  src={mainImage}
-                  alt={destination.name}
-                  className="w-full h-full object-cover rounded-lg"
-                />
-              </div>
-            )}
-          </div>
-          
-          <div className="flex-1">
-            <div className="mb-4">
-              <h2 className="text-2xl font-semibold mb-2">Description</h2>
-              <p className="text-gray-700">{destination.description}</p>
-            </div>
-            <div className="mb-4">
-              <h2 className="text-2xl font-semibold mb-2">Details</h2>
-              <p><strong>State:</strong> {destination.state}</p>
-              <p><strong>District:</strong> {destination.district}</p>
-            </div>
-            
-            {/* Weather Information */}
-            {weather && (
-              <div className="mt-8 bg-blue-100 p-4 rounded-lg shadow-md">
-                <h2 className="text-2xl font-semibold mb-2">Current Weather</h2>
-                <div className="flex items-center">
-                  <img
-                    src={weather.icon}
-                    alt={weather.description}
-                    className="w-12 h-12"
-                  />
-                  <div className="ml-4">
-                    <p className="text-xl font-bold">{weather.temperature}°C</p>
-                    <p className="text-gray-700">{weather.description}</p>
+
+      <div className="container mx-auto px-4 py-8" style={{marginTop:'100px'}}>
+        {destination ? (
+          <div>
+            <h1 className="text-3xl ms-5 font-semibold mb-3">{destination.name}</h1>
+
+            <div className="flex flex-col md:flex-row md:space-x-8">
+              <div className="flex-1">
+                <div className="relative">
+                  <img src={mainImage} alt={destination.name} className="w-full h-auto rounded-lg shadow-lg " />
+                  <div className="absolute top-4 right-4 flex space-x-2">
+                    <button onClick={handleAddToWishlist} className="text-white px-3 py-2 rounded-full shadow-md ">
+                      <FaHeart className={`text-xl ${isWishlist ? 'text-red-500' : 'text-gray-500'}`} />
+                    </button>
+                    <button onClick={handleShare} className="text-black px-3 py-2 rounded-full shadow-md ">
+                      <FaShareAlt className="text-xl" />
+                    </button>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-        </div>
-        
-        {/* Gallery Section */}
-        <div className="mt-8">
-          {destination.images && destination.images.length > 0 && (
-            <div className="flex flex-wrap gap-4">
-              {destination.images.map((image, index) => (
-                <div
-                  key={index}
-                  className="w-24 h-24 cursor-pointer"
-                  onClick={() => setMainImage(image)}
-                >
-                  <img
-                    src={image}
-                    alt={`Thumbnail ${index + 1}`}
-                    className="w-full h-full object-cover rounded-lg border border-gray-300"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Location Information Section */}
-        <div className="mt-8">
-          {mapUrl && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-2">Location Map</h2>
-              <iframe
-                src={mapUrl}
-                width="100%"
-                height="300"
-                frameBorder="0"
-                style={{ border: 0 }}
-                allowFullScreen
-              ></iframe>
-            </div>
-          )}
-        </div>
-
-        {/* Check Packages Button */}
-        <div className="mt-8">
-          <Link to={'/user/Packages'}
-            className="bg-teal-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-teal-600"
-          >
-            Check Our Packages
-          </Link>
-        </div>
-
-        {/* Add Blog Button */}
-        <div className="mt-8">
-          <Link to={`/addBlog/${destId}`}
-            className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600"
-          >
-            Add Blog
-          </Link>
-        </div>
-
-        {/* Blogs Section */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-semibold mb-4">Blogs</h2>
-          {destination.blogs.length > 0 ? (
-            destination.blogs.map((blog, index) => (
-              <div key={index} className="bg-white p-4 rounded-lg shadow-md mb-4">
-                <h3 className="text-xl font-semibold mb-2">Blog {index + 1}</h3>
-                {blog.images.length > 0 && (
-                  <div className="mb-2">
+                <div className="flex space-x-2 lg:space-x-4 mt-4 ms-2">
+                  {destination.images && destination.images.map((image, index) => (
                     <img
-                      src={blog.images[0]}
-                      alt={`Blog ${index + 1}`}
-                      className="w-full h-48 object-cover rounded-lg"
+                      key={index}
+                      src={image}
+                      alt={`Thumbnail ${index}`}
+                      className="w-14 h-10 lg:w-28 lg:h-20 cursor-pointer rounded-lg"
+                      onClick={() => setMainImage(image)}
                     />
-                  </div>
-                )}
-                <p className="text-gray-700 mb-2">{blog.description}</p>
-                <p><strong>Rating:</strong> {blog.rating ? blog.rating : 'Not rated'}</p>
-                <p><strong>Added At:</strong> {new Date(blog.addedDate).toLocaleDateString()}</p>
-                <button
-                  onClick={() => handleChatToggle(index)}
-                  className="mt-2 bg-teal-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-teal-600"
-                >
-                  Chat
-                </button>
-                {chatOpen === index && (
-                  <div className="mt-4 p-4 border border-gray-300 rounded-lg">
-                    <h4 className="font-semibold">Chat with the Blogger</h4>
-                    {/* Chat component or chat interface */}
-                  </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex-1 ps-5 pt-5">
+                <h1 className=" lg:ms-5 text-2xl font-semibold mb-3">Description</h1>
+                <p className=" lg:ms-5 text-lg mb-4">{destination.description}</p>
+
+                <p className="lg:ms-5"><strong>State:</strong>{destination.state}</p>
+                <p className="lg:ms-5 mt-2"><strong>Place:</strong>{destination.district}</p>
+                {/* <div className="flex items-center space-x-4 mb-4">
+                  <RatingStars rating={destination.rating} />
+                </div> */}
+
+                {modalOpen && (
+                  <BlogForm destinationId={destination._id} onClose={handleModalToggle} />
                 )}
               </div>
-            ))
-          ) : (
-            <p>No blogs available for this destination.</p>
-          )}
-        </div>
+            </div>
+          </div>
+        ) : (
+          <p>Loading...</p>
+        )}
+
+        {/* <div className="mt-8">
+          <Link
+            onClick={() => alert('Check out packages')}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
+          >
+            Check Out Packages
+          </Link>
+        </div> */}
+
+        {destination && (
+          <div className="mt-8">
+            <div className="flex justify-between">
+              <h2 className="text-2xl font-semibold mb-4 ms-3">Blogs</h2>
+
+              <button
+                onClick={handleModalToggle}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
+              >
+                Add Blog
+              </button>
+            </div>
+            <Blogpost destination={destination} />
+          
+           
+          </div>
+        )}
       </div>
+
       <Footer />
     </>
   );

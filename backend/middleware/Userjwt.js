@@ -9,7 +9,9 @@ const authenticate = (req, res, next) => {
  
 
   if (!user_accessToken && !user_refreshToken) {
-    return res.status(401).json({ message: "Access denied. No token provided." });
+
+    console.log('ghfghfgjkfjglkfjglkfjglfjg');
+    return res.json({ message: "Access denied. No token provided." });
   }
 
   try {

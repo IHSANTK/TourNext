@@ -4,6 +4,7 @@ const router = express.Router();
 const UserController = require('../Controllers/Usercontroller');
 const { sendOtp, verifyOtp } = require('../Controllers/otpController');
 const { authenticate } = require('../middleware/Userjwt'); 
+const upload = require('../config/multer');
 
 
 
@@ -26,6 +27,8 @@ router.get('/getdestinationdetails/:id',UserController.getdestinationdetiles)
 
 router.post('/addToWishlist',authenticate,UserController.addtowishlist)
 router.get('/getwhishlistdata/:id',authenticate,UserController.getwhishlistdata)
+
+router.post('/addblog',authenticate,upload.array('images'),UserController.addBlog)
 
 router.post('/userlogut',authenticate, UserController.logout);
 
