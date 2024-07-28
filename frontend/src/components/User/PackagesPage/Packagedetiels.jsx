@@ -160,12 +160,12 @@ export default function Packagedetails() {
           </div>
         </div>
 
-        <div className="mt-8 bg-gray-200 w-1/2 p-6 shadow-md">
+        <div className="mt-8 w-1/2 p-6 shadow-md">
           <h3 className="text-xl font-bold mb-2">Description</h3>
           <p>{pkg.description}</p>
         </div>
 
-        <div className="mt-8 bg-gray-200 p-6 shadow-lg">
+        <div className="mt-8  p-6 shadow-lg">
           <h2 className="text-2xl font-bold mb-4">Activities</h2>
           <ul className="list-disc pl-5 space-y-2">
             {pkg.activities && pkg.activities.length > 0 ? (
