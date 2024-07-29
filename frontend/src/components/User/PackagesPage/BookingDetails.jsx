@@ -4,7 +4,7 @@ import axios from '../../../api';
 import Navbar from '../Navbar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import StarRating from './StarRating';
+import StarRating from '../RatingStars';
 
 export default function BookingDetails() {
   const [bookings, setBookings] = useState([]);

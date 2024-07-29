@@ -28,7 +28,7 @@ const ChatBox = ({ user, onClose }) => {
 
   return (
     <div className="flex flex-col h-80">
-                <p className="font-semibold">Chat with {user.name}</p>
+                <p className="font-semibold text-white">Chat with {user.name}</p>
 
       <div className="flex-1 p-2 border border-gray-300 rounded-lg overflow-y-scroll">
         <div>

@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 import { useSelector } from 'react-redux';
-import RatingStars from './RatingStars';
+import RatingStars from '../RatingStars';
 import ChatBox from './ChatBox';
 import Modal from './Modal'; 
 
@@ -71,7 +71,7 @@ export default function Blogpost({ destination }) {
 
       <div>
         {destination.blogs.slice(0, showAllBlogs ? destination.blogs.length : 3).map((blog, index) => (
-          <div key={index} className="mb-4 bg-orange-100 p-5 border border-gray-700 rounded-lg flex flex-col justify-between lg:flex-row items-start">
+          <div key={index} className=" bg-white p-5 border border-gray-700 mb-2 flex flex-col justify-between lg:flex-row items-start">
             <div className='flex'>
               <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center lg:mr-4">
                 {blog.user.image ? (

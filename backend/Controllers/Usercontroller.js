@@ -212,7 +212,7 @@ exports.saveorder = async (req, res) => {
     }
 
     if (package.seats < seats) {
-      return res.status(400).json({ message: 'Not enough seats available' });
+      return res.json({ message: 'Not enough seats available' });
     }
 
     package.seats -= seats; 
@@ -246,15 +246,17 @@ exports.saveorder = async (req, res) => {
 };
 
 
-exports.bookingditels = async (req,res)=>{
-   
+exports.bookingditels = async (req, res) => {
   try {
-    const userId = req.user; 
-    const user = await User.findById(userId).populate('bookings.packageId');
+    const userId = req.user;
+    const user = await User.findById(userId)
+ 
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
+    user.bookings.sort((a, b) => new Date(b.bookingDate) - new Date(a.bookingDate));
 
     res.json(user.bookings);
   } catch (error) {

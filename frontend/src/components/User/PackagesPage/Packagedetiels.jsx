@@ -6,7 +6,7 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import BookingModal from "./BookingModal"; 
 import OtpModal from "./OtpModal";
-import StarRating from './StarRating'
+import StarRating from '../RatingStars'
 
 
 export default function Packagedetails() {
@@ -102,7 +102,7 @@ export default function Packagedetails() {
             <div className="relative mt-5 ">
               <div className="relative h-90 overflow-hidden rounded-lg shadow-md">
                 <img
-                  className="w-full lg:h-[400px] object-fill"
+                  className="w-full lg:h-[500px] object-fill"
                   src={mainImage}
                   alt={`Main image for ${pkg.packageName}`}
                 />
@@ -217,7 +217,7 @@ export default function Packagedetails() {
               </div>
             ))
           ) : (
-            <p className="text-gray-700">No reviews yet.</p>
+            <p className=" ms-3 text-gray-700">No reviews yet.</p>
           )}
         </div>
       </div>

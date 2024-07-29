@@ -54,7 +54,7 @@ export default function DestinationDetails() {
       if (response.data.message === 'Added to wishlist') {
         Toastify({
           text: response.data.message,
-          duration: 3000, 
+          duration: 2000, 
           gravity: 'top', 
           position: 'right',
           backgroundColor: 'green',
@@ -63,10 +63,10 @@ export default function DestinationDetails() {
       } else if (response.data.message === 'Removed from wishlist') {
         Toastify({
           text: response.data.message,
-          duration: 3000, 
+          duration: 2000, 
           gravity: 'top', 
           position: 'right',
-          backgroundColor: 'lightblue',
+          backgroundColor: 'green',
         }).showToast();
         setIsWishlist(false);
       }else if(response.data.message === "Access denied. No token provided." ){
