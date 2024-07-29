@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { format } from 'date-fns';
 import axios from "../../../api";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
@@ -77,6 +78,16 @@ export default function Packagedetails() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
+  const calculateAverageRating = (reviews) => {
+    if (reviews.length === 0) return 0; 
+  
+    const totalRating = reviews.reduce((acc, blog) => acc + blog.rating, 0);
+    return totalRating / reviews.length;
+  };
+
+
+  const averageRating = calculateAverageRating(pkg.reviews);
 
   return (
     <>
@@ -180,8 +191,16 @@ export default function Packagedetails() {
           </ul>
         </div>
 
+       
         <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Reviews</h2>
+          <h2 className="text-2xl font-bold mb-2 ms-2">Reviews</h2>
+          <div className="ms-3 mb-2">
+        <div className='flex'>
+          <StarRating rating={averageRating} />
+        </div>
+        <p className="text-gray-600">{averageRating.toFixed(1)} out of 5</p>
+      </div>
+      
           {pkg.reviews && pkg.reviews.length > 0 ? (
             pkg.reviews.map((review, index) => (
               <div
@@ -189,6 +208,10 @@ export default function Packagedetails() {
                 className="bg-white shadow-md rounded-lg p-4 mb-4"
               >
                 <p className="font-bold text-gray-900 mb-2">{review.userName}</p>
+                <p className="text-sm text-gray-600">
+                  {format(new Date(review.addedAt), 'MMMM d, yyyy')}
+                </p>
+
                 <StarRating rating={review.rating} />
                 <p className="text-gray-700 mt-4">{review.text}</p>
               </div>

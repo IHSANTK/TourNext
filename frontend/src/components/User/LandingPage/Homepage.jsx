@@ -25,6 +25,10 @@ export default function Homepage() {
     fetchDatas();
   }, []);
 
+
+
+
+
   return (
     <>
       <Navbar />
@@ -85,7 +89,7 @@ export default function Homepage() {
 </div>
 
 
-      {/* Main Content */}
+
         <div className="h1div mt-5">
           <h1 className="font-bold firsth1 mt-5">Most popular destinations</h1>
         </div>
