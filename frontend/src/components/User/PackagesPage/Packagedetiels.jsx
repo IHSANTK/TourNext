@@ -102,7 +102,7 @@ export default function Packagedetails() {
             <div className="relative mt-5 ">
               <div className="relative h-90 overflow-hidden rounded-lg shadow-md">
                 <img
-                  className="w-full lg:h-[500px] object-fill"
+                  className="w-full lg:h-[450px] object-fill"
                   src={mainImage}
                   alt={`Main image for ${pkg.packageName}`}
                 />
