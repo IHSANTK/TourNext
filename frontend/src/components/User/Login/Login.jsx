@@ -59,14 +59,17 @@ export default function Login() {
           withCredentials: true,
         }
       );
-      if (response.data.message) {
+      if (response.data.message === 'Invalid email or password') {
         setErr(response.data.message);
       } else if (response.status === 200) {
+
+        console.log('user',response.data.user._id);
         navigate("/");
         dispatch(
           setTokens({
             useraccessToken: response.data.userAccessToken,
             userrefreshToken: response.data.userRefreshToken,
+            userid :response.data.user._id
           })
         );
       }
@@ -95,6 +98,7 @@ export default function Login() {
           setTokens({
             useraccessToken: res.data.userAccessToken,
             userrefreshToken: res.data.userRefreshToken,
+            userid :res.data.user._id
           })
         );
         navigate("/");
@@ -147,6 +151,7 @@ export default function Login() {
           setTokens({
             useraccessToken: response.data.userAccessToken,
             userrefreshToken: response.data.userRefreshToken,
+            userid :response.data.user._id
           })
         );
       } else {

@@ -1,40 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import { useSelector } from 'react-redux';
+import axios from '../../../api';
+
 const socket = io('http://localhost:5001');
 
 const ChatBox = ({ user, onClose }) => {
+  const userid = useSelector((state) => state.userauth.userid);
+
   const [message, setMessage] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
-  const [room, setRoom] = useState(user);
+  const [room, setRoom] = useState(user._id);
 
   useEffect(() => {
     socket.emit('join', room);
 
-    socket.on('message', (message) => {
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(`/messages/${userid}/${user._id}`);
+        setChatMessages(response.data);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    fetchMessages();
+
+    socket.on('private message', (message) => {
       setChatMessages((prevMessages) => [...prevMessages, message]);
     });
 
     return () => {
-      socket.off('message');
+      socket.off('private message');
     };
-  }, [room]);
+  }, [room, userid, user._id]);
 
   const handleSend = () => {
     if (message.trim()) {
-      socket.emit('message', { room, message });
+      socket.emit('private message', { senderId: userid, receiverId: user._id, message });
       setMessage('');
     }
   };
 
   return (
     <div className="flex flex-col h-80">
-                <p className="font-semibold text-white">Chat with {user.name}</p>
-
+      <p className="font-semibold text-white">Chat with {user.name}</p>
       <div className="flex-1 p-2 border border-gray-300 rounded-lg overflow-y-scroll">
         <div>
           {chatMessages.map((msg, index) => (
             <div key={index} className="mb-2">
-              <p>{msg}</p>
+              <p>{msg.message}</p>
             </div>
           ))}
         </div>

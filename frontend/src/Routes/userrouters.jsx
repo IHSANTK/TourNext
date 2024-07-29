@@ -29,7 +29,7 @@ export default function userrouters() {
        <Route path="/user" element={<UserLayout />}>
         <Route path="dashboard" element={<Homepage />} />
         <Route path="login" element={<UserProtecterRoute restricted={true}><Login /></UserProtecterRoute>} />
-        <Route path="signup" element={<UserProtecterRoute restricted={false}><Signup /></UserProtecterRoute>} />
+        <Route path="signup" element={<Signup />} />
         <Route path='Packages' element={<UserProtecterRoute restricted={false}><Packages/></UserProtecterRoute>} />
         <Route path='packagedetails/:pkgId' element={<UserProtecterRoute restricted={false}>< Packagedetiels/></UserProtecterRoute>} />
         <Route path="bookingdetiles/:message" element={<UserProtecterRoute restricted={false}><BookingDetails/></UserProtecterRoute>} />

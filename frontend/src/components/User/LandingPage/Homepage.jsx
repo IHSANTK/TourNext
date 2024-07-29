@@ -3,11 +3,14 @@ import Navbar from './NavbarHome';
 import './Homepage.css';
 import Card from './Card';
 import Aboutsection from './Aboutsection';
+import { useSelector } from 'react-redux';
 import LatestPackages from './LatestPackages';
 import Footer from '../Footer'
 import axios from '../../../api';
 
 export default function Homepage() {
+ 
+
   const [populardest, setPopularDest] = useState([]);
   const [latestPkgs, setLatestPackages] = useState([]);
 

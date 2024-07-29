@@ -78,7 +78,10 @@ export default function Signup() {
         password: formData.password,
       });
       if (response.status === 200) {
+
+
         navigate('/user/login');
+
       } else {
         alert('Signup failed');
       }

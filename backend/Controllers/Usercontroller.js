@@ -18,6 +18,7 @@ const generateRefreshToken = (user) => {
   return jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '7d' });
 };
 
+
 exports.createUser = async (req, res) => {
   try {
     const { name, email, password, phoneNumber } = req.body;
@@ -31,11 +32,12 @@ exports.createUser = async (req, res) => {
     const newUser = new User({ name, email, phoneNumber, password: hashedPassword });
     await newUser.save();
 
-    res.status(200).json({ message: 'User signup successful' });
+    res.status(200).json({ message: 'User signup successful', });
   } catch (error) {
     res.status(400).send(error);
   }
 };
+
 
 exports.loginUser = async (req, res) => {
   try {
@@ -43,13 +45,13 @@ exports.loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 console.log('fgfgfg');
     if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.json({ message: 'Invalid email or password' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.json({ message: 'Invalid email or password' });
     } 
 
     const userAccessToken = generateAccessToken(user); 

@@ -69,7 +69,7 @@ const verifyOtp = async (req, res) => {
         sameSite: "Strict",
         maxAge: 15 * 60 * 1000,
       })
-      .json({ userAccessToken });
+      .json({ userAccessToken,user:existingUser });
   } catch (error) {
     console.error("Error signing up:", error);
     res.status(500).json({ error: "Internal server error" });
