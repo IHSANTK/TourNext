@@ -12,6 +12,7 @@ import Packagedetiels from '../components/User/PackagesPage/Packagedetiels';
 import BookingDetails from '../components/User/PackagesPage/BookingDetails';
 import Alldestinations from '../components/User/Destinations/Alldestinations';
 import DestinationDetails from '../components/User/Destinations/Destinationditeils';
+import ChatList from '../components/User/Destinations/ChatList';
 
 
 
@@ -34,6 +35,7 @@ export default function userrouters() {
         <Route path='packagedetails/:pkgId' element={<UserProtecterRoute restricted={false}>< Packagedetiels/></UserProtecterRoute>} />
         <Route path="bookingdetiles/:message" element={<UserProtecterRoute restricted={false}><BookingDetails/></UserProtecterRoute>} />
         <Route path='Alldestinations' element={<Alldestinations/>} />
+        <Route path='chatlist' element={<ChatList/>} />
        
         <Route path='destinationDetails/:destId' element={<DestinationDetails/>} />
 

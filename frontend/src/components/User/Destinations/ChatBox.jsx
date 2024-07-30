@@ -102,4 +102,3 @@ const ChatBox = ({ user, onClose }) => {
 };
 
 export default ChatBox;
-1

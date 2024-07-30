@@ -18,7 +18,7 @@ const Alldestinations = () => {
 
   const states = useSelector((state) => state.state.states);
 
-  console.log(states);
+  console.log('allstates',states);
   const categories = useSelector((state) => state.category.categories);
   const destinationsPerPage = 9;
 
