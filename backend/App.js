@@ -1,10 +1,11 @@
-require('dotenv').config();
+// app.js
+
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const userRoutes = require('./Routes/Userrouter'); 
 const adminRoutes = require('./Routes/Adminrouter'); 
 const googleAuthRoutes = require('./Routes/GoogleAuthRoutes'); 
@@ -45,16 +46,18 @@ app.use('/', adminRoutes);
 app.use('/', googleAuthRoutes);
 app.use('/', messageRoutes); 
 
-io.on('connection', (socket) => {
-  console.log('A user is connected');
+let onlineUsers = {}; 
 
-  socket.on('join', (room) => {
-    socket.join(room);
+io.on('connection', (socket) => {
+  console.log('A user connected:', socket.id);
+
+  socket.on('join', (userId) => {
+    onlineUsers[userId] = socket.id;
+    console.log(`User ${userId} joined with socket ID ${socket.id}`);
+    io.to(socket.id).emit('user status', { userId, status: 'online' });
   });
 
   socket.on('private message', async ({ senderId, receiverId, message }) => {
-
-    console.log('messges soket fnction');
     const newMessage = new Message({
       senderId,
       receiverId,
@@ -64,19 +67,25 @@ io.on('connection', (socket) => {
 
     try {
       await newMessage.save();
-      io.to(receiverId).emit('private message', newMessage);
+      const receiverSocketId = onlineUsers[receiverId];
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit('private message', newMessage);
+      }
     } catch (err) {
       console.error('Error saving message:', err);
     }
   });
 
   socket.on('disconnect', () => {
-    console.log('A user disconnected');
+    console.log('A user disconnected:', socket.id);
+    for (const [userId, socketId] of Object.entries(onlineUsers)) {
+      if (socketId === socket.id) {
+        delete onlineUsers[userId];
+        io.emit('user status', { userId, status: 'offline' });
+        break;
+      }
+    }
   });
-});
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something went wrong!');
 });
 
 const PORT = process.env.PORT || 5000;

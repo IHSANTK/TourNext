@@ -14,6 +14,7 @@ export default function Blogpost({ destination }) {
   const [showAllBlogs, setShowAllBlogs] = useState(false);
   const [chatOpen, setChatOpen] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null); // State for selected user
 
   const handleChatToggle = (index) => {
     setChatOpen(chatOpen === index ? null : index);
@@ -23,9 +24,9 @@ export default function Blogpost({ destination }) {
     setShowAllBlogs(true);
   };
 
-  const handleModalOpen = (index) => {
+  const handleModalOpen = (user) => {
     if (userisAuthenticated) {
-      setChatOpen(index);
+      setSelectedUser(user); // Set the selected user for the chat
       setIsModalOpen(true);
     } else {
       Toastify({
@@ -40,7 +41,7 @@ export default function Blogpost({ destination }) {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setChatOpen(null);
+    setSelectedUser(null); // Clear the selected user when closing the modal
   };
 
   const calculateAverageRating = (blogs) => {
@@ -108,7 +109,7 @@ export default function Blogpost({ destination }) {
               <div className="flex flex-col items-center lg:ml-4 mt-4 lg:mt-0">
                 {blog.user._id !== userid && (
                   <button
-                    onClick={() => handleModalOpen(index)}
+                    onClick={() => handleModalOpen(blog.user)}
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
                   >
                     <i className="bi bi-chat-left-dots"></i>
@@ -117,9 +118,9 @@ export default function Blogpost({ destination }) {
               </div>
             </div>
 
-            {isModalOpen && (
+            {isModalOpen && selectedUser && (
               <Modal onClose={handleModalClose}>
-                <ChatBox user={blog.user} onClose={handleModalClose} />
+                <ChatBox user={selectedUser} onClose={handleModalClose} />
               </Modal>
             )}
           </div>

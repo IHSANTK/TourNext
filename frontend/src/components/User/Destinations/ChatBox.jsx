@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import { FaArrowLeft } from "react-icons/fa";
+import { IoSend } from "react-icons/io5";
 import { useSelector } from 'react-redux';
 import axios from '../../../api';
 
@@ -14,14 +16,12 @@ const ChatBox = ({ user, onClose }) => {
 
   useEffect(() => {
     // Join the chat room
-    socket.emit('join', room);
+    socket.emit('join', userid);
 
-    // Fetch chat messages
+    // Fetch initial messages
     const fetchMessages = async () => {
       try {
         const response = await axios.get(`/messages/${userid}/${user._id}`);
-
-        console.log('messages',response.data);
         setChatMessages(response.data);
       } catch (error) {
         console.error('Error fetching messages:', error);
@@ -31,27 +31,44 @@ const ChatBox = ({ user, onClose }) => {
     fetchMessages();
 
     // Handle incoming messages
-    socket.on('private message', (message) => {
+    const handleMessage = (message) => {
       setChatMessages((prevMessages) => [...prevMessages, message]);
-    });
-
-    // Cleanup on unmount
-    return () => {
-      socket.off('private message');
     };
-  }, [room, userid, user._id]);
+
+    socket.on('private message', handleMessage);
+
+    // Cleanup on component unmount
+    return () => {
+      socket.emit('leave', userid); // Emit leave event when unmounting
+      socket.off('private message', handleMessage); // Remove listener
+    };
+  }, [userid, user._id]);
 
   const handleSend = () => {
     if (message.trim()) {
-      socket.emit('private message', { senderId: userid, receiverId: user._id, message });
+      const newMessage = { senderId: userid, receiverId: user._id, message };
+      socket.emit('private message', newMessage);
+      setChatMessages((prevMessages) => [...prevMessages, newMessage]); // Optimistic UI update
       setMessage('');
     }
   };
 
   return (
-    <div className="flex flex-col h-80 w-full bg-white border border-gray-300 rounded-lg">
-      <p className="font-semibold text-gray-800 p-2 border-b border-gray-300">Chat with {user.name}</p>
-      <div className="flex-1 p-2 overflow-y-auto">
+    <div className="flex flex-col h-80 w-full bg-gray-900 h-screen lg:h-[500px] rounded-lg">
+      <div className='flex justify-between bg-black'>
+        <button
+          onClick={() => {
+            onClose();
+            socket.emit('leave', userid); // Emit leave event when closing
+          }}
+          className="text-white rounded-lg shadow-md ms-2"
+        >
+          <FaArrowLeft size={'20'} />
+        </button>
+        <p className="font-semibold text-white p-2 border-b border-gray-300">{user.name}</p>
+        <div></div>
+      </div>
+      <div className="flex-1 p-2 overflow-y-auto noscrollbar">
         {chatMessages.length > 0 ? (
           <div>
             {chatMessages.map((msg, index) => (
@@ -66,31 +83,23 @@ const ChatBox = ({ user, onClose }) => {
           <p className="text-gray-500 text-center">No messages yet</p>
         )}
       </div>
-      <div className="p-2 border-t border-gray-300 flex flex-col space-y-2">
+      <div className="p-2 border-t border-gray-300 flex">
         <textarea
           placeholder="Type your message here..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          rows="3"
-          className="border border-gray-300 rounded-lg px-3 py-2 w-full"
+          className="border border-gray-300 rounded-lg px-3 py-2 w-11/12"
         />
-        <div className="flex justify-between space-x-2">
-          <button
-            onClick={handleSend}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 flex items-center"
-          >
-            <i className="fa-solid fa-paper-plane mr-1"></i> Send
-          </button>
-          <button
-            onClick={onClose}
-            className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600"
-          >
-            Close Chat
-          </button>
-        </div>
+        <button
+          onClick={handleSend}
+          className="text-white p-3 rounded-lg shadow-md hover:bg-blue-600 flex items-center"
+        >
+          <IoSend size={'30'} />
+        </button>
       </div>
     </div>
   );
 };
 
 export default ChatBox;
+1

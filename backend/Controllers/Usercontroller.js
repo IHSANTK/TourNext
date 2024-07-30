@@ -466,7 +466,7 @@ exports.getdestinationdetiles = async (req,res)=>{
             console.log('ok',destId);
 
             const pakage = await Destinations.findById(destId)
-            console.log(pakage);
+           
 
        res.status(200).json(pakage)
 

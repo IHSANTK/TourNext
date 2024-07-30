@@ -5,16 +5,15 @@ const Message = require('../models/Message');
 // Fetch messages between two users
 router.get('/messages/:senderId/:receiverId', async (req, res) => {
   const { senderId, receiverId } = req.params;
-
-  console.log('get messges');
+ 
 
   try {
-    const messages = await Message.find({
+    const messages = await Message.find({ 
       $or: [
         { senderId, receiverId },
         { senderId: receiverId, receiverId: senderId }
       ]
-    }).sort({ timestamp: 1 });
+    }).sort({ timestamp: 1 });  
 
     res.json(messages);
   } catch (error) {
