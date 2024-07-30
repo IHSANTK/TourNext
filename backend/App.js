@@ -46,13 +46,15 @@ app.use('/', googleAuthRoutes);
 app.use('/', messageRoutes); 
 
 io.on('connection', (socket) => {
-  console.log('A user connected');
+  console.log('A user is connected');
 
   socket.on('join', (room) => {
     socket.join(room);
   });
 
   socket.on('private message', async ({ senderId, receiverId, message }) => {
+
+    console.log('messges soket fnction');
     const newMessage = new Message({
       senderId,
       receiverId,
@@ -71,6 +73,10 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('A user disconnected');
   });
+});
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
 });
 
 const PORT = process.env.PORT || 5000;
