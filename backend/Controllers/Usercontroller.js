@@ -84,6 +84,40 @@ exports.dashboarddatas = async (req,res)=>{
 
 }
 
+
+exports.editProfile = async (req, res) => {
+  const userId = req.params.userid;
+  const { name, email, phoneNumber } = req.body;
+
+  console.log('userId', userId);
+  console.log('Received Data:', { name, email, phoneNumber });
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { name, email, phoneNumber },
+      { new: true, runValidators: true } 
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    console.log(user);
+
+    res.status(200).json({ message: 'Profile updated successfully', user });
+  } catch (err) {
+    console.error('Error updating profile:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+
+
+
+
+
 exports.getAllpackages = async (req, res) => {
   try {
     const {

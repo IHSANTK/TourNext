@@ -63,13 +63,13 @@ export default function Login() {
         setErr(response.data.message);
       } else if (response.status === 200) {
 
-        console.log('user',response.data.user._id);
+        console.log('user',response.data.user);
         navigate("/");
         dispatch(
           setTokens({
             useraccessToken: response.data.userAccessToken,
             userrefreshToken: response.data.userRefreshToken,
-            userid :response.data.user._id
+            user :response.data.user
           })
         );
       }

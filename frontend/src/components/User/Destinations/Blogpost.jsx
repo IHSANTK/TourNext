@@ -9,7 +9,9 @@ import Modal from './Modal';
 
 export default function Blogpost({ destination }) {
   const userisAuthenticated = useSelector((state) => state.userauth.userisAuthenticated);
-  const userid = useSelector((state) => state.userauth.userid);
+  const exactruser = useSelector((state) => state.userauth.user);
+
+  console.log('ljkjkj',exactruser);
 
   const [showAllBlogs, setShowAllBlogs] = useState(false);
   const [chatOpen, setChatOpen] = useState(null);
@@ -107,7 +109,7 @@ export default function Blogpost({ destination }) {
             </div>
             <div>
               <div className="flex flex-col items-center lg:ml-4 mt-4 lg:mt-0">
-                {blog.user._id !== userid && (
+                {blog.user._id !== exactruser._id && (
                   <button
                     onClick={() => handleModalOpen(blog.user)}
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"

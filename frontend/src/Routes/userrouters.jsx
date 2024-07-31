@@ -13,6 +13,7 @@ import BookingDetails from '../components/User/PackagesPage/BookingDetails';
 import Alldestinations from '../components/User/Destinations/Alldestinations';
 import DestinationDetails from '../components/User/Destinations/Destinationditeils';
 import ChatList from '../components/User/Destinations/ChatList';
+import UserProfile from '../components/User/profail/UserProfile';
 
 
 
@@ -36,6 +37,7 @@ export default function userrouters() {
         <Route path="bookingdetiles/:message" element={<UserProtecterRoute restricted={false}><BookingDetails/></UserProtecterRoute>} />
         <Route path='Alldestinations' element={<Alldestinations/>} />
         <Route path='chatlist' element={<ChatList/>} />
+        <Route path='profialpage' element={<UserProtecterRoute restricted={false}><UserProfile/></UserProtecterRoute>}/>
        
         <Route path='destinationDetails/:destId' element={<DestinationDetails/>} />
 

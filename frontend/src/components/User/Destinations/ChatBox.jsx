@@ -9,19 +9,21 @@ import axios from '../../../api';
 const socket = io('http://localhost:5001');
 
 const ChatBox = ({ user, onClose }) => {
-  const userid = useSelector((state) => state.userauth.userid);
+  const exactruser = useSelector((state) => state.userauth.user);
+
+  console.log('sfdfdf',exactruser);
   const [message, setMessage] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
   const [room, setRoom] = useState(user._id);
 
   useEffect(() => {
     // Join the chat room
-    socket.emit('join', userid);
+    socket.emit('join', exactruser._id);
 
     // Fetch initial messages
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`/messages/${userid}/${user._id}`);
+        const response = await axios.get(`/messages/${exactruser._id}/${user._id}`);
         setChatMessages(response.data);
       } catch (error) {
         console.error('Error fetching messages:', error);
@@ -30,23 +32,21 @@ const ChatBox = ({ user, onClose }) => {
 
     fetchMessages();
 
-    // Handle incoming messages
     const handleMessage = (message) => {
       setChatMessages((prevMessages) => [...prevMessages, message]);
     };
 
     socket.on('private message', handleMessage);
 
-    // Cleanup on component unmount
     return () => {
-      socket.emit('leave', userid); // Emit leave event when unmounting
-      socket.off('private message', handleMessage); // Remove listener
+      socket.emit('leave', exactruser._id); 
+      socket.off('private message', handleMessage); 
     };
-  }, [userid, user._id]);
+  }, [exactruser._id, user._id]);
 
   const handleSend = () => {
     if (message.trim()) {
-      const newMessage = { senderId: userid, receiverId: user._id, message };
+      const newMessage = { senderId:  exactruser._id, receiverId: user._id, message };
       socket.emit('private message', newMessage);
       setChatMessages((prevMessages) => [...prevMessages, newMessage]); // Optimistic UI update
       setMessage('');
@@ -59,7 +59,7 @@ const ChatBox = ({ user, onClose }) => {
         <button
           onClick={() => {
             onClose();
-            socket.emit('leave', userid); // Emit leave event when closing
+            socket.emit('leave', exactruser._id); 
           }}
           className="text-white rounded-lg shadow-md ms-2"
         >
@@ -72,8 +72,8 @@ const ChatBox = ({ user, onClose }) => {
         {chatMessages.length > 0 ? (
           <div>
             {chatMessages.map((msg, index) => (
-              <div key={index} className={`mb-2 ${msg.senderId === userid ? 'text-right' : 'text-left'}`}>
-                <p className={`inline-block px-3 py-2 rounded-lg ${msg.senderId === userid ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
+              <div key={index} className={`mb-2 ${msg.senderId === exactruser._id ? 'text-right' : 'text-left'}`}>
+                <p className={`inline-block px-3 py-2 rounded-lg ${msg.senderId === exactruser._id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
                   {msg.message}
                 </p>
               </div>

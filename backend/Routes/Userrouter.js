@@ -30,6 +30,9 @@ router.get('/getwhishlistdata/:id',authenticate,UserController.getwhishlistdata)
 
 router.post('/addblog',authenticate,upload.array('images'),UserController.addBlog)
 
+
+router.post('/editprofile/:userid',UserController.editProfile)
+
 router.post('/userlogut',authenticate, UserController.logout);
 
 
