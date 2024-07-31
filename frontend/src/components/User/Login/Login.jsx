@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../api";
 import { useDispatch } from "react-redux";
-import { setTokens } from "../../../redux/userauthSlice";
+import { setTokens,setuser } from "../../../redux/userauthSlice";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import "./Login.css";
@@ -65,13 +65,16 @@ export default function Login() {
 
         console.log('user',response.data.user);
         navigate("/");
+        
         dispatch(
           setTokens({
             useraccessToken: response.data.userAccessToken,
-            userrefreshToken: response.data.userRefreshToken,
-            user :response.data.user
+            userrefreshToken: response.data.userRefreshToken,    
           })
         );
+
+        dispatch(setuser( {user :response.data.user}))
+
       }
     } catch (error) {
       console.error(
@@ -98,9 +101,11 @@ export default function Login() {
           setTokens({
             useraccessToken: res.data.userAccessToken,
             userrefreshToken: res.data.userRefreshToken,
-            userid :res.data.user._id
           })
         );
+        console.log('user',res.data.user);
+        dispatch(setuser( {user :res.data.user}))
+
         navigate("/");
       } else {
         console.error("Error during Google login:", res.data);
@@ -122,6 +127,8 @@ export default function Login() {
       const response = await axios.post("/send-otp", { email });
       if (response.status === 200) {
         console.log("OTP sent successfully",response.data);
+        alert("OTP sent successfully",response.data)
+
       } else {
         console.log("Error sending OTP:", response.data);
        
@@ -151,9 +158,10 @@ export default function Login() {
           setTokens({
             useraccessToken: response.data.userAccessToken,
             userrefreshToken: response.data.userRefreshToken,
-            userid :response.data.user._id
           })
         );
+        dispatch(setuser( {user :response.data.user}))
+
       } else {
         console.error("Error verifying OTP:", response.data);
       }

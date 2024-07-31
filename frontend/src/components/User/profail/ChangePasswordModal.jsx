@@ -1,16 +1,45 @@
 import React, { useState } from 'react';
 import { FaTrash } from 'react-icons/fa';
+import Toastify from 'toastify-js';
+import { useDispatch } from 'react-redux';
+import {setuser } from "../../../redux/userauthSlice";
+import 'toastify-js/src/toastify.css';
 import axios from '../../../api'
 
-const ChangePasswordModal = ({ show, onClose }) => {
+const ChangePasswordModal = ({show,onClose,user}) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [err,seterr] = useState('')
 
-  const handleSave = () => {
-    // Dispatch change password action or call API
-    console.log('Changing password:', { currentPassword, newPassword });
-    onClose();
+  const handleSave = async () => {
+    console.log('Changing password:', { currentPassword, newPassword,confirmNewPassword, });
+
+    try{
+        const response = await axios.post(`/changepassword/${user._id}`, { currentPassword, newPassword,confirmNewPassword, }, { withCredentials: true });
+             
+        console.log(response.data);
+        if(response.data==='password update sccesfully'){
+              Toastify({
+                text: response.data,
+                duration: 3000, 
+                gravity: 'top', 
+                position: 'right',
+                backgroundColor: 'green',
+              }).showToast();
+              onClose();
+              setConfirmNewPassword('')
+              setCurrentPassword('')
+              setNewPassword('')
+              seterr('')
+        }else{
+            seterr(response.data)
+            console.log('rerere',err);
+        }
+    }catch(error){
+        console.error(error);
+    }
+ 
   };
 
   if (!show) return null;
@@ -53,6 +82,8 @@ const ChangePasswordModal = ({ show, onClose }) => {
               onChange={(e) => setConfirmNewPassword(e.target.value)}
             />
           </div>
+          <p className='text-red-500  font-bold'>{err}</p>
+
           <button
             type="button"
             className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"

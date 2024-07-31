@@ -89,8 +89,6 @@ exports.editProfile = async (req, res) => {
   const userId = req.params.userid;
   const { name, email, phoneNumber } = req.body;
 
-  console.log('userId', userId);
-  console.log('Received Data:', { name, email, phoneNumber });
 
   try {
     const user = await User.findByIdAndUpdate(
@@ -111,8 +109,46 @@ exports.editProfile = async (req, res) => {
   }
 };
 
+exports.chanagepassword = async (req, res) => {
+  const userId = req.params.userid;
+  const { currentPassword, newPassword,confirmNewPassword } = req.body;
 
+  console.log('userid',userId);
+  console.log(currentPassword, newPassword,confirmNewPassword);
 
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isPasswordMatch = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+    if (!isPasswordMatch) {
+      return res.json(
+        "current password is not match"
+      );  
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      return res.json('conform password is not match'); 
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json("password update sccesfully");
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).json({ message: "Error updating password" });
+  }
+};
 
 
 

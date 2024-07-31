@@ -2,11 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
 
-// Fetch messages between two users
 router.get('/messages/:senderId/:receiverId', async (req, res) => {
   const { senderId, receiverId } = req.params;
  
-  console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhh',);
 
   try {
     const messages = await Message.find({ 
@@ -16,7 +14,7 @@ router.get('/messages/:senderId/:receiverId', async (req, res) => {
       ]
     }).sort({ timestamp: 1 });  
 
-    console.log(messages);
+    // console.log(messages);
 
     res.json(messages);
   } catch (error) {

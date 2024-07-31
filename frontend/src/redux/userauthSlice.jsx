@@ -14,11 +14,15 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setTokens: (state, action) => {
-        console.log("ookuser sssssssssdsssssss",action.payload.user);
+       
       state.useraccessToken = action.payload.useraccessToken;
       state.userrefreshToken = action.payload.userrefreshToken;
-      state.user = action.payload.user;
       state.userisAuthenticated = true;
+    },
+    setuser:(state,action)=>{
+      console.log("ookuser saprate",action.payload.user);
+      state.user = action.payload.user;
+
     },
     clearTokens: (state) => {
         console.log('token clear user');
@@ -31,6 +35,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setTokens, clearTokens } = authSlice.actions;
+export const { setTokens, clearTokens,setuser } = authSlice.actions;
 
 export default authSlice.reducer;

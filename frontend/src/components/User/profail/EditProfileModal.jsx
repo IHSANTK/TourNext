@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { FaTrash } from 'react-icons/fa';
+import Toastify from 'toastify-js';
+import { useDispatch } from 'react-redux';
+import 'toastify-js/src/toastify.css';
+import {setuser } from "../../../redux/userauthSlice";
 import axios from '../../../api'
 
 const EditProfileModal = ({ show, onClose, user }) => {
@@ -7,13 +11,26 @@ const EditProfileModal = ({ show, onClose, user }) => {
   const [email, setEmail] = useState(user.email || '');
   const [phoneNumber, setPhone] = useState(user.phoneNumber || '');
 
+  const dispatch = useDispatch()
+
   const handleSave =  async () => {
     console.log('Saving changes:', { name, email, phoneNumber });
 
     try{
 
         const response = await axios.post(`/editprofile/${user._id}`, { name, email, phoneNumber }, { withCredentials: true });
+        if(response.status === 200){
+            Toastify({
+                text: response.data.message,
+                duration: 3000, 
+                gravity: 'top', 
+                position: 'right',
+                backgroundColor: 'green',
+              }).showToast();
 
+              dispatch(setuser({user:response.data.user}))
+
+        }
            
     }catch(error){
         console.error(error);

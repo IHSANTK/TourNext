@@ -89,6 +89,7 @@ const UserProfile = () => {
         <ChangePasswordModal
           show={showChangePassword}
           onClose={handleCloseModals}
+          user={user}
         />
       </div>
     </>

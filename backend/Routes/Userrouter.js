@@ -32,6 +32,7 @@ router.post('/addblog',authenticate,upload.array('images'),UserController.addBlo
 
 
 router.post('/editprofile/:userid',UserController.editProfile)
+router.post('/changepassword/:userid',UserController.chanagepassword)
 
 router.post('/userlogut',authenticate, UserController.logout);
 

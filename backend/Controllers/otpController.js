@@ -18,7 +18,7 @@ const sendOtp = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
 
-    console.log(existingUser);
+    console.log("user",existingUser);
     if (!existingUser) {
       return res.status(400).json({ message: "User not exists " });
     }
