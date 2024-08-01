@@ -11,6 +11,7 @@ const UserProfile = () => {
 
   const user = useSelector((state) => state.userauth.user);
 
+  console.log('ok');
   const handleOpenEditProfile = () => setShowEditProfile(true);
   const handleOpenChangePassword = () => setShowChangePassword(true);
   const handleCloseModals = () => {
