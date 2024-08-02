@@ -103,14 +103,26 @@ const EditProfileModal = ({ show, onClose, user }) => {
         <h2 className="text-2xl font-semibold mb-4">Edit Profile</h2>
         <div className="flex flex-col items-center mb-4 relative">
           <div className="relative">
+
+            {image ?(
+              <img
+              src={image}
+              alt="Profile"
+              className="w-20 h-20 object-cover rounded-full border-4 border-gray-300"
+            />
+
+            ):(
             <img
               src={user.image || 'https://via.placeholder.com/150'}
               alt="Profile"
               className="w-20 h-20 object-cover rounded-full border-4 border-gray-300"
             />
+            )}
+
             <input
               type="file"
               accept="image/*"
+              
               onChange={handleImageChange}
               className="hidden"
               id="imageInput"
