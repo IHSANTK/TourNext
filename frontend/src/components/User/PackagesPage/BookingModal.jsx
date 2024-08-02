@@ -101,7 +101,7 @@ export default function BookingModal({
                 <div className="flex flex-col mb-1">
                   <div className="flex items-center mb-1">
                     <p className="text-lg font-bold text-gray-700 mt-3">Discount:</p>
-                    <span className="text-2xl  text-red-500 mt-3 ms-2">{discountAmount}</span>
+                    <span className="text-lg text-red-500 mt-3 ms-2">{discountAmount}</span>
                     <span className="text-xl text-gray-700  mt-3">{discountType}</span>
                   </div>
                   {/* <p className="text-lg text-gray-700 mt-3">{discountMessage}</p> */}

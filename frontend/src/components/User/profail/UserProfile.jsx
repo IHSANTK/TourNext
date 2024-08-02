@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { FaEdit, FaLock, FaHeart, FaBook, FaSignOutAlt, FaTrash } from 'react-icons/fa';
+import { CgProfile } from "react-icons/cg";
 import Navbar from '../Navbar';
-import { useSelector } from 'react-redux';
-import {Link} from 'react-router-dom'
+import { useSelector,useDispatch } from 'react-redux';
+import {Link,useNavigate} from 'react-router-dom'
+import { clearTokens } from '../../../redux/userauthSlice';
+import axios from '../../../api'
 import EditProfileModal from './EditProfileModal';
 import ChangePasswordModal from './ChangePasswordModal';
 
 const UserProfile = () => {
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const user = useSelector((state) => state.userauth.user);
 
@@ -20,19 +25,38 @@ const UserProfile = () => {
     setShowChangePassword(false);
   };
 
+  const handleLogout = async ()=>{
+        try{
+          const response = await axios.post('/userlogut', {}, { withCredentials: true });
+          console.log(response.data);
+          if (response.status === 200) {
+            dispatch(clearTokens());
+            navigate('/')
+          }
+
+        }catch(eror){
+          console.error(eror);
+        }
+  }
+
   return (
     <>
       <Navbar />
       <div className="container mx-auto p-6 bg-white shadow-md rounded-lg mt-9" style={{ marginTop: '150px' }}>
         {/* Profile Image Section */}
         <div className="flex flex-col items-center mb-6 relative">
+          {user.image ?(
           <img
             src={user.image}
             alt="Profile"
-            className="w-32 h-32 rounded-full object-cover border-4 border-gray-300"
+            className="w-28 h-28 rounded-full object-cover border-4 border-gray-300"
           />
-        
-          <p className="mt-4 text-xl font-semibold">{user.name}</p>
+        ):(
+          <div className=''>
+            <CgProfile size={100} />
+          </div>
+        )}
+          <p className="mt-4 text-xl font-semibold ">{user.name}</p>
         </div>
 
       
@@ -68,6 +92,7 @@ const UserProfile = () => {
         {/* Logout Button */}
         <div className="text-center">
           <button
+           onClick={handleLogout}
             className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-700 flex items-center mx-auto"
           >
             <FaSignOutAlt size={20} className="mr-2" />

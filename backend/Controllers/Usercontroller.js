@@ -6,6 +6,7 @@ const Packages = require('../models/Packages')
 const cloudinary = require('../config/cloudinery');
 const helpers = require("../helpers/razorpay");
 const otpService = require("../services/otpService");
+const { response } = require('express');
 
 
 const jwtSecret = process.env.USER_JWT_SECRET;
@@ -43,7 +44,7 @@ exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-console.log('fgfgfg');
+  
     if (!user) {
       return res.json({ message: 'Invalid email or password' });
     }
@@ -105,8 +106,6 @@ exports.editProfile = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-   
-
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -118,6 +117,30 @@ exports.editProfile = async (req, res) => {
   }
 };
 
+exports.deleteprofailimage = async (req,res)=>{
+  
+  const userId = req.params.userId
+  console.log(userId);
+
+    try{
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { $unset: {image: "" } }, 
+        { new: true, runValidators: true } 
+      );
+  
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      console.log('updaeeuser',updatedUser);
+      res.status(200).json({ message: 'Profile image deleted successfully', user:updatedUser });
+
+    }catch(error){
+      console.error(error);
+      response.status(500).json('internal server error')
+  }
+}
 
 
 exports.chanagepassword = async (req, res) => {

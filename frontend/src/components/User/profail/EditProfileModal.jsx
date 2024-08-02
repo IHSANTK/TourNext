@@ -66,10 +66,22 @@ const EditProfileModal = ({ show, onClose, user }) => {
   const handleImageDelete = async () => {
     if (window.confirm('Are you sure you want to delete your profile image?')) {
       try {
-        await axios.post(`/deleteprofileimage/${user._id}`, {}, { withCredentials: true });
+       const response = await axios.post(`/deleteprofileimage/${user._id}`, {}, { withCredentials: true });
+
+       console.log("afte delte",response.data);
         setImagePreview(''); 
         setImage(null); 
-        alert('Profile image deleted successfully');
+        Toastify({
+          text: response.data.message,
+          duration: 3000, 
+          gravity: 'top', 
+          position: 'right',
+          backgroundColor: 'green',
+        }).showToast();
+
+        dispatch(setuser({user:response.data.user}))
+        
+        onClose();
       } catch (error) {
         console.error('Error deleting profile image:', error);
         alert('Error deleting profile image');

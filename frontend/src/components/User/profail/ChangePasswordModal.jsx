@@ -51,7 +51,7 @@ const ChangePasswordModal = ({show,onClose,user}) => {
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
           onClick={onClose}
         >
-          <FaTrash size={20} />
+         X
         </button>
         <h2 className="text-2xl font-semibold mb-4">Change Password</h2>
         <form className="space-y-4">
