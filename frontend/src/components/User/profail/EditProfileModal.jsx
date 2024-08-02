@@ -1,25 +1,48 @@
 import React, { useState } from 'react';
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaCloudUploadAlt, FaEdit, FaPlus } from 'react-icons/fa';
 import Toastify from 'toastify-js';
 import { useDispatch } from 'react-redux';
 import 'toastify-js/src/toastify.css';
 import {setuser } from "../../../redux/userauthSlice";
-import axios from '../../../api'
+import axios from '../../../api';
 
 const EditProfileModal = ({ show, onClose, user }) => {
   const [name, setName] = useState(user.name || '');
   const [email, setEmail] = useState(user.email || '');
   const [phoneNumber, setPhone] = useState(user.phoneNumber || '');
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(user.profileImage || '');
 
   const dispatch = useDispatch()
 
-  const handleSave =  async () => {
-    console.log('Saving changes:', { name, email, phoneNumber });
+  const handleImageChange = (e) => {
+    if (e.target.files.length) {
+      setImage(e.target.files[0]);
+      setImagePreview(URL.createObjectURL(e.target.files[0]));
+    }
+  };
 
-    try{
+  const handleSave = async () => {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('phoneNumber', phoneNumber);
+    if (image) {
+      formData.append('profileImage', image);
+    }
+ 
+    console.log(name,email,phoneNumber,image);
 
-        const response = await axios.post(`/editprofile/${user._id}`, { name, email, phoneNumber }, { withCredentials: true });
-        if(response.status === 200){
+    try {
+      const response = await axios.post(`/editprofile/${user._id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        withCredentials: true
+      });
+       if(response.status === 200){
+
+        console.log(response.data);
             Toastify({
                 text: response.data.message,
                 duration: 3000, 
@@ -29,13 +52,29 @@ const EditProfileModal = ({ show, onClose, user }) => {
               }).showToast();
 
               dispatch(setuser({user:response.data.user}))
+              setImage(null);
 
-        }
-           
-    }catch(error){
-        console.error(error);
+              onClose();
+        }  
+      
+      } catch (error) {
+      console.error(error);
     }
-    onClose();
+   
+  };
+
+  const handleImageDelete = async () => {
+    if (window.confirm('Are you sure you want to delete your profile image?')) {
+      try {
+        await axios.post(`/deleteprofileimage/${user._id}`, {}, { withCredentials: true });
+        setImagePreview(''); 
+        setImage(null); 
+        alert('Profile image deleted successfully');
+      } catch (error) {
+        console.error('Error deleting profile image:', error);
+        alert('Error deleting profile image');
+      }
+    }
   };
 
   if (!show) return null;
@@ -47,9 +86,42 @@ const EditProfileModal = ({ show, onClose, user }) => {
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
           onClick={onClose}
         >
-          <FaTrash size={20} />
+          X
         </button>
         <h2 className="text-2xl font-semibold mb-4">Edit Profile</h2>
+        <div className="flex flex-col items-center mb-4 relative">
+          <div className="relative">
+            <img
+              src={user.image || 'https://via.placeholder.com/150'}
+              alt="Profile"
+              className="w-20 h-20 object-cover rounded-full border-4 border-gray-300"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+              id="imageInput"
+            />
+            <label
+              htmlFor="imageInput"
+              className="absolute bottom-0 right-3 bg-gray-600 text-white p-2 rounded-full cursor-pointer hover:bg-gray-800"
+            >
+             <FaPlus size={10} />
+            </label>
+          </div>
+          <div className="mt-2 flex">
+         
+            {user.image && (
+              <button
+                className=""
+                onClick={handleImageDelete}
+              >
+                <FaTrash size={20} className="mr-2" />
+              </button>
+            )}
+          </div>
+        </div>
         <form className="space-y-4">
           <div>
             <label className="block text-gray-700">Name</label>

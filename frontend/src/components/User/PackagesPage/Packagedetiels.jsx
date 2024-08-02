@@ -238,6 +238,7 @@ export default function Packagedetails() {
         handleClose={handleCloseOtpModal}
         email={formData.email}
         formData={formData}
+        pkg={pkg}
         totalPrice={pkg.price * seats}
         seats={seats}
         Id={pkg._id}

@@ -34,7 +34,9 @@ router.get('/getTourPackages',adminController.getAllpackages)
 // router.put('/updateBanners',adminController.editbanners)
 // router.delete('/removeBannerImage',adminController.deletebanners)
 router.get('/getallbookings',adminController.getallbookings);
-router.patch('/updateBookingStatus/:userId/:bookingId',adminController.changebookingstatus)
+router.patch('/updateBookingStatus/:userId/:bookingId',adminController.changebookingstatus);
+
+router.post('/updateoffers/:id',adminController.addoffers)
 
 router.get('/allUsers',adminController.getUsers)
 router.put('/block/:id',adminController.blockUser)

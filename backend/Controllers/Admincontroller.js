@@ -699,6 +699,35 @@ exports.changebookingstatus = async (req,res)=>{
   }
 
 }
+
+
+exports.addoffers = async (req, res) => {
+  const pkgId = req.params.id;
+  const { offerType, amount } = req.body;
+
+  console.log('Received:', pkgId, offerType, amount);
+
+  try {
+    const package = await Packages.findById(pkgId);
+
+    if (!package) {
+      return res.status(404).json({ message: 'Package not found' });
+    }
+
+    package.offer = { offerType, amount };
+
+    const updatedPackage = await package.save();
+
+    res.status(200).json(updatedPackage.offer);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+
 // exports.getallbanners = async (req,res)=>{
 
 //   try {

@@ -3,12 +3,16 @@ import { Link } from "react-router-dom";
 import Sidebar from "./sidebar";
 import axios from "../../api";
 import Modal from "./TourPackagedetiels";
+import OfferModal from "./OfferModal";
+
 
 const TourPackagesList = () => {
   const [tourPackages, setTourPackages] = useState([]);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [offermodal,setoffermodal] =  useState(false);
+
   const [editFormData, setEditFormData] = useState({
     packageName: "",
     description: "",
@@ -23,7 +27,7 @@ const TourPackagesList = () => {
 
   useEffect(() => {
     fetchTourPackages();
-  }, []);
+  },[]);
 
   const fetchTourPackages = async () => {
     try {
@@ -129,12 +133,19 @@ const TourPackagesList = () => {
     }
   };
 
-  const handlePackageClick = (pkg) => {
+  const handlePackageClick = (a,pkg) => {
+    if(a==='alldatas'){
     setSelectedPackage(pkg);
     setIsModalOpen(true);
+    }else{
+
+      setoffermodal(true)
+      setSelectedPackage(pkg);
+    }
   };
 
   const handleModalClose = () => {
+    setoffermodal(false)
     setIsModalOpen(false);
     setSelectedPackage(null);
   };
@@ -164,7 +175,7 @@ const TourPackagesList = () => {
                     src={tourPackage.images[0]}
                     alt={tourPackage.packageName}
                     className="w-full h-48 object-cover rounded mb-4 cursor-pointer"
-                    onClick={() => handlePackageClick(tourPackage)}
+                    onClick={() => handlePackageClick('alldatas',tourPackage)}
                   />
                 ) : (
                   <div className="w-full h-48 bg-gray-200 rounded mb-4 flex items-center justify-center">
@@ -185,6 +196,7 @@ const TourPackagesList = () => {
                   >
                     Edit
                   </button>
+                  <button onClick={()=>handlePackageClick('foroffers',tourPackage)} className="btn bg-green font-bold">Add offer</button>
                   <button
                     onClick={() => handleDelete(tourPackage._id)}
                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -192,13 +204,15 @@ const TourPackagesList = () => {
                     Delete
                   </button>
                 </div>
+
+               
               </div>
             ))}
           </div>
         </div>
       </div>
       {isEditing && (
-        <div className="fixed inset-0 overflow-y-auto flex items-center  w-full justify-center">
+        <div className="fixed center inset-0 overflow-y-auto flex items-center  w-full justify-center">
           <div className="absolute inset-0 "></div>
           <div className="relative bg-white p-8 rounded shadow-lg w-full max-w-xl mt-5">
             <h2 className="text-2xl font-bold ">Edit Package</h2>
@@ -446,6 +460,10 @@ const TourPackagesList = () => {
       {isModalOpen && (
         <Modal selectedPackage={selectedPackage} onClose={handleModalClose} />
       )}
+
+                   {offermodal&&(
+                        <OfferModal pkg={selectedPackage} onClose={handleModalClose}/>
+                   )}
     </div>
   );
 };

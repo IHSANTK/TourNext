@@ -31,7 +31,8 @@ router.get('/getwhishlistdata/:id',authenticate,UserController.getwhishlistdata)
 router.post('/addblog',authenticate,upload.array('images'),UserController.addBlog)
 
 
-router.post('/editprofile/:userid',UserController.editProfile)
+router.post('/editprofile/:userid', upload.single('profileImage'), UserController.editProfile);
+
 router.post('/changepassword/:userid',UserController.chanagepassword)
 
 router.post('/userlogut',authenticate, UserController.logout);

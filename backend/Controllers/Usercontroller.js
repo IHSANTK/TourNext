@@ -88,19 +88,28 @@ exports.dashboarddatas = async (req,res)=>{
 exports.editProfile = async (req, res) => {
   const userId = req.params.userid;
   const { name, email, phoneNumber } = req.body;
-
+  const image = req.file; 
 
   try {
+    const updateData = { name, email, phoneNumber,image };
+
+    if (image) {
+      const result = await cloudinary.uploader.upload(image.path);
+
+      updateData.image = result.secure_url;
+      }
+
     const user = await User.findByIdAndUpdate(
       userId,
-      { name, email, phoneNumber },
-      { new: true, runValidators: true } 
+      updateData,
+      { new: true, runValidators: true }
     );
+
+   
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    console.log(user);
 
     res.status(200).json({ message: 'Profile updated successfully', user });
   } catch (err) {
@@ -108,6 +117,8 @@ exports.editProfile = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
 
 exports.chanagepassword = async (req, res) => {
   const userId = req.params.userid;
@@ -209,10 +220,10 @@ exports.getpkdbyid = async (req,res)=>{
 
 exports.booking = async (req, res) => {
   const userID = req.user;
-  const { formData, totalPrice, Id,otp } = req.body;
+  const { formData, finalAmount, Id,otp } = req.body;
 
   console.log('userID', userID);
-  console.log('email, totalprice, Id', formData.email, totalPrice, Id);
+  console.log('email, totalprice, Id', formData.email, finalAmount, Id);
   console.log('OTP', otp);
 
 
@@ -230,7 +241,7 @@ exports.booking = async (req, res) => {
          return res.json({ message: "Invalid OTP" });
       }
 
-      const razorpayResponse = await helpers.generateRazorpay(user._id, totalPrice);
+      const razorpayResponse = await helpers.generateRazorpay(user._id,finalAmount);
 
       console.log("Razorpay response:", razorpayResponse);
 
@@ -265,8 +276,8 @@ exports.sendOtpforBooking = async (req, res) => {
 
 exports.saveorder = async (req, res) => {
   const userId = req.user; 
-  const { formData, totalPrice, seats, Id } = req.body;
-  console.log('Order Details:', formData, totalPrice, seats, Id);
+  const { formData, finalAmount, seats, Id } = req.body;
+  console.log('Order Details:', formData, finalAmount, seats, Id);
 
   try {
     const user = await User.findById(userId);
@@ -297,7 +308,7 @@ exports.saveorder = async (req, res) => {
       email: formData.email,
       seats: seats,
       packageId: Id,
-      totalprice: totalPrice,
+      totalprice: finalAmount,
       packageName:package.packageName,
       image:package.images[0],
       tripDate:package.startDate,
@@ -545,6 +556,7 @@ exports.getdestinationdetiles = async (req,res)=>{
     res.status(500).json({message:'internal server error'})
   }
 }
+
 
 
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaEdit, FaLock, FaHeart, FaBook, FaSignOutAlt, FaTrash } from 'react-icons/fa';
 import Navbar from '../Navbar';
 import { useSelector } from 'react-redux';
+import {Link} from 'react-router-dom'
 import EditProfileModal from './EditProfileModal';
 import ChangePasswordModal from './ChangePasswordModal';
 
@@ -26,22 +27,15 @@ const UserProfile = () => {
         {/* Profile Image Section */}
         <div className="flex flex-col items-center mb-6 relative">
           <img
-            src="https://via.placeholder.com/150"
+            src={user.image}
             alt="Profile"
             className="w-32 h-32 rounded-full object-cover border-4 border-gray-300"
           />
-          <div className="absolute top-2 right-2 flex gap-2">
-            <button className="text-blue-500 hover:text-blue-700">
-              <FaEdit size={24} />
-            </button>
-            <button className="text-red-500 hover:text-red-700">
-              <FaTrash size={24} />
-            </button>
-          </div>
+        
           <p className="mt-4 text-xl font-semibold">{user.name}</p>
         </div>
 
-        {/* Action Buttons */}
+      
         <div className="flex justify-center flex-wrap gap-3 mb-6">
           <button
             className="bg-gray-300 text-black font-bold py-2 px-2 rounded-2xl hover:bg-blue-700 flex items-center"
@@ -57,18 +51,18 @@ const UserProfile = () => {
             <FaLock size={20} className="mr-2" />
             Change Password
           </button>
-          <button
+          <Link to='/user/'
             className="bg-gray-300 text-black font-bold py-2 px-4 rounded-2xl hover:bg-yellow-700 flex items-center"
           >
             <FaHeart size={20} className="mr-2" />
             Wishlist
-          </button>
-          <button
+          </Link>
+          <Link to='/user/bookingdetiles/:message'
             className="bg-gray-300 text-black font-bold py-2 px-4 rounded-2xl hover:bg-purple-700 flex items-center"
           >
             <FaBook size={20} className="mr-2" />
             Bookings
-          </button>
+          </Link>
         </div>
 
         {/* Logout Button */}

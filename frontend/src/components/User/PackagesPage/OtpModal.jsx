@@ -1,14 +1,46 @@
-import React, { useState, useRef } from "react";
+import React, { useState,useEffect, useRef } from "react";
 import axios from "../../../api";
 import { useNavigate } from "react-router-dom";
 
-export default function OtpModal({ show, handleClose, email, formData, totalPrice, seats, Id }) {
+export default function OtpModal({ show, handleClose,pkg, email, formData, totalPrice, seats, Id }) {
   console.log('otpmodal', show, handleClose, email, formData, totalPrice, seats, Id);
 
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [otpError, setOtpError] = useState("");
   const inputRefs = useRef([]);
   const navigate = useNavigate();
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [discounttype,setdiscounttype] = useState('')
+  const [finalAmount, setFinalAmount] = useState(0);
+
+
+
+  useEffect(() => {
+    const calculateAmounts = () => {
+      let totalAmount = pkg.price * seats;
+      let discount = 0;
+
+      if (pkg.offer) {
+        if (pkg.offer.offerType === 'percentage') {
+          discount = (pkg.offer.amount / 100) * totalAmount;
+          setdiscounttype('%')
+        } else if (pkg.offer.offerType === 'fixed') {
+          setdiscounttype('₹')
+
+          discount = pkg.offer.amount;
+        }
+      }
+
+      const discountedAmount = totalAmount - discount;
+
+      setDiscountAmount(discount);
+      setFinalAmount(discountedAmount > 0 ? discountedAmount : 0); // Ensure final amount is not negative
+    };
+
+    calculateAmounts();
+  }, [pkg, seats])
+
+
 
   const handleOtpChange = (e, index) => {
     const { value } = e.target;
@@ -39,14 +71,14 @@ export default function OtpModal({ show, handleClose, email, formData, totalPric
   const handleOtpSubmit = async () => {
     if (validate()) {
       const otpString = otp.join('');
-      console.log("Total price in modal component", totalPrice);
+      console.log("Total price in modal component",finalAmount);
       console.log("FormData", formData);
       console.log(otpString);
 
       try {
         const response = await axios.post(
           "/booking",
-          { formData, totalPrice, Id, otp: otpString },
+          { formData, finalAmount, Id, otp: otpString },
           { withCredentials: true }
         );
 
@@ -70,7 +102,7 @@ export default function OtpModal({ show, handleClose, email, formData, totalPric
               try {
                 const saveOrderResponse = await axios.post('/saveorder', {
                   formData,
-                  totalPrice,
+                  finalAmount,
                   Id,
                   seats
                 }, { withCredentials: true });
