@@ -74,15 +74,19 @@ const TourPackageAddForm = () => {
     formData.append('seats', seats);
     formData.append('duration', tripDuration);
     formData.append('startDate', tripStartDate);
+
     activities.forEach((activity, index) => {
       formData.append(`activities[${index}]`, activity);
     });
+
+
     images.forEach((image, index) => {
       if (image) {
         formData.append(`images`, image);
       }
     });
-
+    console.log(formData.getAll('images'));
+    
     try {
       await axios.post('/addTourPackages', formData, {
         headers: {

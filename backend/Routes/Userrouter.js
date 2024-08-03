@@ -27,10 +27,10 @@ router.get('/getdestinationdetails/:id',UserController.getdestinationdetiles)
 
 router.post('/addToWishlist',authenticate,UserController.addtowishlist)
 router.get('/getwhishlistdata/:id',authenticate,UserController.getwhishlistdata)
+   
+router.post('/addblog',authenticate,upload.array('images'),UserController.addBlog) 
 
-router.post('/addblog',authenticate,upload.array('images'),UserController.addBlog)
-
-
+ 
 router.post('/editprofile/:userid', upload.single('profileImage'), UserController.editProfile);
 router.post('/deleteprofileimage/:userId',UserController.deleteprofailimage)
 

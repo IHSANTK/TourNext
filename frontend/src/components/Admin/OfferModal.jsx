@@ -5,6 +5,7 @@ export default function OfferModal({ pkg, onClose }) {
   const [offerType, setOfferType] = useState('percentage');
   const [amount, setAmount] = useState('');
 
+  console.log(pkg._id);
   useEffect(() => {
     if (pkg && pkg.offer) {
      

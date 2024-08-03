@@ -47,18 +47,7 @@ const Destinations = () => {
   };
 
   const handleEditSubmit = async (data) => {
-    try {
-      console.log("aftersubmit", data);
-      const response = await axios.put(`/editDestinations/${editingDestination._id}`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      setDestinations(destinations.map(dest => (dest._id === editingDestination._id ? response.data : dest)));
-      setEditingDestination(null);
-    } catch (error) {
-      console.error('Error updating destination:', error);
-    }
+   
   };
 
   const handleImageClick = (id) => {
@@ -138,7 +127,7 @@ const Destinations = () => {
           isOpen={!!editingDestination}
           onClose={() => setEditingDestination(null)}
           destination={editingDestination}
-          onSubmit={handleEditSubmit}
+          
         />
       )}
       {viewingDestination && (

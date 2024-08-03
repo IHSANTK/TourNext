@@ -1,183 +1,179 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
-import Select from 'react-select';
-import axios from '../../api';
+import React, { useState, useEffect } from 'react';
+import axios from "../../api";
 
-const EditDestinationModal = ({ isOpen, onClose, destination, onSubmit }) => {
-    const { register, handleSubmit } = useForm();
+const TourPackageEdit = ({ packageData, onClose }) => {
+  const [editFormData, setEditFormData] = useState({
+    packageName: "",
+    description: "",
+    price: "",
+    seats: "",
+    startDate: "",
+    duration: "",
+    activities: [],
+    images: [], // For displaying images
+    newImages: [], // For new images to upload
+    removedImages: [], // For removed images
+    destinations: "",
+  });
 
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [category, setCategory] = useState('');
-    const [stateValue, setStateValue] = useState(null); // State for state dropdown value
-    const [districtValue, setDistrictValue] = useState(null); // State for district dropdown value
-    const [images, setImages] = useState([]);
-    const [states, setStates] = useState([]);
+  useEffect(() => {
+    if (packageData) {
+      setEditFormData({
+        packageName: packageData.packageName,
+        description: packageData.description,
+        price: packageData.price,
+        seats: packageData.seats,
+        startDate: packageData.startDate || "",
+        duration: packageData.duration || "",
+        activities: packageData.activities || [],
+        images: packageData.images || [],
+        newImages: [], // Clear new images on load
+        removedImages: [], // Clear removed images on load
+        destinations: packageData.destinations || "",
+      });
+    }
+  }, [packageData]);
 
-    const categories = useSelector((state) => state.category.categories.map(category => ({ value: category._id, label: category.categoryName })));
+  const handleEditFormChange = (e) => {
+    const { name, value, type, files } = e.target;
 
-    useEffect(() => {
-        if (destination) {
-            setName(destination.name);
-            setDescription(destination.description);
-            setCategory(destination.category);
-            setImages([...destination.images]);
+    if (type === "file") {
+      const selectedFiles = Array.from(files).slice(0, 5);
+      const uploadedImages = selectedFiles.map((file) => URL.createObjectURL(file));
+      setEditFormData((prevData) => ({
+        ...prevData,
+        newImages: [...prevData.newImages, ...files],
+        images: [...prevData.images, ...uploadedImages],
+      }));
+    } else if (name === "destinations") {
+      setEditFormData({
+        ...editFormData,
+        destinations: value,
+      });
+    } else if (name === "activities") {
+      setEditFormData({
+        ...editFormData,
+        activities: value.split(',').map(activity => activity.trim()),
+      });
+    } else {
+      setEditFormData({
+        ...editFormData,
+        [name]: value,
+      });
+    }
+  };
 
-            fetchStates(destination.state, destination.district);
-        }
-    }, [destination]);
+  const handleActivityAdd = () => {
+    const activity = document.getElementById('newActivity').value.trim();
+    if (activity) {
+      setEditFormData((prevData) => ({
+        ...prevData,
+        activities: [...prevData.activities, activity],
+      }));
+      document.getElementById('newActivity').value = '';
+    }
+  };
 
-    const fetchStates = async (initialState, initialDistrict) => {
-        try {
-            const response = await axios.get('/states');
-            const statesData = response.data.map(state => ({
-                value: state._id,
-                label: state.stateName,
-                districts: state.districts.map(district => ({
-                    value: district._id,
-                    label: district.districtName
-                }))
-            }));
-            setStates(statesData);
+  const handleActivityRemove = (index) => {
+    setEditFormData((prevData) => ({
+      ...prevData,
+      activities: prevData.activities.filter((_, i) => i !== index),
+    }));
+  };
 
-            const selectedState = statesData.find(state => state.label === initialState);
-            const selectedDistrict = selectedState?.districts.find(district => district.label === initialDistrict);
-            setStateValue(selectedState);
-            setDistrictValue(selectedDistrict);
-        } catch (error) {
-            console.error('Error fetching states:', error);
-        }
-    };
+  const handleImageRemove = (index, url) => {
+    setEditFormData((prevData) => ({
+      ...prevData,
+      images: prevData.images.filter((_, i) => i !== index),
+      removedImages: [...prevData.removedImages, url],
+    }));
+  };
 
-    const handleStateChange = (selectedState) => {
-        setStateValue(selectedState);
-        setDistrictValue(null); // Reset district value when state changes
-    };
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+ 
+    const formData = new FormData();
+    formData.append('packageName', editFormData.packageName);
+    formData.append('description', editFormData.description);
+    formData.append('price', editFormData.price);
+    formData.append('seats', editFormData.seats);
+    formData.append('startDate', editFormData.startDate);
+    formData.append('duration', editFormData.duration);
+    formData.append('destinations', editFormData.destinations);
+    formData.append('activities', JSON.stringify(editFormData.activities));
+    formData.append('removedImages', JSON.stringify(editFormData.removedImages));
+    editFormData.newImages.forEach((image) => {
+      formData.append('images', image);
+    });
 
-    const handleImageChange = (e, index) => {
-        const file = e.target.files[0];
-        const updatedImages = [...images];
-        updatedImages[index] = file;
-        setImages(updatedImages);
-    };
+    try {
+      const response = await axios.post(
+        `/editTourPackages/${packageData._id}`,
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
 
-    const handleFormSubmit = () => {
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('description', description);
-        formData.append('category', category);
-        formData.append('state', stateValue ? stateValue.label : null);
-        formData.append('district', districtValue ? districtValue.label : null);
+      // Handle successful response
+      console.log(response.data);
+      onClose(); // Close modal or perform any other action
+    } catch (error) {
+      console.error("Error updating tour package:", error);
+    }
+  };
 
-        images.forEach((image, index) => {
-            if (image instanceof File) {
-                formData.append(`images[${index}]`, image);
-            } else {
-                formData.append(`imagesUrls[${index}]`, image);
-            }
-        });
-
-        onSubmit(formData);
-    };
-
-    if (!isOpen) return null;
-
-    return (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow max-w-3xl w-full">
-                <h2 className="text-2xl font-bold mb-3">Edit Destination</h2>
-                <form onSubmit={handleSubmit(handleFormSubmit)}>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
-                        <input
-                            {...register('name', { required: 'Name is required' })}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Description</label>
-                        <textarea
-                            {...register('description', { required: 'Description is required' })}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="flex mb-4 space-x-4">
-                        <div className="w-1/2">
-                            <label className="block text-gray-700 text-sm font-bold mb-2">State</label>
-                            <Select
-                                options={states}
-                                value={stateValue}
-                                onChange={(selectedOption) => {
-                                    setStateValue(selectedOption);
-                                    handleStateChange(selectedOption);
-                                }}
-                            />
-                        </div>
-                        <div className="w-1/2">
-                            <label className="block text-gray-700 text-sm font-bold mb-2">District</label>
-                            <Select
-                                options={stateValue ? stateValue.districts : []}
-                                value={districtValue}
-                                onChange={(selectedOption) => setDistrictValue(selectedOption)}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Category</label>
-                        <Select
-                            options={categories}
-                            value={categories.find(cat => cat.label === category)}
-                            onChange={(selectedOption) => setCategory(selectedOption.label)}
-                        />
-                    </div>
-
-                    <div className="mb-2">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Images</label>
-                        <div className="flex flex-wrap space-x-2">
-                            {images.map((image, index) => (
-                                <div key={index} className="relative w-24 h-24">
-                                    <img
-                                        src={image instanceof File ? URL.createObjectURL(image) : image}
-                                        alt={`destination-${index}`}
-                                        className="object-cover w-full h-full rounded mb-2"
-                                    />
-                                    <input
-                                        type="file"
-                                        onChange={(e) => handleImageChange(e, index)}
-                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                        <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            type="submit"
-                        >
-                            Save
-                        </button>
-                        <button
-                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            onClick={onClose}
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </form>
+  return (
+    <div className="fixed inset-0 overflow-y-auto flex items-center justify-center">
+      <div className="absolute inset-0 bg-black opacity-50" onClick={onClose}></div>
+      <div className="relative bg-white p-8 rounded shadow-lg w-full max-w-xl mt-5">
+        <h2 className="text-2xl font-bold mb-4">Edit Package</h2>
+        <form onSubmit={handleEditSubmit}>
+          {/* Form fields (same as your original code) */}
+          {/* Add your form fields here... */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="images">Images (select up to 5)</label>
+            <input
+              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="images"
+              type="file"
+              name="images"
+              multiple
+              onChange={handleEditFormChange}
+            />
+            <div className="mt-2 flex flex-wrap gap-2">
+              {editFormData.images.map((image, index) => (
+                <div key={index} className="relative">
+                  <img src={image} alt={`Image ${index}`} className="w-24 h-24 object-cover rounded" />
+                  <button
+                    type="button"
+                    onClick={() => handleImageRemove(index, image)}
+                    className="absolute top-0 right-0 bg-red-500 hover:bg-red-700 text-white font-bold p-1 rounded"
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
             </div>
-        </div>
-    );
+          </div>
+          {/* Other form fields */}
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
 
-export default EditDestinationModal;
+export default TourPackageEdit;

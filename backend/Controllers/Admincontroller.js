@@ -440,41 +440,65 @@ exports.getAllDestinations = async (req, res) => {
 };
 
 
+
 exports.editDestinations = async (req, res) => {
   try {
-    const { id } = req.params; // Extract ID from request parameters
-    const { name, state, district, description, category } = req.body; // Extract fields from request body
-    const images = req.files; // Extract files from request
+      const { id } = req.params;
+      const { name, state, district, description, category, removedImages = [] } = req.body;
+      const images = req.files;
 
+      console.log(name, state, district, description, category, removedImages);
+      console.log('new images', images);
 
-    console.log("hlllooooo");
-    let destination = await Destination.findById(id);
-    if (!destination) {
-      return res.status(404).json({ message: 'Destination not found' });
-    }
-
-    // Upload new images to Cloudinary if any 
-    let imageUrls = [...destination.images];
-    if (images && images.length > 0) {
-      for (const file of images) {
-        const result = await cloudinary.uploader.upload(file.path);
-        imageUrls.push(result.secure_url); 
+      let destination = await Destination.findById(id);
+      if (!destination) {
+          return res.status(404).json({ message: 'Destination not found' });
       }
-    }
 
-    destination.images = imageUrls.length > 0 ? imageUrls : destination.images;
-    destination.name = name || destination.name;
-    destination.state = state || destination.state;
-    destination.district = district || destination.district;
-    destination.description = description || destination.description;
-    destination.category = category || destination.category;
+      const removedImagesArray = Array.isArray(removedImages) ? removedImages : JSON.parse(removedImages);
 
-    await destination.save();
+      for (const imageUrl of removedImagesArray) {
+          const publicId = imageUrl.split('/').pop().split('.')[0];
+          await cloudinary.uploader.destroy(publicId);
+      }
 
-    return res.status(200).json({ message: 'Destination updated successfully', destination });
+      let imageUrls = [...destination.images]; 
+      if (Array.isArray(images)) {
+          for (const image of images) {
+              const result = await cloudinary.uploader.upload(image.path);
+              imageUrls.push(result.secure_url);
+          }
+      } else if (images && images.path) {
+          const result = await cloudinary.uploader.upload(images.path);
+          imageUrls.push(result.secure_url);
+      }
+
+      // Remove deleted image URLs from the imageUrls array
+      imageUrls = imageUrls.filter(url => !removedImagesArray.includes(url));
+
+      // Update the destination
+      destination.name = name || destination.name;
+      destination.state = state || destination.state;
+      destination.district = district || destination.district;
+      destination.description = description || destination.description;
+      destination.category = category || destination.category;
+      destination.images = imageUrls;
+
+      await destination.save();
+
+      res.status(200).json({ message: 'Destination updated successfully', destination });
   } catch (error) {
-    console.error('Error updating destination:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+      console.error('Error updating destination:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+const deleteImage = async (publicId) => {
+  try {
+    await cloudinary.uploader.destroy(publicId);
+  } catch (error) {
+    console.error('Error deleting image from Cloudinary:', error);
   }
 };
 
@@ -596,24 +620,43 @@ exports.delteTourPackage = async (req,res)=>{
   }
 }
 
-exports.editTourPackage = async (req,res)=>{
-  const { id } = req.params;
-  console.log("ok");
-  const {
-    packageName,
-    description,
-    price,
-    seats,
-    startDate,
-    duration,
-    activities,
-    images,
-    destinations,
-  } = req.body;
-
+exports.editTourPackage = async (req, res) => {
   try {
+    const pkgid = req.params.id;
+    const { packageName, destinations, price, description, seats, duration, startDate, activities, removedImages = [] } = req.body;
+    const imageFiles = req.files;
+
+    console.log(pkgid, packageName, destinations, price, description, seats, duration, startDate, activities, removedImages);
+    console.log('image files:', imageFiles);
+
+    const existingPackage = await Packages.findById(pkgid);
+    if (!existingPackage) {
+      return res.status(404).json({ message: 'Package not found' });
+    }
+
+    const removedImagesArray = Array.isArray(removedImages) ? removedImages : JSON.parse(removedImages);
+    for (const imageUrl of removedImagesArray) {
+      const publicId = imageUrl.split('/').pop().split('.')[0];
+      await cloudinary.uploader.destroy(publicId);
+    }
+    let imageUrls = [...existingPackage.images];
+    if (Array.isArray(imageFiles)) {
+      for (const image of imageFiles) {
+        const result = await cloudinary.uploader.upload(image.path);
+        imageUrls.push(result.secure_url);
+      }
+    } else if (imageFiles && imageFiles.path) {
+      const result = await cloudinary.uploader.upload(imageFiles.path);
+      imageUrls.push(result.secure_url); 
+    }
+    imageUrls = imageUrls.filter(url => !removedImagesArray.includes(url));
+
+    // Parse activities as a JSON array if it's a string
+    const activitiesArray = Array.isArray(activities) ? activities : JSON.parse(activities);
+
+    // Update the package
     const updatedPackage = await Packages.findByIdAndUpdate(
-      id,
+      pkgid,
       {
         packageName,
         description,
@@ -621,23 +664,20 @@ exports.editTourPackage = async (req,res)=>{
         seats,
         startDate,
         duration,
-        activities,
-        images,
         destinations,
+        activities: activitiesArray, // Update activities as an array
+        images: imageUrls // Update images to include only the remaining and newly added images
       },
       { new: true }
     );
 
-    if (!updatedPackage) {
-      return res.status(404).json({ error: 'Tour package not found' });
-    }
-
-    res.json(updatedPackage);
+    res.status(200).json(updatedPackage);
   } catch (error) {
     console.error('Error updating tour package:', error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: error.message });
   }
-}
+};
+
 
 exports.getAllpackages = async (req,res)=>{
   try {

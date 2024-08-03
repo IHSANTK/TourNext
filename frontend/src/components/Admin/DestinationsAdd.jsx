@@ -52,7 +52,7 @@ const DestinationsAdd = () => {
     for (let i = 0; i < data.images.length; i++) {
       formData.append('images', data.images[i][0]);
     }
-console.log("formdatasfull",formData);
+ 
     try {
       const response = await axios.post('/destinationadd', formData, {
         headers: {

@@ -22,12 +22,17 @@ router.put('/updateplace/:stateId/:districtId', adminController.updatePlace);
 router.get('/states',adminController.getallstates);
 router.post('/destinationadd',upload.array('images', 5),adminController.addDestinations)
 router.get('/destinations',adminController.getAllDestinations)
-router.put('/editDestinations/:id', upload.array('images', 5), adminController.editDestinations);
-router.delete('/delteDestination/:id',adminController.deleteDestination)
 
+router.put('/editDestinations/:id', upload.array('images'), adminController.editDestinations);
+ 
+router.delete('/delteDestination/:id',adminController.deleteDestination)
+  
 router.post('/addTourPackages',upload.array('images', 5),adminController.addTourPackages)
-router.put('/editTourPackages/:id',adminController.editTourPackage)
-router.delete('/deletetourPackages/:id',adminController.delteTourPackage)
+
+router.post('/editTourPackages/:id',upload.array('images'), adminController.editTourPackage);
+
+router.delete('/deletetourPackages/:id',adminController.delteTourPackage) 
+
 router.get('/getTourPackages',adminController.getAllpackages)
 
 // router.get('/getBanners',adminController.getallbanners)
