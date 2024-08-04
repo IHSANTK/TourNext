@@ -7,6 +7,8 @@ const cloudinary = require('../config/cloudinery');
 const helpers = require("../helpers/razorpay");
 const otpService = require("../services/otpService");
 const { response } = require('express');
+const nodemailer = require('nodemailer');
+
 
 
 const jwtSecret = process.env.USER_JWT_SECRET;
@@ -275,6 +277,9 @@ exports.booking = async (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
+
+
 exports.sendOtpforBooking = async (req, res) => {
   const { email } = req.body;
   console.log("email:", email);
@@ -298,6 +303,7 @@ exports.sendOtpforBooking = async (req, res) => {
 
 
 
+
 exports.saveorder = async (req, res) => {
   const userId = req.user; 
   const { formData, finalAmount, seats, Id } = req.body;
@@ -312,8 +318,6 @@ exports.saveorder = async (req, res) => {
     }
 
     const package = await Packages.findById(Id);
-   
-
     if (!package) {
       return res.status(404).json({ message: 'Package not found' });
     }
@@ -323,7 +327,6 @@ exports.saveorder = async (req, res) => {
     }
 
     package.seats -= seats; 
-
     console.log(package);
 
     const newBooking = {
@@ -333,19 +336,52 @@ exports.saveorder = async (req, res) => {
       seats: seats,
       packageId: Id,
       totalprice: finalAmount,
-      packageName:package.packageName,
-      image:package.images[0],
-      tripDate:package.startDate,
+      packageName: package.packageName,
+      image: package.images[0],
+      tripDate: package.startDate,
       status: 'Booked'
     };
     console.log('New Booking:', newBooking);
 
     user.bookings.push(newBooking);
-
     await package.save(); 
     await user.save();
 
-    res.status(200).json({ message: 'Booking successfull' });
+    const transporter = nodemailer.createTransport({
+      service: 'gmail', 
+      auth: {
+        user: 'ihsantk786313@gmail.com', 
+        pass: 'rdfz ebfk dwag foab' 
+      }
+    });
+
+    const mailOptions = {
+      from: 'ihsantk786313@gmail.com',
+      to: formData.email,          
+      subject: 'Booking Confirmation', 
+      text: `Dear ${formData.name},
+
+      Thank you for booking with us! 
+
+      Here are your booking details:
+      - Package Name: ${package.packageName}
+      - Trip Date: ${package.startDate}
+      - Number of Seats: ${seats}
+      - Total Price: ${finalAmount}
+      - Phone Number: ${formData.phone}
+      - Email: ${formData.email}
+      - Booking Status: Booked
+
+      We look forward to serving you!
+
+      Best regards,
+      TourNext`
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Confirmation email sent successfully.');
+
+    res.status(200).json({ message: 'Booking successful and confirmation email sent' });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ message: 'Internal server error' });
