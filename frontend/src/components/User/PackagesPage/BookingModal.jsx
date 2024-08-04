@@ -13,7 +13,7 @@ export default function BookingModal({
   const [discountAmount, setDiscountAmount] = useState(0);
   const [discountType, setDiscountType] = useState("");
   const [finalAmount, setFinalAmount] = useState(0);
-  const [discountMessage, setDiscountMessage] = useState(""); // Added state for discount message
+  const [discountMessage, setDiscountMessage] = useState(""); 
 
   useEffect(() => {
     const calculateAmounts = () => {
@@ -88,21 +88,21 @@ export default function BookingModal({
           </button>
         </div>
         <div className="flex flex-col lg:flex-row">
-          <div className="lg:w-1/2 mb-4 lg:mb-0">
+          <div className="lg:w-1/2 mb-4 lg:mb-0  shadow-lg shadow-black rounded m-3 p-3">
             <h3 className="text-xl font-bold mb-2">{pkg.packageName}</h3>
             <p className="text-gray-700 mb-3 mt-3">Start Date: {pkg.startDate}</p>
 
             <div className="flex flex-col mb-4">
-              <p className="text-2xl font-bold text-blue-400 mb-1">
+              <p className="text-xl font-bold text-blue-400 mb-1">
                 Price: ₹{pkg.price * seats}
               </p>
 
               {pkg.offer ? (
-                <div className="flex flex-col mb-1">
+                <div className="flex flex-col mb-1 ">
                   <div className="flex items-center mb-1">
                     <p className="text-lg font-bold text-gray-700 mt-3">Discount:</p>
-                    <span className="text-lg text-red-500 mt-3 ms-2">{discountAmount}</span>
-                    <span className="text-xl text-gray-700  mt-3">{discountType}</span>
+                    <span className="text-lg  text-red-500 mt-3 ms-2">{discountAmount}</span>
+                    <span className="text-md text-gray-700  mt-3">{discountType}</span>
                   </div>
                   {/* <p className="text-lg text-gray-700 mt-3">{discountMessage}</p> */}
                 </div>
