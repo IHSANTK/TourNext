@@ -102,19 +102,19 @@ const TourPackagesList = () => {
                 <div className="flex justify-between">
                   <button
                     onClick={() => handleEdit(tourPackage)}
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold ps-3 pe-3  rounded focus:outline-none focus:shadow-outline"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handlePackageClick('foroffers', tourPackage)}
-                    className="btn bg-green font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="btn bg-green-300 font-bold rounded focus:outline-none focus:shadow-outline"
                   >
                     Add Offers
                   </button>
                   <button
                     onClick={() => handleDelete(tourPackage._id)}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold ps-3 pe-3 rounded focus:outline-none focus:shadow-outline"
                   >
                     Delete
                   </button>
@@ -131,7 +131,8 @@ const TourPackagesList = () => {
          
         />
       )}
-      {isModalOpen && <Modal onClose={handleModalClose} packageData={selectedPackage} />}
+      {isModalOpen && <Modal onClose={handleModalClose} selectedPackage={selectedPackage} />}
+      
       {offermodal && <OfferModal onClose={handleModalClose}  pkg={selectedPackage} />}
     </div>
   );

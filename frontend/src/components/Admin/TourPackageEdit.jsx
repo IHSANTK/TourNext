@@ -10,25 +10,28 @@ const TourPackageEdit = ({ packageData, onClose }) => {
     startDate: "",
     duration: "",
     activities: [],
-    images: [],
     destinations: "",
     removedImages: [], // Track removed images
   });
 
+  const [newImages, setNewImages] = useState([]); 
+  const [images, setImages] = useState([]); // Separate state for package images
+
   useEffect(() => {
     if (packageData) {
       setEditFormData({
-        packageName: packageData.packageName,
-        description: packageData.description,
-        price: packageData.price,
-        seats: packageData.seats,
+        packageName: packageData.packageName || "",
+        description: packageData.description || "",
+        price: packageData.price || "",
+        seats: packageData.seats || "",
         startDate: packageData.startDate || "",
         duration: packageData.duration || "",
         activities: packageData.activities || [],
-        images: packageData.images || [],
         destinations: packageData.destinations || "",
-        removedImages: [], // Initialize empty
+        removedImages: [], 
       });
+      setNewImages([]); 
+      setImages(packageData.images || []); // Initialize images state
     }
   }, [packageData]);
 
@@ -36,12 +39,8 @@ const TourPackageEdit = ({ packageData, onClose }) => {
     const { name, value, type, files } = e.target;
 
     if (type === "file") {
-      const selectedFiles = Array.from(files).slice(0, 5 - editFormData.images.length);
-      const uploadedImages = selectedFiles.map((file) => URL.createObjectURL(file));
-      setEditFormData({
-        ...editFormData,
-        images: [...editFormData.images, ...uploadedImages],
-      });
+      const selectedFiles = Array.from(files).slice(0, 5 - (images.length + newImages.length)); // Adjust limit
+      setNewImages((prevImages) => [...prevImages, ...selectedFiles]);
     } else if (name === "destinations") {
       setEditFormData({
         ...editFormData,
@@ -63,27 +62,28 @@ const TourPackageEdit = ({ packageData, onClose }) => {
   const handleActivityAdd = () => {
     const activity = document.getElementById('newActivity').value.trim();
     if (activity) {
-      setEditFormData({
-        ...editFormData,
-        activities: [...editFormData.activities, activity],
-      });
+      setEditFormData((prevData) => ({
+        ...prevData,
+        activities: [...prevData.activities, activity],
+      }));
       document.getElementById('newActivity').value = '';
     }
   };
 
   const handleActivityRemove = (index) => {
-    setEditFormData({
-      ...editFormData,
-      activities: editFormData.activities.filter((_, i) => i !== index),
-    });
+    setEditFormData((prevData) => ({
+      ...prevData,
+      activities: prevData.activities.filter((_, i) => i !== index),
+    }));
   };
 
   const handleImageRemove = (index) => {
+    const imageToRemove = images[index];
     setEditFormData((prevState) => ({
       ...prevState,
-      images: prevState.images.filter((_, i) => i !== index),
-      removedImages: [...prevState.removedImages, packageData.images[index]], // Add removed image to the list
+      removedImages: [...prevState.removedImages, imageToRemove], // Add removed image to the list
     }));
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
   const handleEditSubmit = async (e) => {
@@ -99,28 +99,36 @@ const TourPackageEdit = ({ packageData, onClose }) => {
     formData.append('destinations', editFormData.destinations);
     formData.append('activities', JSON.stringify(editFormData.activities));
     formData.append('removedImages', JSON.stringify(editFormData.removedImages)); // Append removed images
-    editFormData.images.forEach((image) => {
+
+    newImages.forEach((image) => {
       formData.append('images', image);
     });
 
     try {
-      await axios.post(
-        `/editTourPackages/${packageData._id}`,
-        formData,
-      );
-      // Handle response and close modal
-      onClose();
+      await axios.put(`/editTourPackages/${packageData._id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      onClose(); 
     } catch (error) {
       console.error("Error updating tour package:", error);
     }
   };
 
+  const createObjectURL = (image) => {
+    return image instanceof File ? URL.createObjectURL(image) : image;
+  };
+
+  const canAddMoreImages = images.length + newImages.length < 5;
+
   return (
     <div className="fixed inset-0 overflow-y-auto flex items-center justify-center">
       <div className="absolute inset-0 bg-black opacity-50" onClick={onClose}></div>
-      <div className="relative bg-white p-8 rounded shadow-lg w-full max-w-screen-md mt-5"> {/* Adjusted width */}
+      <div className="relative bg-white p-8 rounded shadow-lg w-full max-w-screen-md mt-5">
         <h2 className="text-2xl font-bold mb-4">Edit Package</h2>
         <form onSubmit={handleEditSubmit}>
+          {/* Form fields */}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="packageName">Package Name</label>
             <input
@@ -202,23 +210,23 @@ const TourPackageEdit = ({ packageData, onClose }) => {
                   <button
                     type="button"
                     onClick={() => handleActivityRemove(index)}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-red-500 text-white rounded px-2 py-1"
                   >
-                    Remove
+                    &times;
                   </button>
                 </div>
               ))}
-              <div className="flex mt-2">
+              <div className="flex gap-2">
                 <input
                   id="newActivity"
-                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   type="text"
-                  placeholder="New Activity"
+                  placeholder="Add new activity"
+                  className="border rounded px-2 py-1 w-full"
                 />
                 <button
                   type="button"
                   onClick={handleActivityAdd}
-                  className="ml-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="bg-blue-500 text-white rounded px-4 py-2"
                 >
                   Add
                 </button>
@@ -238,43 +246,63 @@ const TourPackageEdit = ({ packageData, onClose }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="images">Images (select up to 5)</label>
-            <input
-              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="images"
-              type="file"
-              name="images"
-              multiple
-              onChange={handleEditFormChange}
-            />
-            <div className="mt-2 flex flex-wrap gap-2">
-              {editFormData.images.map((image, index) => (
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="images">Images</label>
+            <div className="grid grid-cols-4 lg:grid-cols-5 gap-2 mb-4">
+              {images.map((image, index) => (
                 <div key={index} className="relative">
-                  <img src={image} alt={`Image ${index}`} className="w-24 h-24 object-cover rounded" />
+                  <img src={createObjectURL(image)} alt={`Package image ${index + 1}`} className="h-16 lg:h-24 rounded"/>
                   <button
                     type="button"
                     onClick={() => handleImageRemove(index)}
-                    className="absolute top-0 right-0 bg-red-500 hover:bg-red-700 text-white font-bold p-1 rounded"
+                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
                   >
-                    X
+                    &times;
                   </button>
                 </div>
               ))}
+              {newImages.map((image, index) => (
+                <div key={index} className="relative">
+                  <img src={URL.createObjectURL(image)} alt={`New image ${index + 1}`} className="h-16 lg:h-24  rounded"/>
+                  <button
+                    type="button"
+                    onClick={() => handleImageRemove(images.length + index)}
+                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+
+            {canAddMoreImages && (
+      <div className="relative  border-dashed border-2 border-gray-300 rounded flex items-center justify-center">
+
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleEditFormChange}
+                className="absolute inset-0 h-16 lg:h-24 opacity-0 cursor-pointer"
+                />
+                <p className="text-gray-500">Add Image</p>
             </div>
+            )}
+
+            </div>
+            
           </div>
-          <div className="flex justify-end">
+          <div className="flex gap-4">
             <button
               type="button"
               onClick={onClose}
-              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+              className="bg-gray-500 text-white rounded px-4 py-2"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 text-white rounded px-4 py-2"
             >
-              Save
+              Save Changes
             </button>
           </div>
         </form>

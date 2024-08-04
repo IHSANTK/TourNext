@@ -473,10 +473,9 @@ exports.editDestinations = async (req, res) => {
           imageUrls.push(result.secure_url);
       }
 
-      // Remove deleted image URLs from the imageUrls array
       imageUrls = imageUrls.filter(url => !removedImagesArray.includes(url));
 
-      // Update the destination
+     
       destination.name = name || destination.name;
       destination.state = state || destination.state;
       destination.district = district || destination.district;
@@ -651,10 +650,8 @@ exports.editTourPackage = async (req, res) => {
     }
     imageUrls = imageUrls.filter(url => !removedImagesArray.includes(url));
 
-    // Parse activities as a JSON array if it's a string
     const activitiesArray = Array.isArray(activities) ? activities : JSON.parse(activities);
 
-    // Update the package
     const updatedPackage = await Packages.findByIdAndUpdate(
       pkgid,
       {

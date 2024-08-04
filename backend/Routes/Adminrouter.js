@@ -29,7 +29,7 @@ router.delete('/delteDestination/:id',adminController.deleteDestination)
   
 router.post('/addTourPackages',upload.array('images', 5),adminController.addTourPackages)
 
-router.post('/editTourPackages/:id',upload.array('images'), adminController.editTourPackage);
+router.put('/editTourPackages/:id',upload.array('images'), adminController.editTourPackage);
 
 router.delete('/deletetourPackages/:id',adminController.delteTourPackage) 
 
