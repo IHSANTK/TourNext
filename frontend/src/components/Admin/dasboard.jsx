@@ -5,11 +5,11 @@ import { clearTokens } from '../../redux/adminauthSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../api';
 import Sidebar from './sidebar';
-import { Line } from 'react-chartjs-2';
-import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
 // Register the required components
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Admindashbord = () => {
   const [showLogout, setShowLogout] = useState(false);
@@ -57,34 +57,61 @@ const Admindashbord = () => {
   };
 
   const chartData = {
-    labels: Object.keys(monthlyBookingCounts).reduce((acc, year) => {
-      const months = Object.keys(monthlyBookingCounts[year]);
-      months.forEach(month => {
-        acc.push(`${month} ${year}`);
-      });
-      return acc;
-    }, []),
+    labels: Object.keys(monthlyBookingCounts).flatMap(year => 
+      Object.keys(monthlyBookingCounts[year]).map(month => `${month} ${year}`)
+    ),
     datasets: [
       {
         label: 'Monthly Bookings',
-        data: Object.values(monthlyBookingCounts).reduce((acc, yearData) => {
-          const months = Object.keys(yearData);
-          months.forEach(month => {
-            acc.push(yearData[month]);
-          });
-          return acc;
-        }, []),
-        fill: false,
+        data: Object.keys(monthlyBookingCounts).flatMap(year => 
+          Object.values(monthlyBookingCounts[year])
+        ),
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1,
+        borderWidth: 1,
       },
     ],
   };
 
   const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            let label = context.dataset.label || '';
+            if (label) {
+              label += ': ';
+            }
+            if (context.parsed.y !== null) {
+              label += new Intl.NumberFormat().format(context.parsed.y);
+            }
+            return label;
+          }
+        }
+      }
+    },
     scales: {
       x: {
-        type: 'category',
+        title: {
+          display: true,
+          text: 'Month-Year'
+        },
+        ticks: {
+          autoSkip: true,
+          maxTicksLimit: 12,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Bookings Count'
+        },
+        beginAtZero: true,
       },
     },
   };
@@ -128,7 +155,7 @@ const Admindashbord = () => {
         <div className="bg-white p-4 rounded shadow mb-6">
           <h2 className="text-lg font-bold mb-4">Monthly Booking Data</h2>
           <div className="h-80">
-            <Line data={chartData} options={chartOptions} />
+            <Bar data={chartData} options={chartOptions} />
           </div>
         </div>
 

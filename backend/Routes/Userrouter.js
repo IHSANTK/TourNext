@@ -34,7 +34,7 @@ router.post('/addblog',authenticate,upload.array('images'),UserController.addBlo
 router.post('/editprofile/:userid', upload.single('profileImage'), UserController.editProfile);
 router.post('/deleteprofileimage/:userId',UserController.deleteprofailimage)
 
-router.post('/changepassword/:userid',UserController.chanagepassword)
+router.post('/changepassword/:userid',UserController.changePassword)
 
 router.post('/userlogut',authenticate, UserController.logout);
 

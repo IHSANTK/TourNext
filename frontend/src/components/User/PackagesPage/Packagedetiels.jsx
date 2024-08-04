@@ -11,6 +11,8 @@ import StarRating from '../RatingStars'
 
 export default function Packagedetails() {
   const { pkgId } = useParams();
+
+  console.log('getpakagid',pkgId);
   const [pkg, setPkg] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [seats, setSeats] = useState(1);

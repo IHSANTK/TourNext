@@ -1,45 +1,50 @@
 import React, { useState } from 'react';
-import { FaTrash } from 'react-icons/fa';
 import Toastify from 'toastify-js';
-import { useDispatch } from 'react-redux';
-import {setuser } from "../../../redux/userauthSlice";
 import 'toastify-js/src/toastify.css';
-import axios from '../../../api'
+import axios from '../../../api';
 
-const ChangePasswordModal = ({show,onClose,user}) => {
+const ChangePasswordModal = ({ show, onClose, user }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  const [err,seterr] = useState('')
+  const [err, setErr] = useState('');
 
   const handleSave = async () => {
-    console.log('Changing password:', { currentPassword, newPassword,confirmNewPassword, });
+    console.log('Changing password:', { currentPassword, newPassword, confirmNewPassword });
 
-    try{
-        const response = await axios.post(`/changepassword/${user._id}`, { currentPassword, newPassword,confirmNewPassword, }, { withCredentials: true });
-             
-        console.log(response.data);
-        if(response.data==='password update sccesfully'){
-              Toastify({
-                text: response.data,
-                duration: 3000, 
-                gravity: 'top', 
-                position: 'right',
-                backgroundColor: 'green',
-              }).showToast();
-              onClose();
-              setConfirmNewPassword('')
-              setCurrentPassword('')
-              setNewPassword('')
-              seterr('')
-        }else{
-            seterr(response.data)
-            console.log('rerere',err);
-        }
-    }catch(error){
-        console.error(error);
+    try {
+      const response = await axios.post(
+        `/changepassword/${user._id}`,
+        { currentPassword, newPassword, confirmNewPassword },
+        { withCredentials: true }
+      );
+
+      console.log(response.data);
+
+      if (response.data.message === 'Password updated successfully') {
+        Toastify({
+          text: response.data.message,
+          duration: 3000,
+          gravity: 'top',
+          position: 'center',
+          backgroundColor: 'green',
+        }).showToast();
+        onClose();
+        setConfirmNewPassword('');
+        setCurrentPassword('');
+        setNewPassword('');
+        setErr('');
+      } else {
+        console.log(response.data.message);
+        
+        setErr( response.data.message );
+        
+      }
+    } catch (error) {
+      console.error(error);
+      // Handle unexpected errors
+      setErr('An error occurred while updating the password');
     }
- 
   };
 
   if (!show) return null;
@@ -51,7 +56,7 @@ const ChangePasswordModal = ({show,onClose,user}) => {
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
           onClick={onClose}
         >
-         X
+          X
         </button>
         <h2 className="text-2xl font-semibold mb-4">Change Password</h2>
         <form className="space-y-4">
@@ -82,7 +87,7 @@ const ChangePasswordModal = ({show,onClose,user}) => {
               onChange={(e) => setConfirmNewPassword(e.target.value)}
             />
           </div>
-          <p className='text-red-500  font-bold'>{err}</p>
+          <p className='text-red-500 font-bold'>{err}</p>
 
           <button
             type="button"

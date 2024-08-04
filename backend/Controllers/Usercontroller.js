@@ -143,12 +143,14 @@ exports.deleteprofailimage = async (req,res)=>{
 }
 
 
-exports.chanagepassword = async (req, res) => {
+exports.changePassword = async (req, res) => {
   const userId = req.params.userid;
-  const { currentPassword, newPassword,confirmNewPassword } = req.body;
+  const { currentPassword, newPassword, confirmNewPassword } = req.body;
 
-  console.log('userid',userId);
-  console.log(currentPassword, newPassword,confirmNewPassword);
+  console.log('User ID:', userId);
+  console.log('Current Password:', currentPassword);
+  console.log('New Password:', newPassword);
+  console.log('Confirm New Password:', confirmNewPassword);
 
   try {
     const user = await User.findById(userId);
@@ -157,19 +159,18 @@ exports.chanagepassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isPasswordMatch = await bcrypt.compare(
-      currentPassword,
-      user.password
-    );
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      return res.json({ message: "All fields are required" });
+    }
+
+    const isPasswordMatch = await bcrypt.compare(currentPassword, user.password);
 
     if (!isPasswordMatch) {
-      return res.json(
-        "current password is not match"
-      );  
+      return res.json({ message: 'Current password is incorrect' });
     }
 
     if (newPassword !== confirmNewPassword) {
-      return res.json('conform password is not match'); 
+      return res.json({ message: 'New passwords do not match' });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -177,7 +178,7 @@ exports.chanagepassword = async (req, res) => {
     user.password = hashedPassword;
     await user.save();
 
-    res.status(200).json("password update sccesfully");
+    res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {
     console.error("Error updating password:", error);
     res.status(500).json({ message: "Error updating password" });
