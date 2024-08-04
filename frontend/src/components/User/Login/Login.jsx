@@ -4,7 +4,7 @@ import axios from "../../../api";
 import { useDispatch } from "react-redux";
 import { setTokens,setuser } from "../../../redux/userauthSlice";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import "./Login.css";
 import OtpModal from "./OtpModal";
 
@@ -216,7 +216,8 @@ export default function Login() {
               <p className="text-red-500 text-sm">{errors.password}</p>
             )}
           </div>
-          <span className="ml-5 text-red-600 font-bold">{err}</span>
+          <span className="ml-5 flex justify-center text-red-500 font-bold mb-2"><p>{err}</p></span>
+
           <div className="flex justify-between items-center mb-3">
             <span
               className="text-sm text-blue-500 cursor-pointer"

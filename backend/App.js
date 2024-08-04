@@ -1,15 +1,13 @@
-// app.js
-
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const userRoutes = require('./Routes/Userrouter'); 
-const adminRoutes = require('./Routes/Adminrouter'); 
-const googleAuthRoutes = require('./Routes/GoogleAuthRoutes'); 
-const messageRoutes = require('./Routes/messages'); 
+const userRoutes = require('./Routes/Userrouter');
+const adminRoutes = require('./Routes/Adminrouter');
+const googleAuthRoutes = require('./Routes/GoogleAuthRoutes');
+const messageRoutes = require('./Routes/messages');
 const Message = require('./models/Message');
 
 const app = express();
@@ -34,8 +32,8 @@ db.once('open', () => {
 });
 
 const corsOptions = {
-  origin: 'http://localhost:5173', 
-  credentials: true, 
+  origin: 'http://localhost:5173',
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -44,19 +42,21 @@ app.use(cookieParser());
 app.use('/', userRoutes);
 app.use('/', adminRoutes);
 app.use('/', googleAuthRoutes);
-app.use('/', messageRoutes); 
+app.use('/', messageRoutes);
 
-let onlineUsers = {}; 
- 
+let onlineUsers = {};
+
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
+  // Handle user joining
   socket.on('join', (userId) => {
     onlineUsers[userId] = socket.id;
     console.log(`User ${userId} joined with socket ID ${socket.id}`);
-    io.to(socket.id).emit('user status', { userId, status: 'online' });
+    io.emit('user status', { userId, status: 'online' });
   });
 
+  // Handle private messages
   socket.on('private message', async ({ senderId, receiverId, message }) => {
     const newMessage = new Message({
       senderId,
@@ -76,6 +76,7 @@ io.on('connection', (socket) => {
     }
   });
 
+  // Handle disconnect
   socket.on('disconnect', () => {
     console.log('A user disconnected:', socket.id);
     for (const [userId, socketId] of Object.entries(onlineUsers)) {

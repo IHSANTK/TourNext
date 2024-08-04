@@ -5,22 +5,19 @@ import { IoSend } from "react-icons/io5";
 import { useSelector } from 'react-redux';
 import axios from '../../../api';
 
-// Initialize socket connection
 const socket = io('http://localhost:5001');
 
 const ChatBox = ({ user, onClose }) => {
   const exactruser = useSelector((state) => state.userauth.user);
 
-  console.log('sfdfdf',exactruser);
   const [message, setMessage] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
   const [room, setRoom] = useState(user._id);
+  const [onlineUsers, setOnlineUsers] = useState({});
 
   useEffect(() => {
-    // Join the chat room
     socket.emit('join', exactruser._id);
 
-    // Fetch initial messages
     const fetchMessages = async () => {
       try {
         const response = await axios.get(`/messages/${exactruser._id}/${user._id}`);
@@ -36,11 +33,21 @@ const ChatBox = ({ user, onClose }) => {
       setChatMessages((prevMessages) => [...prevMessages, message]);
     };
 
+    const handleUserStatus = (status) => {
+      setOnlineUsers((prevOnlineUsers) => {
+        const updatedUsers = { ...prevOnlineUsers };
+        updatedUsers[status.userId] = status.status;
+        return updatedUsers;
+      });
+    };
+
     socket.on('private message', handleMessage);
+    socket.on('user status', handleUserStatus);
 
     return () => {
       socket.emit('leave', exactruser._id); 
       socket.off('private message', handleMessage); 
+      socket.off('user status', handleUserStatus);
     };
   }, [exactruser._id, user._id]);
 
@@ -65,7 +72,7 @@ const ChatBox = ({ user, onClose }) => {
         >
           <FaArrowLeft size={'20'} />
         </button>
-        <p className="font-semibold text-white p-2 border-b border-gray-300">{user.name}</p>
+        <p className="font-semibold text-white p-2 border-b border-gray-300">{user.name} {onlineUsers[user._id] === 'online' ? <span className="text-green-500"> (Online)</span> : <span className="text-gray-500"> (Offline)</span>}</p>
         <div></div>
       </div>
       <div className="flex-1 p-2 overflow-y-auto noscrollbar">
