@@ -248,7 +248,7 @@ exports.booking = async (req, res) => {
   console.log('userID', userID);
   console.log('email, totalprice, Id', formData.email, finalAmount, Id);
   console.log('OTP', otp);
-
+ 
 
   try {
       const user = await User.findById(userID);
@@ -264,7 +264,7 @@ exports.booking = async (req, res) => {
          return res.json({ message: "Invalid OTP" });
       }
 
-      const razorpayResponse = await helpers.generateRazorpay(user._id,finalAmount);
+      const razorpayResponse = await helpers.generateRazorpay(user._id,Math.round(finalAmount));
 
       console.log("Razorpay response:", razorpayResponse);
 

@@ -161,12 +161,17 @@ export default function Packagedetails() {
                   className="w-full p-2 border border-gray-300 rounded-md"
                 />
               </div>
-              <button
+              <p className="mb-3 font-bold">Available Seats <span className="text-green-500">{pkg.seats}</span></p>
+           {pkg.seats!==0?(  
+             <button
                 onClick={handleBookNowClick}
                 className="bg-yellow-500 text-white py-2 px-4 rounded-md w-full"
               >
                 Book Now
               </button>
+              ):(
+                <span className="text-red-500">No availbale seates</span>
+              )}
             </div>
           </div>
         </div>
@@ -222,7 +227,7 @@ export default function Packagedetails() {
         </div>
       </div>
       <Footer />
-
+    {pkg.seats>=seats ?(
       <BookingModal
         showModal={showModal}
         handleCloseModal={handleCloseModal}
@@ -232,6 +237,9 @@ export default function Packagedetails() {
         handleInputChange={handleInputChange}
         formsubmit={handleformsubmit} 
       />
+    ):(
+      <span>No Seats</span>
+    )}
 
       <OtpModal
         show={showOtpModal}
