@@ -36,6 +36,8 @@ router.post('/deleteprofileimage/:userId',UserController.deleteprofailimage)
 
 router.post('/changepassword/:userid',UserController.changePassword)
 
+router.get('/searchdestinations',UserController.searchDestinations);
+
 router.post('/userlogut',authenticate, UserController.logout);
 
 

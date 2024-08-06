@@ -56,7 +56,7 @@ export default function DestinationDetails() {
           text: response.data.message,
           duration: 2000, 
           gravity: 'top', 
-          position: 'right',
+          position: 'center',
           backgroundColor: 'green',
         }).showToast();
         setIsWishlist(true);
@@ -65,7 +65,7 @@ export default function DestinationDetails() {
           text: response.data.message,
           duration: 2000, 
           gravity: 'top', 
-          position: 'right',
+          position: 'center',
           backgroundColor: 'green',
         }).showToast();
         setIsWishlist(false);
@@ -75,7 +75,7 @@ export default function DestinationDetails() {
           text: 'Pls Login',
           duration: 3000, 
           gravity: 'top', 
-          position: 'right',
+          position: 'center',
           backgroundColor: 'red',
         }).showToast();
       }
@@ -108,7 +108,7 @@ export default function DestinationDetails() {
       text: 'Pls Login',
       duration: 3000, 
       gravity: 'top', 
-      position: 'right',
+      position: 'center',
       backgroundColor: 'red',
     }).showToast();
   }

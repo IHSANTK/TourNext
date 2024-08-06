@@ -1,5 +1,6 @@
 body{
-  background: linear-gradient(to right, #d4bc9a, #f8eee6);
+  /* background: linear-gradient(to right, #d4bc9a, #f8eee6); */
+  background-color: white;
 }
 .noscrollbar{
   -ms-overflow-style: none;

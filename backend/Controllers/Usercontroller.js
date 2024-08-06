@@ -427,7 +427,7 @@ exports.cancelBooking = async (req, res) => {
       return res.status(404).json({ message: 'Booking not found' });
     }
 
-    booking.status = 'cancelled';
+    booking.status = 'Cancelled';
 
     await user.save();
     res.json({ message: 'Booking cancelled successfully' });
@@ -617,7 +617,27 @@ exports.getdestinationdetiles = async (req,res)=>{
   }
 }
 
+exports.searchDestinations = async (req,res)=>{
+  const { query } = req.query; 
 
+  console.log(query);
+
+  try {
+    const results = await Destinations.find({
+      $or: [
+        { name: { $regex: query, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } }
+      ]
+    });
+
+
+    console.log('results',results);
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 
 exports.logout = (req, res) => {

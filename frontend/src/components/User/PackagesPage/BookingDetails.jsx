@@ -155,10 +155,15 @@ export default function BookingDetails() {
                 </h2>
                <Link to={`/user/packagedetails/${booking.packageId}`} ><img src={booking.image} className='w-2/4 mt-2'/></Link>
                 <p className="text-gray-700 mb-2 mt-3">Trip Date: {booking.tripDate}</p>
-                <p className="text-gray-700 mb-2">Seats: {booking.seats}</p>
+                <p className="text-gray-700 mb-2 ">Seats: {booking.seats}</p>
                 <p className="text-gray-700 mb-2">Total Price: ₹{booking.totalprice}</p>
-                <p className="text-gray-700 mb-2">Status: {booking.status}</p>
-                {!booking.showRefundMessage && booking.status !== 'cancelled' && (
+               <span className='flex'>
+                <p> Status:</p>
+               
+                <p className={`text-gray-700 ms-2 mb-2 ${booking.status === 'Cancelled' ? 'text-red-500' : ''}`}>
+                           {booking.status}
+                </p> </span>
+                 {!booking.showRefundMessage && booking.status !== "Cancelled" && (
                   <button
                     onClick={() => handleModalToggle(booking._id)}
                     className="bg-red-500 text-white py-2 px-4 rounded-md transition hover:bg-red-600"
@@ -166,11 +171,11 @@ export default function BookingDetails() {
                     Cancel Booking
                   </button>
                 )}
-                { booking.status == 'cancelled' && (
+                { booking.status == 'Cancelled' && (
                   <p className="text-green-600 mt-2">Your refund will be credited within 48 hours.</p>
                 )}
               </div>
-              {!booking.showRefundMessage && booking.status !== 'cancelled' && (
+              {!booking.showRefundMessage && booking.status!== "Cancelled" && (
               <div className="mt-4 md:mt-0 md:w-2/3 md:ml-6">
                 {submittedReviews[booking._id] ? (
                   <div>

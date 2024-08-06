@@ -62,7 +62,7 @@ const BlogForm = ({ destinationId, onClose }) => {
         text: 'Blog added successfully!',
         duration: 3000,
         gravity: 'top',
-        position: 'right',
+        position: 'center',
         backgroundColor: 'green',
       }).showToast();
       onClose();

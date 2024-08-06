@@ -28,7 +28,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="absolute top-0 left-0 z-10  bg-gray-100  w-full bg-inherit shadow-xl shadow-neutral-500 " >
+    <nav className="absolute top-0 left-0 z-10  bg-gray-100  w-full bg-inherit shadow-lg " >
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-20 sm:h-24 items-center">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -114,7 +114,7 @@ export default function Navbar() {
               ) : (
                 <button
                   type="button"
-                  className="relative inline-flex items-center justify-center rounded-md bg-yellow-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-900"
+                  className="relative me-3 inline-flex items-center justify-center rounded-md bg-emerald-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-900"
                   onClick={() => navigate('/user/login')}
                 >
                   Login

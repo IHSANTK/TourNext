@@ -52,71 +52,85 @@ exports.adminLogin = async (req, res) => {
 
   exports.adminpanel = async (req, res) => {
     try {
-      console.log('admin panel');
-      const [usersResult, bookingsResult, destinationCount, monthlyBookingCounts] = await Promise.all([
-        User.aggregate([
-          { $group: { _id: null, totalUsers: { $sum: 1 } } }
-        ]),
-        User.aggregate([
-          { 
-            $project: { 
-              bookingsSize: { $size: { $ifNull: ['$bookings', []] } } 
-            } 
-          },
-          { 
-            $group: { 
-              _id: null, 
-              totalBookings: { $sum: '$bookingsSize' } 
-            } 
-          }
-        ]),
-        Destination.countDocuments(),
-        User.aggregate([
-          {
-            $match: {
-              bookings: { $exists: true, $ne: [] }
+        console.log('admin panel');
+        const [usersResult, bookingsResult, destinationCount, monthlyBookingCounts] = await Promise.all([
+            User.aggregate([
+                { $group: { _id: null, totalUsers: { $sum: 1 } } }
+            ]),
+            User.aggregate([
+                { 
+                    $project: { 
+                        bookingsSize: { 
+                            $size: { 
+                                $filter: { 
+                                    input: "$bookings", 
+                                    as: "booking", 
+                                    cond: { $ne: ["$$booking.status", "cancelled"] } 
+                                } 
+                            } 
+                        } 
+                    } 
+                },
+                { 
+                    $group: { 
+                        _id: null, 
+                        totalBookings: { $sum: '$bookingsSize' } 
+                    } 
+                }
+            ]),
+            Destination.countDocuments(),
+            User.aggregate([
+                {
+                    $match: {
+                        bookings: { $exists: true, $ne: [] }
+                    }
+                },
+                {
+                    $unwind: "$bookings"
+                },
+                {
+                    $match: {
+                        "bookings.status": { $ne: "cancelled" }
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            year: { $year: "$bookings.bookingDate" },
+                            month: { $month: "$bookings.bookingDate" }
+                        },
+                        count: { $sum: 1 }
+                    }
+                }
+            ])
+        ]);
+
+        const monthlyBookingCountsData = {};
+        monthlyBookingCounts.forEach(count => {
+            const year = count._id.year;
+            const month = count._id.month;
+            const monthName = new Date(Date.UTC(2000, month - 1, 1)).toLocaleDateString('en-US', { month: 'long' });
+            if (!monthlyBookingCountsData[year]) {
+                monthlyBookingCountsData[year] = {};
             }
-          },
-          {
-            $unwind: "$bookings"
-          },
-          {
-            $group: {
-              _id: {
-                year: { $year: "$bookings.bookingDate" },
-                month: { $month: "$bookings.bookingDate" }
-              },
-              count: { $sum: 1 }
-            }
-          }
-        ])
-      ]);
-  
-      const monthlyBookingCountsData = {};
-      monthlyBookingCounts.forEach(count => {
-        const year = count._id.year;
-        const month = count._id.month;
-        const monthName = new Date(Date.UTC(2000, month - 1, 1)).toLocaleDateString('en-US', { month: 'long' });
-        if (!monthlyBookingCountsData[year]) {
-          monthlyBookingCountsData[year] = {};
-        }
-        monthlyBookingCountsData[year][monthName] = count.count;
-      });
-  
-      const totalUsers = usersResult.length > 0 ? usersResult[0].totalUsers : 0;
-      const totalBookings = bookingsResult.length > 0 ? bookingsResult[0].totalBookings : 0;
-  
-      console.log("Total Users:", totalUsers);
-      console.log("Total Bookings:", totalBookings);
-      console.log("Total Destinations:", destinationCount);
-      console.log("Monthly Booking Counts:", monthlyBookingCountsData);
-  
-      res.json({ totalUsers, totalBookings, destinationCount, monthlyBookingCounts: monthlyBookingCountsData });
+            monthlyBookingCountsData[year][monthName] = count.count;
+        });
+
+        const totalUsers = usersResult.length > 0 ? usersResult[0].totalUsers : 0;
+        const totalBookings = bookingsResult.length > 0 ? bookingsResult[0].totalBookings : 0;
+
+        console.log("Total Users:", totalUsers);
+        console.log("Total Bookings:", totalBookings);
+        console.log("Total Destinations:", destinationCount);
+        console.log("Monthly Booking Counts:", monthlyBookingCountsData);
+
+        res.json({ totalUsers, totalBookings, destinationCount, monthlyBookingCounts: monthlyBookingCountsData });
     } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Server error' });
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Server error' });
     }
-  };
+};
+
   
 
   exports.categorieadd = async (req, res) => {

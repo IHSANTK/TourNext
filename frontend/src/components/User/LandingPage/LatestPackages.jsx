@@ -27,7 +27,7 @@ export default function LatestPackages({ latestpkgs }) {
           </div>
         ))}
         <div className="col-span-full flex justify-center mt-5">
-          <Link to={'/user/Packages'} className="btn bg-yellow-500 text-white px-4 py-2 rounded-md">View More</Link>
+          <Link to={'/user/Packages'} className="btn bg-emerald-500 text-white px-4 py-2 rounded-md">View More</Link>
         </div>
       </div>
     </div>

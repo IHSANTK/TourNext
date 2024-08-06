@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
 import { useSelector } from 'react-redux';
 import axios from '../../../api';
@@ -16,25 +16,25 @@ const Alldestinations = () => {
   const [showDistrictDropdown, setShowDistrictDropdown] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
-  const states = useSelector((state) => state.state.states);
+  const location = useLocation();
+  const searchResults = location.state?.results || [];
 
-  console.log('allstates',states);
+  const states = useSelector((state) => state.state.states);
   const categories = useSelector((state) => state.category.categories);
   const destinationsPerPage = 9;
 
-  console.log(states);
   useEffect(() => {
-    const fetchDestinations = async (page) => {
+    const fetchDestinations = async () => {
       try {
         const response = await axios.get('/getAllDestinations', {
-          params: { 
-            page, 
-            limit: destinationsPerPage, 
-            state: selectedState, 
-            district: selectedDistrict, 
-            category: selectedCategory 
+          params: {
+            page: currentPage,
+            limit: destinationsPerPage,
+            state: selectedState,
+            district: selectedDistrict,
+            category: selectedCategory,
           },
-          withCredentials: true
+          withCredentials: true,
         });
         setDestinations(response.data.destinations);
         setTotalPages(response.data.totalPages);
@@ -43,21 +43,22 @@ const Alldestinations = () => {
         console.error(error);
       }
     };
-    fetchDestinations(currentPage);
+
+    if (searchResults.length>0) {
+     
+      console.log('serch block');
+      setDestinations(searchResults);
+      setTotalPages(1);
+    } else {
+      console.log('fethblock');
+      fetchDestinations();
+    }
   }, [currentPage, selectedState, selectedDistrict, selectedCategory]);
 
   const handleStateChange = (stateName) => {
-
-    console.log('statecnage funtion called',stateName);
     setSelectedState(stateName);
     const state = states.find(state => state.stateName === stateName);
-    console.log('handlechnge',state);
-    if (state) {
-        console.log('districts',state.districts);
-      setFilteredDistricts(state.districts);
-    } else {
-      setFilteredDistricts([]);
-    }
+    setFilteredDistricts(state ? state.districts : []);
     setSelectedDistrict('');
     setShowStateDropdown(false);
     setShowDistrictDropdown(true);
@@ -75,7 +76,6 @@ const Alldestinations = () => {
 
   const handleDropdownToggle = (dropdown) => {
     if (dropdown === 'state') {
-        console.log('handle set dropdown');
       setShowStateDropdown(!showStateDropdown);
       setShowDistrictDropdown(false);
       setShowCategoryDropdown(false);
@@ -86,14 +86,18 @@ const Alldestinations = () => {
     }
   };
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto " style={{ marginTop: '100px' }}>
+      <div className="container mx-auto" style={{ marginTop: '100px' }}>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4" style={{ marginTop: '150px' }}>
-          <div className=" lg:col-span-1 p-4">
+          <div className="lg:col-span-1 p-4">
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="state">
                 State
@@ -124,7 +128,7 @@ const Alldestinations = () => {
             {selectedState && (
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="district">
-                 Places
+                  District
                 </label>
                 <div className="relative">
                   <div
@@ -179,32 +183,50 @@ const Alldestinations = () => {
             </div>
           </div>
           <div className="lg:col-span-3">
-            <div className="space-y-8">
-              {destinations.map((destination, index) => (
-                <div key={index} className={`flex flex-col lg:flex-row ${index % 2 === 0 ? '' : 'lg:flex-row-reverse'} items-center`}>
-                  <div className="lg:w-1/2 mb-4 lg:mb-0">
-                    <Link to={`/user/destinationDetails/${destination._id}`}>
-                      <img src={destination.images[0]} alt={destination.name} className="w-full border-2 h-auto rounded-lg shadow-xl shadow-black" />
-                    </Link>
+            {destinations.length > 0 ? (
+              <div className="space-y-8">
+                {destinations.map((destination, index) => (
+                  <div
+                    key={index}
+                    className={`flex flex-col lg:flex-row ${index % 2 === 0 ? '' : 'lg:flex-row-reverse'} items-center bg-white p-4 shadow-lg shadow-black rounded-se-md rounded-es-md rounded-ss-3xl rounded-ee-3xl`}
+                  >
+                    <div className="lg:w-1/2 mb-4 lg:mb-0">
+                      <Link to={`/user/destinationDetails/${destination._id}`}>
+                        <img
+                          src={destination.images[0]}
+                          alt={destination.name}
+                          className="w-full border-2 h-auto rounded-lg shadow-xl shadow-black"
+                        />
+                      </Link>
+                    </div>
+                    <div className="lg:w-1/2 lg:pl-4 text-center lg:text-left">
+                      <h3 className="text-xl font-semibold">{destination.name}</h3>
+                      <p>{destination.description}</p>
+                    </div>
                   </div>
-                  <div className="lg:w-1/2 lg:pl-4 text-center lg:text-left">
-                    <h3 className="text-xl font-semibold">{destination.name}</h3>
-                    <p>{destination.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-8 flex justify-center">
-              <nav>
-                <ul className="flex list-none">
-                  {[...Array(totalPages).keys()].map(num => (
-                    <li key={num} className={`px-3 py-1 border ${currentPage === num + 1 ? 'bg-gray-300' : ''}`}>
-                      <button onClick={() => paginate(num + 1)}>{num + 1}</button>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center text-gray-700 mt-10">
+                <p>No destinations found</p>
+              </div>
+            )}
+            {destinations.length > 0 && (
+              <div className="mt-8 flex justify-center">
+                <nav>
+                  <ul className="flex list-none">
+                    {[...Array(totalPages).keys()].map(num => (
+                      <li
+                        key={num}
+                        className={`px-3 py-1 border ${currentPage === num + 1 ? 'bg-gray-300' : ''}`}
+                      >
+                        <button onClick={() => paginate(num + 1)}>{num + 1}</button>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
+            )}
           </div>
         </div>
       </div>

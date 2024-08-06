@@ -4,11 +4,15 @@ import './Homepage.css';
 import Footer from '../Footer';
 import axios from '../../../api';
 import LazyLoadComponent from './LazyLoadComponent';
+import { useNavigate } from 'react-router-dom';
+import Alldestinations from '../Destinations/Alldestinations';
 
 export default function Homepage() {
   const [populardest, setPopularDest] = useState([]);
   const [latestPkgs, setLatestPackages] = useState([]);
-
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchDatas = async () => {
       try {
@@ -22,6 +26,23 @@ export default function Homepage() {
     };
     fetchDatas();
   }, []);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = async () => {
+    try {
+
+      console.log(searchQuery);
+   
+      const response = await axios.get(`/searchdestinations?query=${searchQuery}`);
+      setSearchResults(response.data);
+      navigate('/user/Alldestinations', { state: { results: response.data } });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
@@ -72,13 +93,22 @@ export default function Homepage() {
         </button>
 
         {/* Search Bar */}
-        <div className="absolute bottom-0 transform translate-y-1/2 w-3/4 left-1/2 -translate-x-1/2 p-3 bg-gray-100 flex justify-center rounded-md">
+        <div className="absolute bottom-0 transform translate-y-1/2 w-3/4 left-1/2 -translate-x-1/2 p-3 bg-white shadow-2xl shadow-black flex justify-center rounded-se-3xl rounded-es-3xl rounded-ee-lg rounded-ss-lg">
           <input
             type="text"
-            className="w-2/3 outline-none rounded-2xl ps-3 border border-gray-300"
+            className="w-2/3 outline-none rounded-2xl ps-3 border border-gray-300 p-2  text-gray-500"
             placeholder="Search destinations..."
+            value={searchQuery}
+            onChange={handleSearchChange}
           />
-          <button className="ms-3 p-2 bg-yellow-500 text-white rounded-3xl w-24">Search</button>
+          {searchQuery &&
+          <button
+            className="ms-3 p-2  bg-emerald-500 text-white rounded-3xl w-24"
+            onClick={handleSearch}
+          >
+            Search
+          </button>
+          }
         </div>
       </div>
 
@@ -94,6 +124,8 @@ export default function Homepage() {
         <h1 className="font-bold firsth1">Latest Packages</h1>
       </div>
       <LazyLoadComponent importFunc={() => import('./LatestPackages')} latestpkgs={latestPkgs} />
+
+  
 
       <Footer />
     </>

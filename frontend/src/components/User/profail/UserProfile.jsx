@@ -62,27 +62,27 @@ const UserProfile = () => {
       
         <div className="flex justify-center flex-wrap gap-3 mb-6">
           <button
-            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-2 rounded-2xl hover:bg-blue-700 flex items-center"
+            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-2 rounded-2xl hover:bg-gray-300 flex items-center"
             onClick={handleOpenEditProfile}
           >
             <FaEdit size={20} className="mr-2" />
             Edit Profile
           </button>
           <button
-            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-2 rounded-2xl hover:bg-green-700 flex items-center"
+            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-2 rounded-2xl hover:bg-gray-300 flex items-center"
             onClick={handleOpenChangePassword}
           >
             <FaLock size={20} className="mr-2" />
             Change Password
           </button>
           <Link to='/user/'
-            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-4 rounded-2xl hover:bg-yellow-700 flex items-center"
+            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-4 rounded-2xl hover:bg-gray-300 flex items-center"
           >
             <FaHeart size={20} className="mr-2" />
             Wishlist
           </Link>
           <Link to='/user/bookingdetiles/:message'
-            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-4 rounded-2xl hover:bg-purple-700 flex items-center"
+            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-4 rounded-2xl hover:bg-gray-300 flex items-center"
           >
             <FaBook size={20} className="mr-2" />
             Bookings

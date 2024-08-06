@@ -45,34 +45,51 @@ const ChatBox = ({ user, onClose }) => {
     socket.on('user status', handleUserStatus);
 
     return () => {
-      socket.emit('leave', exactruser._id); 
-      socket.off('private message', handleMessage); 
+      socket.emit('leave', exactruser._id);
+      socket.off('private message', handleMessage);
       socket.off('user status', handleUserStatus);
     };
   }, [exactruser._id, user._id]);
 
   const handleSend = () => {
     if (message.trim()) {
-      const newMessage = { senderId:  exactruser._id, receiverId: user._id, message };
+      const newMessage = { senderId: exactruser._id, receiverId: user._id, message, timestamp: new Date().toISOString() };
       socket.emit('private message', newMessage);
-      setChatMessages((prevMessages) => [...prevMessages, newMessage]); // Optimistic UI update
+      setChatMessages((prevMessages) => [...prevMessages, newMessage]);
       setMessage('');
     }
   };
 
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    
+    const options = {
+      weekday: 'short', // Day of the week (e.g., "Mon")
+      // year: 'numeric',
+      // month: 'short',
+      // day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    
+    return date.toLocaleString('en-US', options); // Combining date and time in one string
+  };
+
   return (
-    <div className="flex flex-col h-80 w-full bg-gray-900 h-screen lg:h-[500px] rounded-lg">
+    <div className="flex flex-col h-80 w-full bg-gray-900 h-screen lg:h-[550px] rounded-lg">
       <div className='flex justify-between bg-black'>
         <button
           onClick={() => {
             onClose();
-            socket.emit('leave', exactruser._id); 
+            socket.emit('leave', exactruser._id);
           }}
           className="text-white rounded-lg shadow-md ms-2"
         >
           <FaArrowLeft size={'20'} />
         </button>
-        <p className="font-semibold text-white p-2 border-b border-gray-300">{user.name} {onlineUsers[user._id] === 'online' ? <span className="text-green-500"> (Online)</span> : <span className="text-gray-500"> (Offline)</span>}</p>
+        <p className="font-semibold text-white p-2 border-b border-gray-300">
+          {user.name} {onlineUsers[user._id] === 'online' ? <span className="text-green-500"> (Online)</span> : <span className="text-gray-500"> (Offline)</span>}
+        </p>
         <div></div>
       </div>
       <div className="flex-1 p-2 overflow-y-auto noscrollbar">
@@ -83,6 +100,10 @@ const ChatBox = ({ user, onClose }) => {
                 <p className={`inline-block px-3 py-2 rounded-lg ${msg.senderId === exactruser._id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
                   {msg.message}
                 </p>
+                <br />
+                <span className={`text-xs ${msg.senderId === exactruser._id ? 'text-blue-300' : 'text-gray-500'}`}>
+                  {formatTimestamp(msg.timestamp)}
+                </span>
               </div>
             ))}
           </div>

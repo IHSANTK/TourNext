@@ -70,13 +70,13 @@ export default function Navbar() {
           </div>
           <div className="hidden sm:flex flex-1 justify-center">
             <div className="flex space-x-4 items-center h-full">
-              <Link to="#" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-700">
+              <Link to="#" className="rounded-md px-3 py-2  font-bold text-neutral-700">
                 Home
               </Link>
-              <Link to="/user/Alldestinations" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-700">
+              <Link to="/user/Alldestinations" className="rounded-md px-3 py-2  font-bold text-neutral-700">
                Destinations
               </Link>
-              <Link to="/user/Packages" className="rounded-md px-3 py-2 text-xl font-bold text-neutral-700">
+              <Link to="/user/Packages" className="rounded-md px-3 py-2  font-bold text-neutral-700">
                 All Packages
               </Link>
             </div>
@@ -110,7 +110,7 @@ export default function Navbar() {
               ) : (
                 <button
                   type="button"
-                  className="relative inline-flex items-center justify-center rounded-md bg-yellow-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-900"
+                  className="relative inline-flex items-center justify-center rounded-md bg-emerald-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-900"
                   onClick={() => navigate('/user/login')}
                 >
                   Login

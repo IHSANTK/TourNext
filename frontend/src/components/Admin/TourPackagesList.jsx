@@ -110,7 +110,7 @@ const TourPackagesList = () => {
                     onClick={() => handlePackageClick('foroffers', tourPackage)}
                     className="btn bg-green-300 font-bold rounded focus:outline-none focus:shadow-outline"
                   >
-                    Add Offers
+                    Add Offer
                   </button>
                   <button
                     onClick={() => handleDelete(tourPackage._id)}

@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Handle disconnect
+  // Handle disconnect 
   socket.on('disconnect', () => {
     console.log('A user disconnected:', socket.id);
     for (const [userId, socketId] of Object.entries(onlineUsers)) {
