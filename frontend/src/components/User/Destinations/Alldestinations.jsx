@@ -128,14 +128,14 @@ const Alldestinations = () => {
       <Navbar />
       <div className="container mx-auto" style={{ marginTop: '100px' }}>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4" style={{ marginTop: '150px' }}>
-          <div className="lg:col-span-1 p-4">
+          <div className="lg:col-span-1 p-4 shadow-lg rounded-xl h-[300px]">
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="state">
                 State
               </label>
               <div className="relative">
                 <div
-                  className="cursor-pointer bg-white border border-gray-300 rounded p-2 text-black flex items-center justify-between"
+                  className="cursor-pointer bg-white border-b-2 rounded p-2 text-black flex items-center justify-between"
                   onClick={() => handleDropdownToggle('state')}
                 >
                   <span>{selectedState || 'Select State'}</span>
@@ -163,7 +163,7 @@ const Alldestinations = () => {
                 </label>
                 <div className="relative">
                   <div
-                    className="cursor-pointer bg-white border border-gray-300 rounded p-2 text-black flex items-center justify-between"
+                    className="cursor-pointer bg-white border-b-2 rounded p-2 text-black flex items-center justify-between"
                     onClick={() => handleDropdownToggle('district')}
                   >
                     <span>{selectedDistrict || 'Select District'}</span>
@@ -191,7 +191,7 @@ const Alldestinations = () => {
               </label>
               <div className="relative">
                 <div
-                  className="cursor-pointer bg-white border border-gray-300 rounded p-2 text-black flex items-center justify-between"
+                  className="cursor-pointer bg-white border-b-2 rounded p-2 text-black flex items-center justify-between"
                   onClick={() => handleDropdownToggle('category')}
                 >
                   <span>{selectedCategory || 'Select Category'}</span>

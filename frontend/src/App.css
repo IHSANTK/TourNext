@@ -6,3 +6,7 @@ body{
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.scroll-container {
+  scroll-behavior: smooth;
+}

@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import axios from "../../../api";
 import { useParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
-import Toastify from 'toastify-js';
-import 'toastify-js/src/toastify.css';
 import Navbar from '../Navbar';
 import Footer from "../Footer";
 import { FaHeart, FaShareAlt } from 'react-icons/fa';
 import BlogForm from './BlogForm';
 import Blogpost from "./Blogpost";
+import toastify from "../tostify";
+
+
+   
 
 export default function DestinationDetails() {
 
@@ -52,32 +54,15 @@ export default function DestinationDetails() {
     try {
       const response = await axios.post('/addtowishlist', { destinationId: destId }, { withCredentials: true });
       if (response.data.message === 'Added to wishlist') {
-        Toastify({
-          text: response.data.message,
-          duration: 2000, 
-          gravity: 'top', 
-          position: 'center',
-          backgroundColor: 'green',
-        }).showToast();
+        toastify(response.data.message)             
         setIsWishlist(true);
       } else if (response.data.message === 'Removed from wishlist') {
-        Toastify({
-          text: response.data.message,
-          duration: 2000, 
-          gravity: 'top', 
-          position: 'center',
-          backgroundColor: 'green',
-        }).showToast();
+        toastify(response.data.message)             
+
         setIsWishlist(false);
       }else if(response.data.message === "Access denied. No token provided." ){
-      
-        Toastify({
-          text: 'Pls Login',
-          duration: 3000, 
-          gravity: 'top', 
-          position: 'center',
-          backgroundColor: 'red',
-        }).showToast();
+        toastify('Pls Login')             
+
       }
     } catch (err) {
       console.error(err);
@@ -104,13 +89,7 @@ export default function DestinationDetails() {
   if(userisAuthenticated){
     setModalOpen(!modalOpen);
   }else{
-    Toastify({
-      text: 'Pls Login',
-      duration: 3000, 
-      gravity: 'top', 
-      position: 'center',
-      backgroundColor: 'red',
-    }).showToast();
+    toastify('Pls Login') 
   }
   };
 
@@ -126,11 +105,11 @@ export default function DestinationDetails() {
 
             <div className="flex flex-col md:flex-row md:space-x-8">
               <div className="flex-1">
-                <div className="relative">
-                  <img src={mainImage} alt={destination.name} className="w-full h-auto rounded-lg shadow-lg " />
+                <div className="relative  rounderd ">
+                  <img src={mainImage} alt={destination.name} className="w-full shadow-xl shadow-black  h-auto border-2 border-gray-500 rounded-lg shadow-lg " />
                   <div className="absolute top-4 right-4 flex space-x-2">
                     <button onClick={handleAddToWishlist} className="text-white px-3 py-2 rounded-full shadow-md ">
-                      <FaHeart className={`text-xl ${isWishlist ? 'text-red-500' : 'text-gray-500'}`} />
+                      <FaHeart className={`text-xl ${isWishlist ? 'text-red-600' : 'text-gray-500'}`} />
                     </button>
                     <button onClick={handleShare} className="text-black px-3 py-2 rounded-full shadow-md ">
                       <FaShareAlt className="text-xl" />
@@ -156,6 +135,7 @@ export default function DestinationDetails() {
 
                 <p className="lg:ms-5"><strong>State:</strong>{destination.state}</p>
                 <p className="lg:ms-5 mt-2"><strong>Place:</strong>{destination.district}</p>
+               
                 {/* <div className="flex items-center space-x-4 mb-4">
                   <RatingStars rating={destination.rating} />
                 </div> */}
@@ -186,7 +166,7 @@ export default function DestinationDetails() {
 
               <button
                 onClick={handleModalToggle}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
+                className="bg-emerald-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-emerald-700"
               >
                 Add Blog
               </button>

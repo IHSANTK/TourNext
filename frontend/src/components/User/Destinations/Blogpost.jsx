@@ -112,9 +112,9 @@ export default function Blogpost({ destination }) {
                 {blog.user._id !== exactruser._id && (
                   <button
                     onClick={() => handleModalOpen(blog.user)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
+                    className="bg-gray-100 text-Black font-bold px-4 py-2 rounded-lg shadow-md hover:bg-emerald-500"
                   >
-                    <i className="bi bi-chat-left-dots"></i>
+                    <i className="bi bi-chat-left-dots w-[50px] h-[50px]"></i>
                   </button>
                 )}
               </div>

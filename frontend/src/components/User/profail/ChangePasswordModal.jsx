@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 import axios from '../../../api';
+import toastify from "../tostify";
+
 
 const ChangePasswordModal = ({ show, onClose, user }) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -22,13 +24,8 @@ const ChangePasswordModal = ({ show, onClose, user }) => {
       console.log(response.data);
 
       if (response.data.message === 'Password updated successfully') {
-        Toastify({
-          text: response.data.message,
-          duration: 3000,
-          gravity: 'top',
-          position: 'center',
-          backgroundColor: 'green',
-        }).showToast();
+        toastify(response.data.message)
+        
         onClose();
         setConfirmNewPassword('');
         setCurrentPassword('');
@@ -42,7 +39,6 @@ const ChangePasswordModal = ({ show, onClose, user }) => {
       }
     } catch (error) {
       console.error(error);
-      // Handle unexpected errors
       setErr('An error occurred while updating the password');
     }
   };

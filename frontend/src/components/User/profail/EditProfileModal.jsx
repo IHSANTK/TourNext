@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import 'toastify-js/src/toastify.css';
 import {setuser } from "../../../redux/userauthSlice";
 import axios from '../../../api';
+import toastify from "../tostify";
+
 
 const EditProfileModal = ({ show, onClose, user }) => {
   const [name, setName] = useState(user.name || '');
@@ -43,13 +45,7 @@ const EditProfileModal = ({ show, onClose, user }) => {
        if(response.status === 200){
 
         console.log(response.data);
-            Toastify({
-                text: response.data.message,
-                duration: 3000, 
-                gravity: 'top', 
-                position: 'right',
-                backgroundColor: 'green',
-              }).showToast();
+        toastify(response.data.message)
 
               dispatch(setuser({user:response.data.user}))
               setImage(null);
@@ -71,13 +67,7 @@ const EditProfileModal = ({ show, onClose, user }) => {
        console.log("afte delte",response.data);
         setImagePreview(''); 
         setImage(null); 
-        Toastify({
-          text: response.data.message,
-          duration: 3000, 
-          gravity: 'top', 
-          position: 'right',
-          backgroundColor: 'green',
-        }).showToast();
+        toastify(response.data.message)
 
         dispatch(setuser({user:response.data.user}))
         

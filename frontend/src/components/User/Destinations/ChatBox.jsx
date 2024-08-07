@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaArrowLeft } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import { useSelector } from 'react-redux';
 import axios from '../../../api';
-
-const socket = io('http://localhost:5001');
+import socket from '../../socketio';
 
 const ChatBox = ({ user, onClose }) => {
   const exactruser = useSelector((state) => state.userauth.user);
 
   const [message, setMessage] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
-  const [room, setRoom] = useState(user._id);
   const [onlineUsers, setOnlineUsers] = useState({});
+
+  // Create references for scrolling
+  const chatContainerRef = useRef(null);
 
   useEffect(() => {
     socket.emit('join', exactruser._id);
@@ -51,6 +51,12 @@ const ChatBox = ({ user, onClose }) => {
     };
   }, [exactruser._id, user._id]);
 
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
+
   const handleSend = () => {
     if (message.trim()) {
       const newMessage = { senderId: exactruser._id, receiverId: user._id, message, timestamp: new Date().toISOString() };
@@ -64,44 +70,44 @@ const ChatBox = ({ user, onClose }) => {
     const date = new Date(timestamp);
     
     const options = {
-      weekday: 'short', // Day of the week (e.g., "Mon")
-      // year: 'numeric',
-      // month: 'short',
-      // day: 'numeric',
+      weekday: 'short', 
       hour: '2-digit',
       minute: '2-digit'
     };
     
-    return date.toLocaleString('en-US', options); // Combining date and time in one string
+    return date.toLocaleString('en-US', options); 
   };
 
   return (
-    <div className="flex flex-col h-80 w-full bg-gray-900 h-screen lg:h-[550px] rounded-lg">
-      <div className='flex justify-between bg-black'>
+    <div className="flex flex-col h-screen w-full  lg:h-[550px] lg:rounded-3xl">
+      <div className='flex justify-between bg-white text-black lg:rounded-ss-3xl lg:rounded-se-3xl '>
         <button
           onClick={() => {
             onClose();
             socket.emit('leave', exactruser._id);
           }}
-          className="text-white rounded-lg shadow-md ms-2"
+          className=" lg:rounded-3xl  ms-2"
         >
           <FaArrowLeft size={'20'} />
         </button>
-        <p className="font-semibold text-white p-2 border-b border-gray-300">
-          {user.name} {onlineUsers[user._id] === 'online' ? <span className="text-green-500"> (Online)</span> : <span className="text-gray-500"> (Offline)</span>}
+        <p className="font-semibold text-black p-2 border-b border-gray-300">
+          {user.name} {onlineUsers[user._id] === 'online' ? <span className="text-green-500"> Online</span> : <span className="text-gray-500"> Offline</span>}
         </p>
         <div></div>
       </div>
-      <div className="flex-1 p-2 overflow-y-auto noscrollbar">
+      <div
+        className="flex-1 p-2 overflow-y-auto bg-gradient-to-r from-sky-400 to-pink-200 text-white noscrollbar"
+        ref={chatContainerRef}
+      >
         {chatMessages.length > 0 ? (
           <div>
             {chatMessages.map((msg, index) => (
               <div key={index} className={`mb-2 ${msg.senderId === exactruser._id ? 'text-right' : 'text-left'}`}>
-                <p className={`inline-block px-3 py-2 rounded-lg ${msg.senderId === exactruser._id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
+                <p className={`inline-block px-3 py-2 rounded-lg ${msg.senderId === exactruser._id ? 'bg-gradient-to-r from-sky-400 to-indigo-600 text-white' : 'bg-gray-200 text-gray-800'}`}>
                   {msg.message}
                 </p>
                 <br />
-                <span className={`text-xs ${msg.senderId === exactruser._id ? 'text-blue-300' : 'text-gray-500'}`}>
+                <span className={`text-xs ${msg.senderId === exactruser._id ? 'text-gray-700' : 'text-gray-500'}`}>
                   {formatTimestamp(msg.timestamp)}
                 </span>
               </div>
@@ -120,7 +126,7 @@ const ChatBox = ({ user, onClose }) => {
         />
         <button
           onClick={handleSend}
-          className="text-white p-3 rounded-lg shadow-md hover:bg-blue-600 flex items-center"
+          className="text-black p-3 rounded-lg  hover:bg-gray-100 flex items-center"
         >
           <IoSend size={'30'} />
         </button>

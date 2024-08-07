@@ -95,7 +95,6 @@ exports.dashboarddatas = async (req,res)=>{
         }
       ]);
 
-      console.log('hggfh fhgf f fgj',lastAddedDestinations);
   
       const latestpackages = await Packages.find().sort({ date: -1 }).limit(4);
       

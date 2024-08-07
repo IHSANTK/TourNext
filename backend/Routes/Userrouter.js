@@ -35,7 +35,7 @@ router.post('/editprofile/:userid', upload.single('profileImage'), UserControlle
 router.post('/deleteprofileimage/:userId',UserController.deleteprofailimage);
 
 router.post('/changepassword/:userid',UserController.changePassword);
-
+ 
 router.get('/searchdestinations',UserController.searchDestinations);
 
 router.get('/getcategorys',UserController.getcategories);

@@ -113,7 +113,7 @@ export default function Homepage() {
       </div>
 
       <div className="h1div mt-5">
-        <h1 className="font-bold firsth1 mt-5">Most popular destinations</h1>
+        <h1 className="font-bold firsth1 mt-5">Top-Rated Travel Places</h1>
       </div>
 
       <LazyLoadComponent importFunc={() => import('./Card')} latestdest={populardest} />
