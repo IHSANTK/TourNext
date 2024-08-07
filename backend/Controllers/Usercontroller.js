@@ -70,21 +70,43 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.dashboarddatas = async (req,res)=>{
-  try {
-    console.log('datasbackend ok');
-    
-    
-    const lastAddedDestinations = await Destinations.find().sort({ date: -1 }).limit(4);
+    try {
+      console.log('datasbackend ok');
+      
+      const lastAddedDestinations = await Destinations.aggregate([
+        {
+          $addFields: {
+            averageRating: {
+              $avg: {
+                $map: {
+                  input: "$blogs",
+                  as: "blog",
+                  in: "$$blog.rating" 
+                }
+              }
+            }
+          }
+        },
+        {
+          $sort: { averageRating: -1 }
+        },
+        {
+          $limit: 4
+        }
+      ]);
 
-    const latestpackages = await Packages.find().sort({date:-1}).limit(4)
-    
-    console.log(latestpackages);
-    
-    res.status(200).json({lastAddedDestinations,latestpackages});
-  } catch (error) {
-    console.error('Error fetching destinations:', error);
-    res.status(500).json({ error: 'Failed to fetch destinations' });
-  }
+      console.log('hggfh fhgf f fgj',lastAddedDestinations);
+  
+      const latestpackages = await Packages.find().sort({ date: -1 }).limit(4);
+      
+
+      
+      res.status(200).json({ lastAddedDestinations, latestpackages });
+    } catch (error) {
+      console.error('Error fetching destinations:', error);
+      res.status(500).json({ error: 'Failed to fetch destinations' });
+    }
+  
 
 }
 

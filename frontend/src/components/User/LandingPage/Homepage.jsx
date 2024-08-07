@@ -50,7 +50,7 @@ export default function Homepage() {
 
       {/* Carousel */}
       <div id="carouselExampleControls" className="carousel slide relative" data-bs-ride="carousel">
-        <div className="carousel-inner h-[250px] lg:h-[500px]">
+        <div className="carousel-inner h-[250px] lg:h-[450px]">
           <div className="carousel-item active">
             <img
               src="https://mrwallpaper.com/images/hd/travel-4k-volcano-ynlmn2hmts0n7gsw.jpg"
@@ -61,7 +61,7 @@ export default function Homepage() {
           <div className="carousel-item">
             <img
               src="https://cdn.pixabay.com/photo/2021/12/05/10/28/nature-6847175_640.jpg"
-              className="d-block w-100 h-full object-cover"
+              className="d-block w-100 h-1/2 lg:h-full object-cover"
               alt="Second slide"
             />
           </div>

@@ -6,22 +6,22 @@ import RatingStars from '../RatingStars';
 export default function Card({ latestdest }) {
   console.log('cardpage', latestdest);
 
-  const calculateAverageRating = (blogs) => {
-    if (blogs.length === 0) return 0;
+  // const calculateAverageRating = (blogs) => {
+  //   if (blogs.length === 0) return 0;
 
-    const totalRating = blogs.reduce((acc, blog) => acc + blog.rating, 0);
-    return totalRating / blogs.length;
-  };
+  //   const totalRating = blogs.reduce((acc, blog) => acc + blog.rating, 0);
+  //   return totalRating / blogs.length;
+  // };
 
   return (
     <div className="px-5 mt-5">
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1">
         {latestdest.map((card, index) => {
-          const averageRating = calculateAverageRating(card.blogs);
+          // const averageRating = calculateAverageRating(card.blogs);
           return (
             <div
               key={index}
-              className="card-container max-w-xs rounded overflow-hidden m-3 bg-orange-100 transition-transform duration-700 ease-in-out transform hover:scale-105 hover:rotate-3"
+              className="card-container max-w-xs rounded overflow-hidden m-3  transition-transform duration-700 ease-in-out transform hover:scale-105 hover:rotate-3"
             >
               <Link to={`/user/destinationDetails/${card._id}`}>
                 <div className="relative">
@@ -39,7 +39,7 @@ export default function Card({ latestdest }) {
            
                 <div className=" mt-2">
                     <div className='flex'>
-                       <RatingStars rating={averageRating} />
+                       <RatingStars rating={card.averageRating} />
                    </div>
              </div>
          
