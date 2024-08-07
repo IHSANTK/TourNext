@@ -16,12 +16,43 @@ const Alldestinations = () => {
   const [showDistrictDropdown, setShowDistrictDropdown] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
+  const[states,setStates] =useState()
+  const[categories,setCategory] = useState()
+
   const location = useLocation();
   const searchResults = location.state?.results || [];
 
-  const states = useSelector((state) => state.state.states);
-  const categories = useSelector((state) => state.category.categories);
+  // const states = useSelector((state) => state.state.states);
+
+  console.log('states',states);
+
+  // const categories = useSelector((state) => state.category.categories);
+
+  // console.log("all categoris",categories);
+
   const destinationsPerPage = 9;
+   useEffect(() => {
+    const fetchAllStates = async () => {
+      try {
+        const response = await axios.get('/getstates');
+
+        const states = response.data; 
+
+        console.log("inital renser time ",states);
+        
+        setStates(states);
+
+        const res = await axios.get('/getcategorys')
+         console.log(res.data);
+        setCategory(res.data)
+       
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchAllStates();
+  },[]); 
+
 
   useEffect(() => {
     const fetchDestinations = async () => {

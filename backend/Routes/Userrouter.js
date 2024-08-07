@@ -32,11 +32,13 @@ router.post('/addblog',authenticate,upload.array('images'),UserController.addBlo
 
  
 router.post('/editprofile/:userid', upload.single('profileImage'), UserController.editProfile);
-router.post('/deleteprofileimage/:userId',UserController.deleteprofailimage)
+router.post('/deleteprofileimage/:userId',UserController.deleteprofailimage);
 
-router.post('/changepassword/:userid',UserController.changePassword)
+router.post('/changepassword/:userid',UserController.changePassword);
 
 router.get('/searchdestinations',UserController.searchDestinations);
+
+router.get('/getcategorys',UserController.getcategories);
 
 router.post('/userlogut',authenticate, UserController.logout);
 

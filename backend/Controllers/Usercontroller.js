@@ -8,6 +8,7 @@ const helpers = require("../helpers/razorpay");
 const otpService = require("../services/otpService");
 const { response } = require('express');
 const nodemailer = require('nodemailer');
+const Admin = require('../models/Admin');
 
 
 
@@ -484,7 +485,7 @@ exports.gellAlldestinatons = async (req, res) => {
   if (district) filter.district = district;
   if (category) filter.category = category;
 
-  console.log('Filter criteria:', filter);
+  // console.log('Filter criteria:', filter);
 
   try {
     const destinations = await Destinations.find(filter)
@@ -494,7 +495,7 @@ exports.gellAlldestinatons = async (req, res) => {
 
     const count = await Destinations.countDocuments(filter);
 
-    console.log('Filtered destinations:', destinations);
+    // console.log('Filtered destinations:', destinations);
     res.json({
       destinations,
       totalPages: Math.ceil(count / limit),
@@ -506,6 +507,22 @@ exports.gellAlldestinatons = async (req, res) => {
   }
 };
 
+exports.getcategories = async(req,res)=>{
+    
+   try{
+    const admin = await Admin.findOne();
+     const categories = admin.categories
+
+     console.log(categories);
+
+     res.status(200).json(categories)
+
+   }catch(error){
+    console.error(error);
+     res.status(500).json('Internal servel error')
+   }
+
+}
 
 exports.addtowishlist = async (req, res) => {
   const { destinationId } = req.body;
