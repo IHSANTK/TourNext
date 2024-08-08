@@ -1,10 +1,9 @@
-import { useState} from 'react';
+// src/pages/Signup.js
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../../api';
 import './Signup.css';
-import {  FaEnvelope, FaLock, FaUser, FaPhone, FaEye, FaEyeSlash } from 'react-icons/fa';
-
-
+import TextInput from './TextInput';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -78,10 +77,7 @@ export default function Signup() {
         password: formData.password,
       });
       if (response.status === 200) {
-
-
         navigate('/user/login');
-
       } else {
         alert('Signup failed');
       }
@@ -89,6 +85,7 @@ export default function Signup() {
       console.error('Error creating user');
     }
   };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -96,92 +93,57 @@ export default function Signup() {
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
+
   return (
-    <div className='maindiv flex justify-center items-center min-h-screen b  bg-gray-200'>
-      <div className='inputdiv p-8 rounded-lg   bg-gray-100'>
+    <div className='maindiv flex justify-center items-center min-h-screen bg-gray-200'>
+      <div className='inputdiv p-8 rounded-lg bg-gray-100'>
         <h1 className='text-2xl font-bold mb-4 text-center'>Sign Up</h1>
         <form onSubmit={handleSubmit}>
-          <div className='mb-4'>
-            <div className='inputWrapper flex items-center mb-2'>
-              <FaUser className='icon mr-2' />
-              <input
-                type="text"
-                name="name"
-                placeholder='Name'
-                className='inputField w-full p-2 rounded'
-                value={formData.name}
-                onChange={handleChange}
-              
-              />
-              
-            </div>
-            {errors.name && <div className='error'>{errors.name}</div>}
-
-            <div className='inputWrapper flex items-center mb-2'>
-              <FaPhone className='icon mr-2' />
-              <input
-                type="text"
-                name="phoneNumber"
-                placeholder='Phone Number'
-                className='inputField w-full p-2 rounded'
-                value={formData.phoneNumber}
-                onChange={handleChange}
-              
-              />
-            </div>
-            {errors.phoneNumber && <div className='error'>{errors.phoneNumber}</div>}
-
-            <div className='inputWrapper flex items-center mb-2'>
-              <FaEnvelope className='icon mr-2' />
-              <input
-                type="email"
-                name="email"
-                placeholder='Email'
-                className='inputField w-full p-2 rounded'
-                value={formData.email}
-                onChange={handleChange}
-            
-              />
-            </div>
-            {errors.email && <div className='error'>{errors.email}</div>}
-
-            <div className='inputWrapper flex items-center mb-2'>
-              <FaLock className='icon mr-2' />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                placeholder='Password'
-                className='inputField w-full p-2 rounded'
-                value={formData.password}
-                onChange={handleChange}
-               
-              />
-              <span onClick={togglePasswordVisibility} className="cursor-pointer">
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
-            </div>
-            {errors.password && <div className='error'>{errors.password}</div>}
-
-            <div className='inputWrapper flex items-center mb-2'>
-              <FaLock className='icon mr-2' />
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                name="confirmPassword"
-                placeholder='Confirm Password'
-                className='inputField w-full p-2 rounded'
-                value={formData.confirmPassword}
-                onChange={handleChange}
-          
-              />
-              <span onClick={toggleConfirmPasswordVisibility} className="cursor-pointer">
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
-            </div>
-            {errors.confirmPassword && <div className='error'>{errors.confirmPassword}</div>}
-
-          </div>
-
-          <button type="submit" className='w-full py-2 bg-blue-500 text-white rounded mb-4'>Sign Up</button>
+          <TextInput
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={formData.name}
+            onChange={handleChange}
+            error={errors.name}
+          />
+          <TextInput
+            type="text"
+            name="phoneNumber"
+            placeholder="Phone Number"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            error={errors.phoneNumber}
+          />
+          <TextInput
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            error={errors.email}
+          />
+          <TextInput
+            type={showPassword ? 'text' : 'password'}
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            showPassword={showPassword}
+            togglePasswordVisibility={togglePasswordVisibility}
+            error={errors.password}
+          />
+          <TextInput
+            type={showConfirmPassword ? 'text' : 'password'}
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            showConfirmPassword={showConfirmPassword}
+            toggleConfirmPasswordVisibility={toggleConfirmPasswordVisibility}
+            error={errors.confirmPassword}
+          />
+          <button type="submit" className='w-full py-2 bg-emerald-500 text-white rounded mb-4'>Sign Up</button>
         </form>
 
         <div className='flex items-center justify-center mb-4'>
@@ -189,7 +151,7 @@ export default function Signup() {
           <span className='mx-2'>or</span>
           <div className='flex-grow border-t border-gray-300'></div>
         </div>
-        <button onClick={() => navigate('/user/login')} className='w-full py-2 bg-green-500 text-white rounded'>Login</button>
+        <button onClick={() => navigate('/user/login')} className='w-full py-2 bg-white shadow-lg text-black rounded'>Login</button>
       </div>
     </div>
   );

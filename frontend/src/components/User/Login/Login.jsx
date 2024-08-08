@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../api";
 import { useDispatch } from "react-redux";
-import { setTokens,setuser } from "../../../redux/userauthSlice";
-import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import { setTokens, setuser } from "../../../redux/userauthSlice";
 import { GoogleLogin } from "@react-oauth/google";
 import "./Login.css";
 import OtpModal from "./OtpModal";
+import TextInput from "./TextInput";
+import { FaEnvelope, FaLock } from 'react-icons/fa';
 
 export default function Login() {
   const [err, setErr] = useState("");
@@ -62,26 +63,20 @@ export default function Login() {
       if (response.data.message === 'Invalid email or password') {
         setErr(response.data.message);
       } else if (response.status === 200) {
-
-        console.log('user',response.data.user);
         navigate("/");
-        
         dispatch(
           setTokens({
             useraccessToken: response.data.userAccessToken,
-            userrefreshToken: response.data.userRefreshToken,    
+            userrefreshToken: response.data.userRefreshToken,
           })
         );
-
-        dispatch(setuser( {user :response.data.user}))
-
+        dispatch(setuser({ user: response.data.user }));
       }
     } catch (error) {
       console.error(
         "Error logging in:",
         error.response ? error.response.data : error.message
       );
-      
     }
   };
 
@@ -103,10 +98,8 @@ export default function Login() {
             userrefreshToken: res.data.userRefreshToken,
           })
         );
-        console.log('user',res.data.user);
-        dispatch(setuser( {user :res.data.user}))
-
         navigate("/");
+        dispatch(setuser({ user: res.data.user }));
       } else {
         console.error("Error during Google login:", res.data);
       }
@@ -119,20 +112,16 @@ export default function Login() {
   };
 
   const handleGoogleFailure = (error) => {
-    console.error("Google login failed ok:", error);
+    console.error("Google login failed:", error);
   };
 
   const handleOtpEmailSubmit = async (email) => {
     try {
       const response = await axios.post("/send-otp", { email });
       if (response.status === 200) {
-        console.log("OTP sent successfully",response.data);
-        alert("OTP sent successfully",response.data)
-
+        alert("OTP sent successfully");
       } else {
         console.log("Error sending OTP:", response.data);
-       
-      
       }
     } catch (error) {
       console.error(
@@ -152,7 +141,6 @@ export default function Login() {
         }
       );
       if (response.status === 200) {
-        console.log("sucess ok");
         navigate("/");
         dispatch(
           setTokens({
@@ -160,8 +148,7 @@ export default function Login() {
             userrefreshToken: response.data.userRefreshToken,
           })
         );
-        dispatch(setuser( {user :response.data.user}))
-
+        dispatch(setuser({ user: response.data.user }));
       } else {
         console.error("Error verifying OTP:", response.data);
       }
@@ -178,46 +165,29 @@ export default function Login() {
       <div className="inputdiv p-8 rounded-lg bg-gray-100">
         <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <div className="inputWrapper flex items-center mb-2">
-              <FaEnvelope className="icon mr-2" />
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                className="inputField w-full p-2 rounded"
-                value={formData.email}
-                onChange={handleChange}
-                
-              />
-            </div>
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email}</p>
-            )}
-            <div className="inputWrapper flex items-center mt-3 relative">
-              <FaLock className="icon mr-2" />
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="Password"
-                className="inputField w-full p-2 rounded"
-                value={formData.password}
-                onChange={handleChange}
-             
-              />
-              <div
-                className="absolute right-2 top-2 mt-3 cursor-pointer"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </div>
-            </div>
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password}</p>
-            )}
-          </div>
-          <span className="ml-5 flex justify-center text-red-500 font-bold mb-2"><p>{err}</p></span>
-
+          <TextInput
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            error={errors.email}
+            icon={<FaEnvelope />}
+          />
+          <TextInput
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            error={errors.password}
+            showPassword={showPassword}
+            toggleShowPassword={() => setShowPassword(!showPassword)}
+            icon={<FaLock />}
+          />
+          <span className="ml-5 flex justify-center text-red-500 font-bold mb-2">
+            <p>{err}</p>
+          </span>
           <div className="flex justify-between items-center mb-3">
             <span
               className="text-sm text-blue-500 cursor-pointer"
@@ -233,7 +203,7 @@ export default function Login() {
             Login
           </button>
         </form>
-        <div className="flex justify-center w-full ">
+        <div className="flex justify-center w-full">
           <GoogleLogin
             size="9"
             onSuccess={handleGoogleSuccess}
@@ -246,8 +216,8 @@ export default function Login() {
         </div>
         <div className="flex items-center justify-center mb-4">
           <div className="flex-grow border-t border-gray-300 mt-2"></div>
-          <span className="mx-2  mt-2">or</span>
-          <div className="flex-grow border-t border-gray-300  mt-2"></div>
+          <span className="mx-2 mt-2">or</span>
+          <div className="flex-grow border-t border-gray-300 mt-2"></div>
         </div>
         <button
           onClick={() => navigate("/user/signup")}

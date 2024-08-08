@@ -40,6 +40,8 @@ router.get('/searchdestinations',UserController.searchDestinations);
 
 router.get('/getcategorys',UserController.getcategories);
 
+router.get('/wishlistdatas/:userid',UserController.getwishlistdata)
+
 router.post('/userlogut',authenticate, UserController.logout);
 
 
