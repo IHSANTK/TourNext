@@ -34,7 +34,7 @@ export default function Homepage() {
   const handleSearch = async () => {
     try {
 
-      console.log(searchQuery);
+      console.log(searchQuery,'fdfdf');
    
       const response = await axios.get(`/searchdestinations?query=${searchQuery}`);
       setSearchResults(response.data);
