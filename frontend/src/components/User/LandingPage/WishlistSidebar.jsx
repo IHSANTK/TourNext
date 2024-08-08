@@ -40,7 +40,7 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
        
         Toastify({
             text: response.data.message,
-            duration: 2000, 
+            duration: 1000, 
             gravity: 'top', 
             position: 'right',
             backgroundColor: 'green',

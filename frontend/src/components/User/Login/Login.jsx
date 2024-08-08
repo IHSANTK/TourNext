@@ -62,7 +62,11 @@ export default function Login() {
       );
       if (response.data.message === 'Invalid email or password') {
         setErr(response.data.message);
-      } else if (response.status === 200) {
+      } else if(response.data.message === 'You are blocked and cannot log in'){ 
+          
+        alert(response.data.message);
+
+      }else if(response.status === 200) {
         navigate("/");
         dispatch(
           setTokens({

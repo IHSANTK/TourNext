@@ -47,27 +47,34 @@ exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-  
+
     if (!user) {
-      return res.json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
+
+    if (user.blocked) {
+
+      return  res.json({ message: 'You are blocked and cannot log in' });
+
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.json({ message: 'Invalid email or password' });
-    } 
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
 
-    const userAccessToken = generateAccessToken(user); 
+    const userAccessToken = generateAccessToken(user);
     const userRefreshToken = generateRefreshToken(user);
 
     res.cookie('user_refreshToken', userRefreshToken, { httpOnly: true, sameSite: 'Strict', maxAge: 7 * 24 * 60 * 60 * 1000 })
        .cookie('user_accessToken', userAccessToken, { httpOnly: true, sameSite: 'Strict', maxAge: 15 * 60 * 1000 })
        .json({ userAccessToken, user });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ error: 'Server error' });
   }
 };
+
 
 exports.dashboarddatas = async (req,res)=>{
     try {
