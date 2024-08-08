@@ -2,14 +2,23 @@ import React, { useState } from 'react';
 import { useNavigate,Link } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
 import { clearTokens } from '../../redux/userauthSlice';
-import { FaUserCircle } from 'react-icons/fa';
+import WishlistSidebar from './LandingPage/WishlistSidebar';
+import {
+  FaUserCircle,
+  FaHeart,
+  FaUser,
+  FaClipboardList,
+  FaSignOutAlt,
+} from "react-icons/fa";
 import Logosvg from './logosvg';
 import axios from '../../api';
 
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false); // State for dropdown menu
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false); 
+  const [isWishlistSidebarOpen, setIsWishlistSidebarOpen] = useState(false);
+
   const userisAuthenticated = useSelector((state) => state.userauth.userisAuthenticated);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -26,9 +35,12 @@ export default function Navbar() {
       console.error(err);
     }
   };
-
+  const handleWishlistClick = () => {
+    setIsWishlistSidebarOpen(!isWishlistSidebarOpen);
+    setIsProfileMenuOpen(false);
+  };
   return (
-    <nav className="absolute top-0 left-0 z-10  bg-gray-100  w-full bg-inherit shadow-lg " >
+    <nav className="absolute top-0 left-0 z-10  bg-gray-100  w-full bg-inherit shadow " >
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-20 sm:h-24 items-center">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -103,12 +115,20 @@ export default function Navbar() {
                   </button>
                 
                   <div className={`${isProfileMenuOpen ? 'block' : 'hidden'} absolute right-0 z-10 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg`}>
-                    <div className="py-1">
-                      <Link to="/user/profialpage" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</Link>
-                      <Link to="/user/bookingdetiles/:message" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Bookings</Link>
-
-                      <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
-                    </div>
+                  <div className="py-1">
+    <Link to="/user/profialpage" className="flex hover:text-emerald-500 items-center font-bold px-4 py-2 text-sm text-gray-700 no-hover-bg">
+      <FaUser className="mr-2" /> Profile
+    </Link>
+    <Link to="/user/bookingdetiles/:message" className="flex hover:text-emerald-500 font-bold items-center px-4 py-2 text-sm text-gray-700 no-hover-bg">
+      <FaClipboardList className="mr-2" /> Bookings
+    </Link>
+    <Link to="#" onClick={handleWishlistClick} className="flex hover:text-emerald-500 items-center px-4 py-2 text-sm text-gray-700 font-bold no-hover-bg">
+      <FaHeart className="mr-2" /> Wishlist
+    </Link>
+    <button onClick={handleLogout} className="flex hover:text-emerald-500 font-bold items-center w-full text-left px-4 py-2 text-sm text-gray-700 no-hover-bg">
+      <FaSignOutAlt className="mr-2" /> Logout
+    </button>
+  </div>
                   </div>
                 </div>
               ) : (
@@ -143,6 +163,14 @@ export default function Navbar() {
           </Link>
         </div>
       </div>
+
+      
+      {isWishlistSidebarOpen && (
+        <WishlistSidebar
+          isOpen={isWishlistSidebarOpen}
+          onClose={() => setIsWishlistSidebarOpen(false)}
+        />
+      )}
     </nav>
   );
 }

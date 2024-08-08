@@ -26,6 +26,8 @@ router.get('/getAllDestinations',UserController.gellAlldestinatons)
 router.get('/getdestinationdetails/:id',UserController.getdestinationdetiles)
 
 router.post('/addToWishlist',authenticate,UserController.addtowishlist)
+
+router.post('/removedwishlist',authenticate,UserController.removedfromwishlist)
 router.get('/getwhishlistdata/:id',authenticate,UserController.getwhishlistdata)
    
 router.post('/addblog',authenticate,upload.array('images'),UserController.addBlog) 

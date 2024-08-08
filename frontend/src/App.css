@@ -10,3 +10,13 @@ body{
 .scroll-container {
   scroll-behavior: smooth;
 }
+
+.no-hover-bg {
+  transition: none; /* Remove transition if needed */
+}
+
+.no-hover-bg:hover {
+  background-color: transparent; /* Remove hover background color */
+  color: inherit; /* Optional: retain text color */
+  text-decoration: none; /* Ensure no underline */
+}
