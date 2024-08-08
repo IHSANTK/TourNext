@@ -52,14 +52,13 @@ export default function Packages() {
       <Navbar />
       <div className=" mx-auto px-4 mt-16 flex flex-col lg:flex-row ">
         <div className="lg:w-1/4 lg:pr-8">
-          <div className="sticky top-0 p-4 bg-white shadow-md rounded-md mt-5">
-            <h2 className="text-xl font-bold mb-4">Filter Packages</h2>
+          <div className="sticky top-40 p-4 bg-white shadow-md rounded-md ">
             <input
               type="text"
               placeholder="Search packages..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="w-full p-2 mb-4 border border-gray-300 rounded-full"
+              className="w-full ps-3 p-2 mb-4 placeholder:text-slate-700 outline-none border-b-2 border-gray-300 rounded-full "
             />
             <h3 className="text-lg font-semibold mb-2">Price Range</h3>
             <Range

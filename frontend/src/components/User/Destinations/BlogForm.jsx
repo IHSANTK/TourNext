@@ -75,7 +75,7 @@ const BlogForm = ({ destinationId, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 sm:mx-0">
         <h2 className="text-2xl font-semibold mb-4">Add a Blog</h2>
         <form onSubmit={handleBlogSubmit}>
@@ -100,7 +100,7 @@ const BlogForm = ({ destinationId, onClose }) => {
               name="description"
               value={newBlog.description}
               onChange={handleBlogChange}
-              rows="4"
+              rows="1"
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base md:text-lg"
               required
             />
