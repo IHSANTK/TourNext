@@ -20,3 +20,38 @@ body{
   color: inherit; /* Optional: retain text color */
   text-decoration: none; /* Ensure no underline */
 }
+
+.map-container {
+  height: 100%;
+  width: 100%;
+}
+
+.weather-sunny {
+  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfav-S7nmyC_r-QMdnPLDgduVatlBDpSXxKQ&s') no-repeat center center;
+  background-size: cover;
+  color: #fdd835; 
+}
+
+.weather-rainy {
+  background: url('/path-to-rainy-image.gif') no-repeat center center;
+  background-size: cover;
+  color: #00796b; 
+}
+
+.weather-cool {
+  background: url('/path-to-cool-image.jpg') no-repeat center center;
+  background-size: cover;
+  color: #0277bd; 
+}
+
+.weather-container {
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  color: #fff;
+}
+.weather-hazy {
+  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfav-S7nmyC_r-QMdnPLDgduVatlBDpSXxKQ&s') no-repeat center center;
+  background-size: cover;
+  color: #969b6f; /* or any other hazy color */
+}

@@ -163,17 +163,18 @@ export default function DestinationDetails() {
                 <p className="lg:ms-5 mt-2"><strong>Place:</strong> {destination.district}</p>
               </div>
             </div>
-            <div className="my-8 flex flex-col lg:flex-row gap-4">
-              <div className="w-full lg:w-1/2 h-[300px] rounded-lg shadow-lg overflow-hidden relative">
+
+            <div className="my-8 flex flex-col lg:flex-row gap-2">
+              <div className="w-full lg:w-1/2 h-[300px] relative">
                 <Map lat={destination.latitude} lng={destination.longitude} />
               </div>
-              <div className="w-full lg:w-1/2 lg:ps-8 mt-4 lg:mt-0 relative rounded-lg shadow-lg overflow-hidden">
+              <div className="w-full lg:w-1/2 lg:ps-8 mt-4 lg:mt-0 relative">
                 <img
                   src={getWeatherImage()}
                   alt="Weather Background"
                   className="w-full h-full object-cover absolute inset-0"
                 />
-                <div className="relative p-4 bg-opacity-75 mb-3 rounded-lg shadow-md">
+                <div className="relative p-4  bg-opacity-75">
                   <h2 className="text-2xl font-semibold mb-4">Weather in {destination.district}</h2>
                   {weather ? (
                     <div className="flex flex-col items-center">
@@ -188,7 +189,6 @@ export default function DestinationDetails() {
               </div>
             </div>
 
-
             {destination && (
                 <div>
               <div className="py-4">
@@ -200,8 +200,8 @@ export default function DestinationDetails() {
                 </button>
                 {modalOpen && <BlogForm destinationId={destination._id} closeModal={handleModalToggle} />}
               </div>
-              <Blogpost destination={destination} />
-              </div>
+               <Blogpost key={index} blog={blog} />
+               </div>
             )}
 
            

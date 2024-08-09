@@ -226,7 +226,7 @@ const Alldestinations = () => {
                         <img
                           src={destination.images[0]}
                           alt={destination.name}
-                          className="w-full border-2 h-auto rounded-lg shadow-xl shadow-black"
+                          className="w-full border border-white h-auto rounded-lg shadow-xl shadow-black"
                         />
                       </Link>
                     </div>

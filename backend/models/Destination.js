@@ -13,6 +13,14 @@ const DestinationSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  latitude: {
+    type: Number,   // Changed from String to Number
+    required: true
+  },
+  longitude: {
+    type: Number,   // Changed from String to Number
+    required: true
+  },
   description: {
     type: String,
     required: true
@@ -24,14 +32,14 @@ const DestinationSchema = new mongoose.Schema({
     type: [String],
     required: true
   },
-  date:{
+  date: {
     type: Date,
     default: Date.now
   },
   blogs: [{
-    user:{},
+    user: { type: mongoose.Schema.Types.Mixed },  // Adjusted type for user
     images: [{ type: String }],
-    text:String,
+    text: String,
     description: { type: String },
     addedAt: {
       type: Date,
@@ -41,7 +49,6 @@ const DestinationSchema = new mongoose.Schema({
   }]
 });
 
-
-const Destinations = mongoose.model('Destinations',  DestinationSchema);
+const Destinations = mongoose.model('Destinations', DestinationSchema);
 
 module.exports = Destinations;

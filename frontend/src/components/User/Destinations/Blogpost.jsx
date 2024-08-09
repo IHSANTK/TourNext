@@ -58,6 +58,7 @@ export default function Blogpost({ destination }) {
   return (
     <>
       <div className="ms-3 mb-1">
+        <h2 className="text-3xl font-bold mb-5 mt-3">Blogs</h2>
         <h2 className="text-xl font-semibold mb-2">Total Rating:</h2>
         <div className='flex'>
           <RatingStars rating={averageRating} />

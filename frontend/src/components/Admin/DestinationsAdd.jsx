@@ -5,7 +5,7 @@ import Sidebar from './sidebar';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from '../../api';
-import { ClipLoader } from 'react-spinners';  
+import { ClipLoader } from 'react-spinners';
 
 const DestinationsAdd = () => {
   const { register, handleSubmit, control, formState: { errors }, watch } = useForm();
@@ -48,6 +48,8 @@ const DestinationsAdd = () => {
     formData.append('category', data.category.label);
     formData.append('district', data.district.label);
     formData.append('state', data.state.label);
+    formData.append('latitude', data.latitude);
+    formData.append('longitude', data.longitude);
 
     for (let i = 0; i < data.images.length; i++) {
       formData.append('images', data.images[i][0]);
@@ -124,6 +126,26 @@ const DestinationsAdd = () => {
               rules={{ required: 'Category is required' }}
             />
             {errors.category && <p className="text-red-500 text-xs italic">{errors.category.message}</p>}
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Latitude</label>
+            <input 
+              {...register('latitude', { required: 'Latitude is required' })}
+              className={`shadow appearance-none border ${errors.latitude ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+              type="text"
+            />
+            {errors.latitude && <p className="text-red-500 text-xs italic">{errors.latitude.message}</p>}
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Longitude</label>
+            <input 
+              {...register('longitude', { required: 'Longitude is required' })}
+              className={`shadow appearance-none border ${errors.longitude ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+              type="text"
+            />
+            {errors.longitude && <p className="text-red-500 text-xs italic">{errors.longitude.message}</p>}
           </div>
 
           {[...Array(5)].map((_, index) => (

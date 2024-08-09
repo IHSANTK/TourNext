@@ -3,7 +3,7 @@ import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 import axios from '../../../api';
 
-const BlogForm = ({ destinationId, onClose }) => {
+const BlogForm = ({ destinationId,closeModal }) => {
   const [newBlog, setNewBlog] = useState({ description: '', rating: '',text:'' });
   const [imageFields, setImageFields] = useState([{ id: Date.now(), file: null, preview: '' }]);
 
@@ -65,9 +65,10 @@ const BlogForm = ({ destinationId, onClose }) => {
         position: 'center',
         backgroundColor: 'green',
       }).showToast();
-      onClose();
+      closeModal()
       setNewBlog({ description: '', rating: '' });
       setImageFields([{ id: Date.now(), file: null, preview: '' }]);
+     
     } catch (err) {
       console.error(err);
       alert("Unable to add blog. Please try again.");
@@ -75,7 +76,7 @@ const BlogForm = ({ destinationId, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div className="fixed inset-0  flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 sm:mx-0">
         <h2 className="text-2xl font-semibold mb-4">Add a Blog</h2>
         <form onSubmit={handleBlogSubmit}>
@@ -157,7 +158,7 @@ const BlogForm = ({ destinationId, onClose }) => {
           <div className="flex flex-col sm:flex-row justify-between gap-4">
             <button
               type="button"
-              onClick={onClose}
+              onClick={closeModal}
               className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600"
             >
               Cancel

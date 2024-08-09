@@ -14,6 +14,8 @@ const EditDestinationModal = ({ isOpen, onClose, destination }) => {
     const [images, setImages] = useState([]);
     const [removedImages, setRemovedImages] = useState([]); 
     const [states, setStates] = useState([]);
+    const [latitude, setLatitude] = useState('');
+    const [longitude, setLongitude] = useState('');
 
     const categories = useSelector((state) => state.category.categories.map(category => ({
         value: category._id,
@@ -26,6 +28,8 @@ const EditDestinationModal = ({ isOpen, onClose, destination }) => {
             setDescription(destination.description);
             setCategory(destination.category);
             setImages([...destination.images]);
+            setLatitude(destination.latitude || '');
+            setLongitude(destination.longitude || '');
 
             fetchStates(destination.state, destination.district);
         }
@@ -61,7 +65,6 @@ const EditDestinationModal = ({ isOpen, onClose, destination }) => {
     const handleImageChange = (e, index) => {
         const file = e.target.files[0];
         if (file) {
-
             const updatedImages = [...images];
             updatedImages[index] = file;
             setImages(updatedImages);
@@ -87,6 +90,8 @@ const EditDestinationModal = ({ isOpen, onClose, destination }) => {
         formData.append('category', category);
         formData.append('state', stateValue ? stateValue.label : null);
         formData.append('district', districtValue ? districtValue.label : null);
+        formData.append('latitude', latitude);
+        formData.append('longitude', longitude);
       
         removedImages.forEach(image => formData.append('removedImages[]', image));
          
@@ -106,7 +111,7 @@ const EditDestinationModal = ({ isOpen, onClose, destination }) => {
           });
       
           if (response.data) {
-            onClose(); // Close modal on success
+            onClose(); 
           }
         } catch (error) {
           console.error('Error updating destination:', error);
@@ -164,8 +169,30 @@ const EditDestinationModal = ({ isOpen, onClose, destination }) => {
                         <label className="block text-gray-700 text-sm font-bold mb-2">Category</label>
                         <Select
                             options={categories}
-                            value={categories.find(cat => cat.label === category)}
-                            onChange={(selectedOption) => setCategory(selectedOption.label)}
+                            value={categories.find(cat => cat.value === category)}
+                            onChange={(selectedOption) => setCategory(selectedOption.value)}
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Latitude</label>
+                        <input
+                            {...register('latitude')}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            value={latitude}
+                            onChange={(e) => setLatitude(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Longitude</label>
+                        <input
+                            {...register('longitude')}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            value={longitude}
+                            onChange={(e) => setLongitude(e.target.value)}
                         />
                     </div>
 

@@ -408,9 +408,9 @@ exports.getallstates = async (Req,res)=>{
 }
 
 exports.addDestinations = async (req, res) => {
-  const { name, description, state, district, category } = req.body;
+  const { name, description, state, district, category,latitude,longitude } = req.body;
 
-  console.log("fordatabody from",req.body.formData);
+  console.log("fordatabody from",name, description, state, district, category,latitude,longitude);
   const imageFiles = req.files;
   const imageUrls = [];
   
@@ -426,6 +426,8 @@ exports.addDestinations = async (req, res) => {
       description,
       state,
       district,
+      latitude,
+      longitude,
       category,
       images: imageUrls,
       blogs: [] 
@@ -457,8 +459,9 @@ exports.getAllDestinations = async (req, res) => {
 
 exports.editDestinations = async (req, res) => {
   try {
+ 
       const { id } = req.params;
-      const { name, state, district, description, category, removedImages = [] } = req.body;
+      const { name, state, district, description, category, latitude,longitude, removedImages = [] } = req.body;
       const images = req.files;
 
       console.log(name, state, district, description, category, removedImages);
@@ -496,6 +499,8 @@ exports.editDestinations = async (req, res) => {
       destination.description = description || destination.description;
       destination.category = category || destination.category;
       destination.images = imageUrls;
+      destination.latitude   = latitude||destination.latitude 
+      destination.longitude = longitude||destination.longitude
 
       await destination.save();
 
