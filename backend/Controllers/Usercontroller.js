@@ -82,7 +82,7 @@ exports.loginUser = async (req, res) => {
 
 exports.dashboarddatas = async (req,res)=>{
     try {
-      console.log('datasbackend ok');
+      console.log('datasbackend ');
       
       const lastAddedDestinations = await Destinations.aggregate([
         {
