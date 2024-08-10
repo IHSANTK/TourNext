@@ -459,7 +459,7 @@ exports.getAllDestinations = async (req, res) => {
 
 exports.editDestinations = async (req, res) => {
   try {
- 
+  
       const { id } = req.params;
       const { name, state, district, description, category, latitude,longitude, removedImages = [] } = req.body;
       const images = req.files;
