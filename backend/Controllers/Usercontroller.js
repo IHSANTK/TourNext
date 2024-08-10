@@ -15,10 +15,12 @@ const Admin = require('../models/Admin');
 const jwtSecret = process.env.USER_JWT_SECRET;
 
 const generateAccessToken = (user) => { 
+  console.log('access token created');
   return jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '15m' });
 };
 
 const generateRefreshToken = (user) => {
+  console.log('refersh token created');
   return jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '7d' });
 };
 
@@ -47,6 +49,8 @@ exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+
+    console.log('login page');
 
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
@@ -600,6 +604,8 @@ exports.addtowishlist = async (req, res) => {
     if (isInWishlist) {
        user.wishlist = user.wishlist.filter(item => item._id.toString() !== destinationId.toString());
       await user.save();
+
+      console.log('backend called');  
       res.status(200).json({ message: 'Removed from wishlist' });
     } else {
       user.wishlist.push(destinationId);
