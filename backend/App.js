@@ -14,7 +14,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: 'https://tournext-frontend.onrender.com',
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -32,7 +32,7 @@ db.once('open', () => {
 });
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: 'https://tournext-frontend.onrender.com',
   credentials: true, 
 };
 
