@@ -70,13 +70,15 @@ export default function DestinationDetails() {
     try {
       const response = await axios.post('/addtowishlist', { destinationId: destId }, { withCredentials: true });
       if (response.data.message === 'Added to wishlist') {
+        console.log('hlooooo');
         toastify(response.data.message);
         setIsWishlist(true);
       } else if (response.data.message === 'Removed from wishlist') {
+        console.log('hiiiiiii');
         toastify(response.data.message);
         setIsWishlist(false);
       } else if(response.data.message === "Access denied. No token provided.") {
-        toastify('Pls Login');
+        toastify('Pls Login fdfdfdfd');
       }
     } catch (err) {
       console.error(err);
