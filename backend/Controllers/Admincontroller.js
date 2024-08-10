@@ -468,6 +468,8 @@ exports.editDestinations = async (req, res) => {
       console.log('new images', images);
 
       let destination = await Destination.findById(id);
+
+    
       if (!destination) {
           return res.status(404).json({ message: 'Destination not found' });
       }

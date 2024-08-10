@@ -48,6 +48,8 @@ export default function DestinationDetails() {
       try {
         const response = await fetch(`${baseUrl}/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`);
         const data = await response.json();
+
+        console.log("weateher data",data);
         if (data.weather && data.weather.length > 0) {
           setWeather({
             temperature: data.main.temp,

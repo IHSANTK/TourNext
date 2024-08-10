@@ -32,27 +32,22 @@ const Alldestinations = () => {
   // console.log("all categoris",categories);
 
   const destinationsPerPage = 9;
-   useEffect(() => {
-    const fetchAllStates = async () => {
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get('/getstates');
+        const [statesRes, categoriesRes] = await Promise.all([
+          axios.get('/getstates'),
+          axios.get('/getcategorys'),
+        ]);
 
-        const states = response.data; 
-
-        console.log("inital renser time ",states);
-        
-        setStates(states);
-
-        const res = await axios.get('/getcategorys')
-         console.log(res.data);
-        setCategory(res.data)
-       
+        setStates(statesRes.data);
+        setCategory(categoriesRes.data);
       } catch (error) {
         console.error(error);
       }
     };
-    fetchAllStates();
-  },[]); 
+    fetchData();
+  }, []);
 
 
   useEffect(() => {
@@ -135,7 +130,7 @@ const Alldestinations = () => {
       <Navbar />
       <div className="p-3 " >
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-5" >
-          <div className="lg:col-span-1 p-4 shadow-lg rounded-xl h-[300px]">
+          <div className="lg:col-span-1 p-4 shadow-lg rounded-xl h-[330px]">
 
           <div className="mb-4">
               <input
