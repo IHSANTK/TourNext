@@ -11,6 +11,7 @@ export default function Packages() {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
 
+  console.log('pakage componet');
   useEffect(() => {
     async function fetchPackages() {
       try {
@@ -50,66 +51,59 @@ export default function Packages() {
   return (
     <div>
       <Navbar />
-      <div className="mx-auto px-4 mt-16 flex flex-col lg:flex-row">
+      <div className=" mx-auto px-4 mt-16 flex flex-col lg:flex-row ">
         <div className="lg:w-1/4 lg:pr-8">
-          <div className="sticky top-40 p-4 bg-white shadow-md rounded-md">
+          <div className="sticky top-40 p-4 bg-white shadow-md rounded-md ">
             <input
               type="text"
               placeholder="Search packages..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="w-full ps-3 p-2 mb-4 placeholder:text-slate-700 outline-none border-b-2 border-gray-300 rounded-full"
+              className="w-full ps-3 p-2 mb-4 placeholder:text-slate-700 outline-none border-b-2 border-gray-300 rounded-full "
             />
             <h3 className="text-lg font-semibold mb-2">Price Range</h3>
-            {/* <Range
+            <Range
               step={100}
               min={0}
               max={10000}
               values={priceRange}
               onChange={handlePriceChange}
-              renderTrack={({ props, children }) => {
-                const { key, ...restProps } = props; // Exclude key from spread
-                return (
-                  <div
-                  key={'key'}
-                    {...restProps}
-                    className="h-2 pr-2 bg-emerald-500 rounded-lg"
-                    style={{
-                      background: getTrackBackground({
-                        values: priceRange,
-                        colors: ['#ccc', 'rgb(16 185 129)', '#ccc'],
-                        min: 0,
-                        max: 10000,
-                      }),
-                    }}
-                  >
-                    {children}
-                  </div>
-                );
-              }}
-              renderThumb={({ props }) => {
-                const { key, ...restProps } = props; // Exclude key from spread
-                return (
-                  <div
-                    {...restProps}
-                    className="h-5 w-5 bg-emerald-500 rounded-full"
-                  />
-                );
-              }}
-            /> */}
+              renderTrack={({ props, children }) => (
+                <div
+                  {...props}
+                  className="h-2 pr-2 bg-emerald-500 rounded-lg"
+                  style={{
+                    background: getTrackBackground({
+                      values: priceRange,
+                      colors: ['#ccc', ' rgb(16 185 129)', '#ccc'],
+                      min: 0,
+                      max: 10000,
+                    }),
+                  }}
+                >
+                  {children}
+                </div>
+              )}
+              renderThumb={({ props }) => (
+                <div
+                  {...props}
+                  className="h-5 w-5 bg-emerald-500 rounded-full"
+                />
+              )}
+            />
             <div className="flex justify-between mt-2">
               <span>₹{priceRange[0]}</span>
               <span>₹{priceRange[1]}</span>
             </div>
           </div>
         </div>
-        <div className="lg:w-3/4">
+        <div className="lg:w-4/4   ">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {packages.map((pkg) => (
-            <div
-                  key={pkg._id} // Use the package's _id as the key
-                      className="max-w-xs rounded overflow-hidden bg-white shadow-md transition-transform duration-500 ease-in-out transform hover:scale-105"
-               >
+            {packages.map((pkg, index) => (
+              <div
+                key={index}
+                className="max-w-xs rounded overflow-hidden bg-white shadow-md transition-transform duration-500 ease-in-out transform hover:scale-105"
+              >
                 <div className="relative h-64 rounded-t overflow-hidden">
                   <Link to={`/user/packagedetails/${pkg._id}`}>
                     <img
