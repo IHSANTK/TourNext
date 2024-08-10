@@ -465,7 +465,7 @@ exports.editDestinations = async (req, res) => {
       const images = req.files;
 
       console.log(name, state, district, description, category, removedImages);
-      console.log('new images', images);
+      console.log('new images all', images);
 
       let destination = await Destination.findById(id);
 
