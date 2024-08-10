@@ -15,6 +15,7 @@ const Alldestinations = () => {
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const [showDistrictDropdown, setShowDistrictDropdown] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const[states,setStates] =useState()
   const[categories,setCategory] = useState()
@@ -64,6 +65,7 @@ const Alldestinations = () => {
             state: selectedState,
             district: selectedDistrict,
             category: selectedCategory,
+            search: searchQuery,
           },
           withCredentials: true,
         });
@@ -84,7 +86,12 @@ const Alldestinations = () => {
       console.log('fethblock');
       fetchDestinations();
     }
-  }, [currentPage, selectedState, selectedDistrict, selectedCategory]);
+  }, [currentPage, selectedState, selectedDistrict, selectedCategory, searchQuery]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); 
+  };
 
   const handleStateChange = (stateName) => {
     setSelectedState(stateName);
@@ -126,9 +133,19 @@ const Alldestinations = () => {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto" style={{ marginTop: '100px' }}>
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4" style={{ marginTop: '150px' }}>
+      <div className="p-3 " >
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-5" >
           <div className="lg:col-span-1 p-4 shadow-lg rounded-xl h-[300px]">
+
+          <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Search destinations"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="state">
                 State

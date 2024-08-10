@@ -1,9 +1,9 @@
-import React from 'react';
+import React,{useMemo} from 'react';
 import { GoogleMap, LoadScript, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '',
-  height: '300px',
+  height: '250px',
 };
 const apikey = import.meta.env.VITE_MAP_KEY;
 

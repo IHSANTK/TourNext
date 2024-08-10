@@ -113,7 +113,9 @@ export default function DestinationDetails() {
         return 'https://wallpapers.com/images/hd/cloudy-weather-digital-illustration-hi16vkc00cp99uzv.jpg'; 
       case 'Rain':
         return 'https://static.vecteezy.com/system/resources/thumbnails/042/146/565/small_2x/ai-generated-beautiful-rain-day-view-photo.jpg'; 
-      case 'Clouds':
+      case 'mist':
+        return 'https://media.istockphoto.com/id/1055906130/photo/foggy-rural-asphalt-highway-perspective-with-white-line-misty-road-road-with-traffic-and.jpg?s=612x612&w=0&k=20&c=NS_1x0gGJQkJ7RfC1J17bzu5PFj2xJGYoLA6L3BCZzg='; 
+     case 'Clouds':
         return 'https://images.pexels.com/photos/209831/pexels-photo-209831.jpeg?cs=srgb&dl=pexels-pixabay-209831.jpg&fm=jpg';
       case 'Haze':
         return 'https://img.freepik.com/premium-photo/abstract-background-blue-sunny-sky-with-clouds_1234738-140214.jpg'; 
@@ -125,7 +127,7 @@ export default function DestinationDetails() {
   return (
     <>
       <Navbar />
-      <div className="container mx-auto px-4 py-8" style={{ marginTop: '100px' }}>
+      <div className=" p-5 " >
         {destination ? (
           <div>
             <div className="flex justify-center lg:w-[750px]">
@@ -133,8 +135,8 @@ export default function DestinationDetails() {
             </div>
             <div className="flex flex-col md:flex-row md:space-x-8">
               <div className="flex-1">
-                <div className="relative rounded shadow-lg shadow-black md:w-[500px] lg:w-[700px] xl:w-[800px] lg:h-[450px]">
-                  <img src={mainImage} alt={destination.name} className="w-full sm:h-[200px] md:h-[250px] lg:h-[450px] object-fill border-2 border-gray-500 rounded-lg shadow-lg" />
+                <div className="relative rounded shadow-lg shadow-black md:w-[500px] lg:w-[700px] xl:w-[800px] lg:h-[400px]">
+                  <img src={mainImage} alt={destination.name} className="w-full border border-gray-300 sm:h-[200px] md:h-[250px] lg:h-[400px] object-fill border-2 border-gray-500 rounded-lg shadow-lg" />
                   <div className="absolute top-4 right-4 flex space-x-2">
                     <button onClick={handleAddToWishlist} className="text-white px-3 py-2 rounded-full shadow-md">
                       <FaHeart className={`text-xl ${isWishlist ? 'text-red-600' : 'text-gray-500'}`} />
@@ -150,7 +152,7 @@ export default function DestinationDetails() {
                       key={index}
                       src={image}
                       alt={`Thumbnail ${index}`}
-                      className="w-1/6 ms-2 lg:w-36 lg:h-24 cursor-pointer rounded-lg"
+                      className="w-1/6 ms-2 lg:w-40 lg:h-24 cursor-pointer rounded-lg"
                       onClick={() => setMainImage(image)}
                     />
                   ))}
@@ -163,28 +165,32 @@ export default function DestinationDetails() {
                 <p className="lg:ms-5 mt-2"><strong>Place:</strong> {destination.district}</p>
               </div>
             </div>
-            <div className="my-8 flex flex-col lg:flex-row gap-4">
-              <div className="w-full lg:w-1/2 h-[300px] rounded-lg shadow-lg overflow-hidden relative">
-                <Map lat={destination.latitude} lng={destination.longitude} />
-              </div>
-              <div className="w-full lg:w-1/2 lg:ps-8 mt-4 lg:mt-0 relative rounded-lg shadow-lg overflow-hidden">
+            <div className="p-5 flex justify-center flex-col lg:flex-row gap-4  ">
+
+              <div className="w-full h-[200px]   lg:w-1/3 lg:ps-8 mt-4 lg:mt-0 relative rounded-lg shadow-lg overflow-hidden">
+
                 <img
                   src={getWeatherImage()}
                   alt="Weather Background"
-                  className="w-full h-full object-cover absolute inset-0"
+                  className="w-full h-full object-cover absolute inset-0  shadow-2xl shadow-black"
                 />
-                <div className="relative p-4 bg-opacity-75 mb-3 rounded-lg shadow-md">
-                  <h2 className="text-2xl font-semibold mb-4">Weather in {destination.district}</h2>
+                
+                <div className="relative p-4 bg-opacity-75 mb-3 rounded-lg shadow-md ">
+                  
                   {weather ? (
                     <div className="flex flex-col items-center">
-                      <img src={weather.icon} alt="Weather Icon" className="w-24 h-24" />
+                    <h2 className="text-2xl  font-semibold mb-4">Weather in {destination.district}</h2>
+
                       <p className="text-3xl font-bold">{Math.round(weather.temperature)}°C</p>
-                      <p className="text-lg">{weather.description}</p>
+                      <p className="text-lg font-bold">{weather.description}</p>
                     </div>
                   ) : (
                     <p>Loading weather...</p>
                   )}
                 </div>
+              </div>
+              <div className="w-full h-[200px] lg:w-1/3  mt-4 lg:mt-0 relative rounded-lg shadow-lg overflow-hidden">
+                <Map lat={destination.latitude} lng={destination.longitude} />
               </div>
             </div>
 
@@ -194,7 +200,7 @@ export default function DestinationDetails() {
               <div className="py-4">
                 <button
                   onClick={handleModalToggle}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md"
+                  className="bg-emerald-500 text-white px-4 py-2 rounded-lg shadow-md"
                 >
                   Add Blog
                 </button>

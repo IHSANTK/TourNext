@@ -138,16 +138,16 @@ export default function BookingDetails() {
     <>
       <Navbar />
 
-      <div className="container mx-auto px-4 mt-24">
+      <div className=" p-10 ">
         <ToastContainer />
-        <h1 className="text-3xl font-bold mt-5 text-center text-blue-700">Your Bookings</h1>
+        <h1 className="text-3xl font-bold text-center text-blue-700">Your Bookings</h1>
         {bookings.length === 0 ? (
-          <p className="text-gray-700 text-center mt-4">No bookings available.</p>
+          <p className="text-gray-700 text-center">No bookings available.</p>
         ) : (
           bookings.map((booking) => (
             <div
               key={booking._id}
-              className={`bg-white shadow-lg mt-5 rounded-lg p-6 mb-4 transition transform hover:scale-105 duration-300 ease-in-out flex flex-col md:flex-row ${booking.showRefundMessage ? 'opacity-70' : ''}`}
+              className={`bg-white shadow-lg mt-3 rounded-lg p-6 mb-4 transition transform hover:scale-105 duration-300 ease-in-out flex flex-col md:flex-row ${booking.showRefundMessage ? 'opacity-70' : ''}`}
             >
               <div className="md:w-2/3">
                 <h2 className="text-2xl font-bold mb-2 text-gray-800">

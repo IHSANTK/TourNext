@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaEdit, FaLock, FaHeart, FaBook, FaSignOutAlt, FaTrash } from 'react-icons/fa';
-import { CgProfile } from "react-icons/cg";
+import { FaUser } from "react-icons/fa";
 import Navbar from '../Navbar';
 import { useSelector,useDispatch } from 'react-redux';
 import {Link,useNavigate} from 'react-router-dom'
@@ -43,7 +43,7 @@ const UserProfile = () => {
   return (
     <>
       <Navbar />
-      <div className="container mx-auto p-6 bg-white shadow-md rounded-lg mt-9" style={{ marginTop: '150px' }}>
+      <div className=" p-6 bg-white shadow-md rounded-lg mt-5" >
         {/* Profile Image Section */}
         <div className="flex flex-col items-center mb-6 relative">
           {user.image ?(
@@ -54,7 +54,7 @@ const UserProfile = () => {
           />
         ):(
           <div className=''>
-            <CgProfile size={100} />
+            <FaUser  size={50} />
           </div>
         )}
           <p className="mt-4 text-xl font-semibold ">{user.name}</p>
@@ -63,27 +63,27 @@ const UserProfile = () => {
       
         <div className="flex justify-center flex-wrap gap-3 mb-6">
           <button
-            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-2 rounded-2xl hover:bg-gray-300 flex items-center"
+            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-2 rounded-2xl hover:bg-emerald-400 flex items-center"
             onClick={handleOpenEditProfile}
           >
             <FaEdit size={20} className="mr-2" />
             Edit Profile
           </button>
           <button
-            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-2 rounded-2xl hover:bg-gray-300 flex items-center"
+            className=" shadow-xl shadow-slate-500 text-black font-bold py-2 px-2 rounded-2xl hover:bg-emerald-400 flex items-center"
             onClick={handleOpenChangePassword}
           >
             <FaLock size={20} className="mr-2" />
             Change Password
           </button>
-          <Link to='/user/'
-            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-4 rounded-2xl hover:bg-gray-300 flex items-center"
+          {/* <Link to='/user/'
+            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-4 rounded-2xl hover:bg-emerald-400 flex items-center"
           >
             <FaHeart size={20} className="mr-2" />
             Wishlist
-          </Link>
+          </Link> */}
           <Link to='/user/bookingdetiles/:message'
-            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-4 rounded-2xl hover:bg-gray-300 flex items-center"
+            className="bg-gray-100 shadow-xl shadow-slate-500 text-black font-bold py-2 px-4 rounded-2xl hover:bg-emerald-400 flex items-center"
           >
             <FaBook size={20} className="mr-2" />
             Bookings

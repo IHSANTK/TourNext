@@ -70,11 +70,11 @@ export default function Packages() {
               renderTrack={({ props, children }) => (
                 <div
                   {...props}
-                  className="h-2 pr-2 bg-gray-200 rounded-lg"
+                  className="h-2 pr-2 bg-emerald-500 rounded-lg"
                   style={{
                     background: getTrackBackground({
                       values: priceRange,
-                      colors: ['#ccc', '#548BF4', '#ccc'],
+                      colors: ['#ccc', ' rgb(16 185 129)', '#ccc'],
                       min: 0,
                       max: 10000,
                     }),
@@ -86,7 +86,7 @@ export default function Packages() {
               renderThumb={({ props }) => (
                 <div
                   {...props}
-                  className="h-5 w-5 bg-blue-500 rounded-full"
+                  className="h-5 w-5 bg-emerald-500 rounded-full"
                 />
               )}
             />
@@ -96,12 +96,12 @@ export default function Packages() {
             </div>
           </div>
         </div>
-        <div className="lg:w-4/4 mt-8 lg:mt-9 ">
+        <div className="lg:w-4/4   ">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {packages.map((pkg, index) => (
               <div
                 key={index}
-                className="max-w-xs mt-5 rounded overflow-hidden bg-white shadow-md transition-transform duration-500 ease-in-out transform hover:scale-105"
+                className="max-w-xs rounded overflow-hidden bg-white shadow-md transition-transform duration-500 ease-in-out transform hover:scale-105"
               >
                 <div className="relative h-64 rounded-t overflow-hidden">
                   <Link to={`/user/packagedetails/${pkg._id}`}>

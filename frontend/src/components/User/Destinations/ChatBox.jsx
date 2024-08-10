@@ -79,7 +79,7 @@ const ChatBox = ({ user, onClose }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full  lg:h-[550px] lg:rounded-3xl">
+    <div className="flex flex-col h-screen w-full bg-gray-200  lg:h-[550px] lg:rounded-3xl">
       <div className='flex justify-between bg-white text-black lg:rounded-ss-3xl lg:rounded-se-3xl '>
         <button
           onClick={() => {
@@ -96,14 +96,14 @@ const ChatBox = ({ user, onClose }) => {
         <div></div>
       </div>
       <div
-        className="flex-1 p-2 overflow-y-auto bg-gradient-to-r from-sky-400 to-pink-200 text-white noscrollbar"
+        className="flex-1 p-2 overflow-y-auto bg-gradient-to-r from-sky-400 to-gray-300 text-white noscrollbar"
         ref={chatContainerRef}
       >
         {chatMessages.length > 0 ? (
           <div>
             {chatMessages.map((msg, index) => (
               <div key={index} className={`mb-2 ${msg.senderId === exactruser._id ? 'text-right' : 'text-left'}`}>
-                <p className={`inline-block px-3 py-2 rounded-lg ${msg.senderId === exactruser._id ? 'bg-gradient-to-r from-sky-400 to-indigo-600 text-white' : 'bg-gray-200 text-gray-800'}`}>
+                <p className={`inline-block px-3 py-2 rounded-lg ${msg.senderId === exactruser._id ? 'bg-gradient-to-r from-sky-500 to-indigo-600 text-white' : 'bg-gray-200 text-gray-800'}`}>
                   {msg.message}
                 </p>
                 <br />
@@ -117,7 +117,7 @@ const ChatBox = ({ user, onClose }) => {
           <p className="text-gray-500 text-center">No messages yet</p>
         )}
       </div>
-      <div className="p-2 border-t border-gray-300 flex">
+      <div className="p-2   border-t border-gray-300 flex">
         <textarea
           placeholder="Type your message here..."
           value={message}
@@ -126,7 +126,7 @@ const ChatBox = ({ user, onClose }) => {
         />
         <button
           onClick={handleSend}
-          className="text-black p-3 rounded-lg  hover:bg-gray-100 flex items-center"
+          className="text-emerald-500 p-3 rounded-lg  hover:bg-gray-100 flex items-center"
         >
           <IoSend size={'30'} />
         </button>

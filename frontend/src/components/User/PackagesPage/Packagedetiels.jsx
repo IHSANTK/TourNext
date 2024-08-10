@@ -93,15 +93,16 @@ export default function Packagedetails() {
 
   return (
     <>
-      <div className=" mx-auto px-4 mt-16">
+     
         <Navbar />
-        <h1 style={{ marginTop: "120px" }} className="text-3xl font-bold ms-4">
+        <div className=" p-5">
+        <h1  className="text-3xl font-bold mb-3  ms-4">
           {pkg.packageName}
         </h1>
 
         <div className="flex flex-col lg:flex-row">
           <div className="lg:w-2/3">
-            <div className="relative mt-5 ">
+            <div className="relative  ">
               <div className="relative h-90 overflow-hidden rounded-lg shadow-md">
                 <img
                   className="w-full lg:h-[450px] object-fill"
@@ -131,7 +132,7 @@ export default function Packagedetails() {
             </div>
           </div>
 
-          <div className="lg:w-1/3 lg:pl-8 mt-8 lg:mt-0 mt-5">
+          <div className="lg:w-1/3 lg:pl-8  lg:mt-0 ">
             <div className="bg-white shadow-lg rounded-lg p-6">
               <p className="text-gray-700 mb-4">{pkg.destinations}</p>
               <p className="text-gray-700 mb-4">{pkg.duration}</p>
@@ -167,7 +168,7 @@ export default function Packagedetails() {
            {pkg.seats!==0?(  
              <button
                 onClick={handleBookNowClick}
-                className="bg-yellow-500 text-white py-2 px-4 rounded-md w-full"
+                className="bg-emerald-500 text-white py-2 px-4 rounded-md w-full"
               >
                 Book Now
               </button>
@@ -178,12 +179,12 @@ export default function Packagedetails() {
           </div>
         </div>
 
-        <div className="mt-8 w-1/2 p-6 shadow-md">
+        <div className="mt-8 w-1/2 p-6 shadow-md rounded">
           <h3 className="text-xl font-bold mb-2">Description</h3>
           <p>{pkg.description}</p>
         </div>
 
-        <div className="mt-8  p-6 shadow-lg">
+        <div className="mt-8  p-6 shadow-lg rounded">
           <h2 className="text-2xl font-bold mb-4">Activities</h2>
           <ul className="list-disc pl-5 space-y-2">
             {pkg.activities && pkg.activities.length > 0 ? (

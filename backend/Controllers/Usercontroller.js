@@ -526,14 +526,23 @@ exports.gellAlldestinatons = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const startIndex = (page - 1) * limit;
 
-  const { state, district, category } = req.query;
+  const { state, district, category, search } = req.query;
+
+  console.log(state, district, category, search);
 
   const filter = {};
   if (state) filter.state = state;
   if (district) filter.district = district;
   if (category) filter.category = category;
 
-  // console.log('Filter criteria:', filter);
+  // Add search functionality
+  if (search) {
+    const searchRegex = new RegExp(search, 'i'); // 'i' for case-insensitive
+    filter.$or = [
+      { name: searchRegex },
+      { description: searchRegex }
+    ];
+  }
 
   try {
     const destinations = await Destinations.find(filter)
@@ -543,7 +552,6 @@ exports.gellAlldestinatons = async (req, res) => {
 
     const count = await Destinations.countDocuments(filter);
 
-    // console.log('Filtered destinations:', destinations);
     res.json({
       destinations,
       totalPages: Math.ceil(count / limit),
@@ -554,6 +562,7 @@ exports.gellAlldestinatons = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 exports.getcategories = async(req,res)=>{
     

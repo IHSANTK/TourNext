@@ -168,7 +168,7 @@ export default function BookingModal({
               </div>
               <button
                 type="submit"
-                className="bg-yellow-500 text-white py-2 px-4 rounded-md w-full"
+                className="bg-emerald-500 text-white py-2 px-4 rounded-md w-full"
               >
                 Confirm Booking
               </button>

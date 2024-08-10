@@ -119,7 +119,7 @@ export default function OtpModal({ show, handleClose,pkg, email, formData, total
               contact: formData.phone
             },
             theme: {
-              color: '#F37254' 
+              color: '#10b981 ' 
             }
           };
 
@@ -157,7 +157,7 @@ export default function OtpModal({ show, handleClose,pkg, email, formData, total
             {otpError && <p className="text-red-500 mb-4">{otpError}</p>}
             <button
               onClick={handleOtpSubmit}
-              className="bg-green-500 text-white py-2 px-4 rounded-md w-full"
+              className="bg-emerald-500 text-white py-2 px-4 rounded-md w-full"
             >
               Submit
             </button>

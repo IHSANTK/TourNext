@@ -102,19 +102,19 @@ export default function Navbar() {
             <div className="flex space-x-4 items-center h-full">
               <Link
                 to="#"
-                className="rounded-md px-3 py-2 font-bold text-neutral-700"
+                className="rounded-md px-3 py-2 font-bold text-neutral-700 hover:text-emerald-500"
               >
                 Home
               </Link>
               <Link
                 to="/user/Alldestinations"
-                className="rounded-md px-3 py-2 font-bold text-neutral-700"
+                className="rounded-md px-3 py-2 font-bold text-neutral-700 hover:text-emerald-500"
               >
                 Destinations
               </Link>
               <Link
                 to="/user/Packages"
-                className="rounded-md px-3 py-2 font-bold text-neutral-700"
+                className="rounded-md px-3 py-2 font-bold text-neutral-700 hover:text-emerald-500"
               >
                 All Packages
               </Link>

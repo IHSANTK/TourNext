@@ -76,7 +76,7 @@ const BlogForm = ({ destinationId,closeModal }) => {
   };
 
   return (
-    <div className="fixed inset-0  flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div className="fixed inset-0 z-10  flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 sm:mx-0">
         <h2 className="text-2xl font-semibold mb-4">Add a Blog</h2>
         <form onSubmit={handleBlogSubmit}>
@@ -165,7 +165,7 @@ const BlogForm = ({ destinationId,closeModal }) => {
             </button>
             <button
               type="submit"
-              className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600"
+              className="bg-emerald-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600"
             >
               Submit Blog
             </button>
