@@ -60,6 +60,9 @@ export default function Login() {
           withCredentials: true,
         }
       );
+
+      console.log('login message',response.data.message);
+
       if (response.data.message === 'Invalid email or password') {
         setErr(response.data.message);
       } else if(response.data.message === 'You are blocked and cannot log in'){ 
