@@ -129,7 +129,7 @@ const Alldestinations = () => {
     <div>
       <Navbar />
       <div className="p-3 " >
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-5" >
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-11" style={{marginTop:'80px'}} >
           <div className="lg:col-span-1 p-4 shadow-lg rounded-xl h-[330px]">
 
           <div className="mb-4">
