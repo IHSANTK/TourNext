@@ -95,7 +95,7 @@ export default function Signup() {
   };
 
   return (
-    <div className='maindiv flex justify-center items-center min-h-screen bg-gray-100'>
+    <div className='maindiv flex justify-center items-center min-h-screen '>
       <div className='inputdiv p-8 rounded-lg bg-gray-100'>
         <h1 className='text-2xl font-bold mb-4 text-center'>Sign Up</h1>
         <form onSubmit={handleSubmit}>
