@@ -69,18 +69,14 @@ export default function DestinationDetails() {
   const handleAddToWishlist = async () => {
     try {
       const response = await axios.post('/addtowishlist', { destinationId: destId }, { withCredentials: true });
-
-      console.log('wishlit message',response.data);
       if (response.data.message === 'Added to wishlist') {
-        console.log('hlooooo');
         toastify(response.data.message);
         setIsWishlist(true);
       } else if (response.data.message === 'Removed from wishlist') {
-        console.log('hiiiiiii');
         toastify(response.data.message);
         setIsWishlist(false);
       } else if(response.data.message === "Access denied. No token provided.") {
-        toastify('Pls Login fdfdfdfd');
+        toastify('Pls Login');
       }
     } catch (err) {
       console.error(err);
@@ -133,16 +129,16 @@ export default function DestinationDetails() {
   return (
     <>
       <Navbar />
-      <div className=" p-5 " >
+      <div className=" p-2 lg:p-5 mt-5 " >
         {destination ? (
           <div>
-            <div className="flex justify-center lg:w-[750px]">
-              <h1 className="text-3xl ms-4 font-semibold mb-3">{destination.name}</h1>
+            <div className="flex justify-center lg:w-[750px] mt-5">
+              <h1 className="text-3xl ms-4 font-semibold mb-2 lg:mb-3 ">{destination.name}</h1>
             </div>
             <div className="flex flex-col md:flex-row md:space-x-8">
               <div className="flex-1">
-                <div className="relative rounded shadow-lg shadow-black md:w-[500px] lg:w-[700px] xl:w-[800px] lg:h-[400px]">
-                  <img src={mainImage} alt={destination.name} className="w-full border border-gray-300 sm:h-[200px] md:h-[250px] lg:h-[400px] object-fill border-2 border-gray-500 rounded-lg shadow-lg" />
+                <div className="relative rounded shadow-lg shadow-black md:w-[500px] lg:w-[700px] xl:w-[800px] md:h-[300px] lg:h-[400px]">
+                  <img src={mainImage} alt={destination.name} className="w-full border border-gray-300 sm:h-[200px] md:h-[300px] lg:h-[400px] object-fill border-2 border-gray-500 rounded-lg shadow-lg" />
                   <div className="absolute top-4 right-4 flex space-x-2">
                     <button onClick={handleAddToWishlist} className="text-white px-3 py-2 rounded-full shadow-md">
                       <FaHeart className={`text-xl ${isWishlist ? 'text-red-600' : 'text-gray-500'}`} />
