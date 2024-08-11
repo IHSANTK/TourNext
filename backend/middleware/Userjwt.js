@@ -29,6 +29,7 @@ const authenticate = (req, res, next) => {
 
       res.cookie("user_accessToken", newAccessToken, {
         httpOnly: true,
+        sameSite: 'Strict',
         maxAge: 604800000
       });
       req.user = decodedRefresh.userId; // Attach decoded user ID to request object
