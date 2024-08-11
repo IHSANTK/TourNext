@@ -71,9 +71,9 @@ exports.loginUser = async (req, res) => {
     const userAccessToken = generateAccessToken(user);
     const userRefreshToken = generateRefreshToken(user);
 
-    res.cookie('user_refreshToken', userRefreshToken, { httpOnly: true })
-       .cookie('user_accessToken', userAccessToken, {  httpOnly: true })
-       .json({ userAccessToken, user });
+    res.cookie('user_refreshToken', userRefreshToken, { httpOnly: true, sameSite: 'None', secure: true })
+           .cookie('user_accessToken', userAccessToken, { httpOnly: true, sameSite: 'None', secure: true })
+           .json({ userAccessToken, user });
   } catch (error) {
     res.status(500).send({ error: 'Server error' });
   }
