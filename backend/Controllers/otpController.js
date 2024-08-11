@@ -58,18 +58,11 @@ const verifyOtp = async (req, res) => {
     const userAccessToken = generateAccessToken(existingUser);
     const userRefreshToken = generateRefreshToken(existingUser);
 
-    res 
-      .cookie("user_refreshToken", userRefreshToken, {
-        httpOnly: true,
-        sameSite: "Strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      })
-      .cookie("user_accessToken", userAccessToken, {
-        httpOnly: true,
-        sameSite: "Strict",
-        maxAge: 15 * 60 * 1000,
-      })
-      .json({ userAccessToken,user:existingUser });
+   
+    res.cookie('user_refreshToken', userRefreshToken, { httpOnly: true, sameSite: 'None', secure: true })
+     .cookie('user_accessToken', userAccessToken, { httpOnly: true, sameSite: 'None', secure: true })
+     .json({ userAccessToken,user:existingUser });
+
   } catch (error) {
     console.error("Error signing up:", error);
     res.status(500).json({ error: "Internal server error" });

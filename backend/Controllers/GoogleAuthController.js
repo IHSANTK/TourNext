@@ -39,9 +39,9 @@ console.log('token',tokenId);
     const userAccessToken = generateAccessToken(user); 
     const userRefreshToken = generateRefreshToken(user);
 
-    res.cookie('user_refreshToken', userRefreshToken, { httpOnly: true, sameSite: 'Strict', maxAge: 7 * 24 * 60 * 60 * 1000 })
-       .cookie('user_accessToken', userAccessToken, { httpOnly: true, sameSite: 'Strict', maxAge: 15 * 60 * 1000 })
-       .json({ userAccessToken, user });
+    res.cookie('user_refreshToken', userRefreshToken, { httpOnly: true, sameSite: 'None', secure: true })
+           .cookie('user_accessToken', userAccessToken, { httpOnly: true, sameSite: 'None', secure: true })
+           .json({ userAccessToken, user });
   } catch (error) {
     console.error('Error verifying Google token', error);
     res.status(401).json({ message: 'Invalid token' });

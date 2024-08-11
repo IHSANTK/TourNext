@@ -39,8 +39,8 @@ exports.adminLogin = async (req, res) => {
       console.log(adminAccessToken);
   
       
-      res.cookie('admin_refreshToken', adminRefreshToken, { httpOnly: true, sameSite: 'Strict', maxAge: 7 * 24 * 60 * 60 * 1000 })
-      .cookie('admin_accessToken', adminAccessToken, { httpOnly: true, sameSite: 'Strict', maxAge: 15 * 60 * 1000 })
+    res.cookie('admin_refreshToken', adminRefreshToken, { httpOnly: true, sameSite: 'None', secure: true  })
+      .cookie('admin_accessToken', adminAccessToken, { httpOnly: true, sameSite: 'None', secure: true  })
       .status(200).json({ message: 'Admin login successful', adminAccessToken });
         
       
