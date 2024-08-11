@@ -71,8 +71,8 @@ exports.loginUser = async (req, res) => {
     const userAccessToken = generateAccessToken(user);
     const userRefreshToken = generateRefreshToken(user);
 
-    res.cookie('user_refreshToken', userRefreshToken, { httpOnly: true, sameSite: 'Strict', maxAge: 7 * 24 * 60 * 60 * 1000 })
-       .cookie('user_accessToken', userAccessToken, { httpOnly: true, sameSite: 'Strict', maxAge: 15 * 60 * 1000 })
+    res.cookie('user_refreshToken', userRefreshToken, { httpOnly: true,  maxAge: 7 * 24 * 60 * 60 * 1000 })
+       .cookie('user_accessToken', userAccessToken, { httpOnly: true,  maxAge: 15 * 60 * 1000 })
        .json({ userAccessToken, user });
   } catch (error) {
     res.status(500).send({ error: 'Server error' });
