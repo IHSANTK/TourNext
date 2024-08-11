@@ -26,7 +26,7 @@ export default function Packages() {
           withCredentials: true
         });
 
-        console.log('gell all packages',response.data);
+        console.log('gell all packages',response.data.message);
         setPackages(response.data.packages);
         setTotalPages(response.data.totalPages);
       } catch (error) {

@@ -69,6 +69,8 @@ export default function DestinationDetails() {
   const handleAddToWishlist = async () => {
     try {
       const response = await axios.post('/addtowishlist', { destinationId: destId }, { withCredentials: true });
+
+      console.log("wishlist adding time",response.data.message);
       if (response.data.message === 'Added to wishlist') {
         toastify(response.data.message);
         setIsWishlist(true);

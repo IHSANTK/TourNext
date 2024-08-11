@@ -31,7 +31,8 @@ export default function Navbar() {
         {},
         { withCredentials: true }
       );
-      console.log(response.data);
+      console.log(response.data.message);
+      
       if (response.status === 200) {
         dispatch(clearTokens());
         navigate("/");
