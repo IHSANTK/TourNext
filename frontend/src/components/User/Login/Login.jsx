@@ -214,7 +214,7 @@ export default function Login() {
             onFailure={handleGoogleFailure}
             cookiePolicy={"single_host_origin"}
             text="Sign in with Google"
-            width="340px"
+            width="300px"
             theme="outline"
           />
         </div>
