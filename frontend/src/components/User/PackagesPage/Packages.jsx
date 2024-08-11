@@ -53,7 +53,7 @@ export default function Packages() {
   return (
     <div>
       <Navbar />
-      <div className=" mx-auto px-4 mt-16 flex flex-col lg:flex-row ">
+      <div className=" mx-auto px-4 mt-16 flex flex-col lg:flex-row " style={{marginTop:'100px'}}>
         <div className="lg:w-1/4 lg:pr-8">
           <div className="sticky top-40 p-4 bg-white shadow-md rounded-md ">
             <input
