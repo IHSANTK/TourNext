@@ -60,9 +60,6 @@ export default function Login() {
           withCredentials: true,
         }
       );
-
-      console.log('login message',response.data.message);
-
       if (response.data.message === 'Invalid email or password') {
         setErr(response.data.message);
       } else if(response.data.message === 'You are blocked and cannot log in'){ 
@@ -169,7 +166,7 @@ export default function Login() {
 
   return (
     <div className="maindiv flex justify-center items-center min-h-screen bg-gray-300">
-      <div className="inputdiv p-8 rounded-lg bg-gray-100">
+      <div className=" rounded-lg p-3 bg-gray-100">
         <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
         <form onSubmit={handleSubmit}>
           <TextInput
@@ -205,7 +202,7 @@ export default function Login() {
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-blue-500 text-white rounded mb-4"
+            className="w-full py-2 bg-emerald-500 font-bold text-white rounded mb-4"
           >
             Login
           </button>
@@ -228,7 +225,7 @@ export default function Login() {
         </div>
         <button
           onClick={() => navigate("/user/signup")}
-          className="w-full py-2 bg-green-500 text-white rounded"
+          className="w-full py-2 bg-gray-200 text-black rounded"
         >
           Sign Up
         </button>

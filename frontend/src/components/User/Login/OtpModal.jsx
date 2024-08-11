@@ -59,7 +59,7 @@ export default function OtpModal({ isOpen, onClose, onSubmitEmail, onSubmitOtp }
               required
             />
             {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
-            <button onClick={handleEmailSubmit} className="w-full py-2 bg-blue-500 text-white rounded">
+            <button onClick={handleEmailSubmit} className="w-full py-2 bg-emerald-500 text-white rounded">
               Get OTP
             </button>
           </>
@@ -74,7 +74,7 @@ export default function OtpModal({ isOpen, onClose, onSubmitEmail, onSubmitOtp }
               onChange={(e) => setOtp(e.target.value)}
             />
             {otpError && <p className="text-red-500 text-sm">{otpError}</p>}
-            <button onClick={handleOtpSubmit} className="w-full py-2 bg-blue-500 text-white rounded">
+            <button onClick={handleOtpSubmit} className="w-full py-2 bg-emerald-500 text-white rounded">
               Verify OTP
             </button>
           </>
