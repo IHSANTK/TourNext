@@ -78,6 +78,8 @@ export default function DestinationDetails() {
         toastify(response.data.message);
         setIsWishlist(false);
       } else if(response.data.message === "Access denied. No token provided.") {
+
+        console.log('haaaaaa');
         toastify('Pls Login');
       }
     } catch (err) {
