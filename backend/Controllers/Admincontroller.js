@@ -65,7 +65,7 @@ exports.adminLogin = async (req, res) => {
                                 $filter: { 
                                     input: "$bookings", 
                                     as: "booking", 
-                                    cond: { $ne: ["$$booking.status", "cancelled"] } 
+                                    cond: { $ne: ["$$booking.status", "Cancelled"] } 
                                 } 
                             } 
                         } 
