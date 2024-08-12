@@ -96,13 +96,16 @@ export default function Packagedetails() {
      
         <Navbar />
         <div className="p-2 lg:p-5">
-        <h1  className="text-3xl font-bold mb-3  ms-4">
+       
+        <div className=" lg:ms-[300px] ms-[80px] md:ms-[250px]  mb-2 md:mt-[100px]  mt-[70px] lg:mt-[100px]"> <h1  className=" text-3xl lg:text-3xl font-bold" >
           {pkg.packageName}
-        </h1>
-
+        </h1></div>
         <div className="flex flex-col lg:flex-row">
+          
           <div className="lg:w-2/3">
+          
             <div className="relative  ">
+              
               <div className="relative h-90 overflow-hidden rounded-lg shadow-md">
                 <img
                   className="w-full lg:h-[450px] object-fill"
