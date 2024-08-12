@@ -95,7 +95,7 @@ export default function Packagedetails() {
     <>
      
         <Navbar />
-        <div className=" p-5">
+        <div className="p-2 lg:p-5">
         <h1  className="text-3xl font-bold mb-3  ms-4">
           {pkg.packageName}
         </h1>
@@ -179,7 +179,7 @@ export default function Packagedetails() {
           </div>
         </div>
 
-        <div className="mt-8 w-1/2 p-6 shadow-md rounded">
+        <div className="mt-8 w-1/2 p-6 ">
           <h3 className="text-xl font-bold mb-2">Description</h3>
           <p>{pkg.description}</p>
         </div>
