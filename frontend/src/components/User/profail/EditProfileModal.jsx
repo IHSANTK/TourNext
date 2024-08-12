@@ -158,7 +158,7 @@ const EditProfileModal = ({ show, onClose, user }) => {
           <div>
             <label className="block text-gray-700">Phone</label>
             <input
-              type="tel"
+              type="number"
               className="w-full p-2 border border-gray-300 rounded-lg"
               value={phoneNumber}
               onChange={(e) => setPhone(e.target.value)}

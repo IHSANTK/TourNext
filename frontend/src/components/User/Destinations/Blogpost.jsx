@@ -132,7 +132,7 @@ export default function Blogpost({ destination }) {
       {!showAllBlogs && destination.blogs.length > 3 && (
         <button
           onClick={handleViewMore}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
+          className="bg-emerald-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
         >
           View More
         </button>

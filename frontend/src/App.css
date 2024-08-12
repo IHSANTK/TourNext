@@ -1,7 +1,4 @@
-body{
-  /* background: linear-gradient(to right, #d4bc9a, #f8eee6); */
-  background-color: white;
-}
+
 .noscrollbar{
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -54,4 +51,20 @@ body{
   background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfav-S7nmyC_r-QMdnPLDgduVatlBDpSXxKQ&s') no-repeat center center;
   background-size: cover;
   color: #969b6f; /* or any other hazy color */
+}
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+/* styles.css */
+.no-scroll {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

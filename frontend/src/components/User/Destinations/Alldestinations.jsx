@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
-import { useSelector } from 'react-redux';
 import axios from '../../../api';
+import Spinner from '../Spinner';
 
 const Alldestinations = () => {
   const [destinations, setDestinations] = useState([]);
@@ -16,20 +16,14 @@ const Alldestinations = () => {
   const [showDistrictDropdown, setShowDistrictDropdown] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true); 
+
 
   const[states,setStates] =useState()
   const[categories,setCategory] = useState()
 
   const location = useLocation();
   const searchResults = location.state?.results || [];
-
-  // const states = useSelector((state) => state.state.states);
-
-  console.log('states',states);
-
-  // const categories = useSelector((state) => state.category.categories);
-
-  // console.log("all categoris",categories);
 
   const destinationsPerPage = 9;
   useEffect(() => {
@@ -69,6 +63,8 @@ const Alldestinations = () => {
         setCurrentPage(response.data.currentPage);
       } catch (error) {
         console.error(error);
+      }finally {
+        setIsLoading(false); 
       }
     };
 
@@ -125,9 +121,14 @@ const Alldestinations = () => {
     }
   };
 
+  if (isLoading) {
+    return <Spinner />; 
+  }
+
   return (
     <div>
       <Navbar />
+      
       <div className="p-3 " >
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-11" style={{marginTop:'80px'}} >
           <div className="lg:col-span-1 p-4 shadow-lg rounded-xl h-[330px]">

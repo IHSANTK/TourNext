@@ -9,6 +9,7 @@ import BlogForm from './BlogForm';
 import Blogpost from "./Blogpost";
 import toastify from "../tostify";
 import Map from './Map'; 
+import Spinner from "../Spinner";
 
 export default function DestinationDetails() {
   const userisAuthenticated = useSelector((state) => state.userauth.userisAuthenticated);
@@ -18,6 +19,8 @@ export default function DestinationDetails() {
   const [isWishlist, setIsWishlist] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [weather, setWeather] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); 
+
 
   const apiKey = import.meta.env.VITE_API_KEY;  
   const baseUrl = import.meta.env.VITE_API_URL;
@@ -41,6 +44,8 @@ export default function DestinationDetails() {
 
       } catch (err) {
         console.error(err);
+      }finally{
+        setIsLoading(false)
       }
     };
 
@@ -69,8 +74,6 @@ export default function DestinationDetails() {
   const handleAddToWishlist = async () => {
     try {
       const response = await axios.post('/addtowishlist', { destinationId: destId }, { withCredentials: true });
-
-      console.log("wishlist adding time",response.data.message);
       if (response.data.message === 'Added to wishlist') {
         toastify(response.data.message);
         setIsWishlist(true);
@@ -78,8 +81,6 @@ export default function DestinationDetails() {
         toastify(response.data.message);
         setIsWishlist(false);
       } else if(response.data.message === "Access denied. No token provided.") {
-
-        console.log('haaaaaa');
         toastify('Pls Login');
       }
     } catch (err) {
@@ -130,6 +131,9 @@ export default function DestinationDetails() {
     }
   };
 
+  if(isLoading){
+    return <Spinner />;
+  }
   return (
     <>
       <Navbar />

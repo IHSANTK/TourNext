@@ -4,6 +4,7 @@ import axios from '../../../api';
 import { Link } from 'react-router-dom';
 import { Range, getTrackBackground } from 'react-range';
 import RatingStars from '../RatingStars';
+import Spinner from '../Spinner';
 
 const calculateAverageRating = (reviews) => {
   if (reviews.length === 0) return 0;
@@ -17,6 +18,8 @@ export default function Packages() {
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+
 
   useEffect(() => {
     async function fetchPackages() {
@@ -35,6 +38,8 @@ export default function Packages() {
         setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error('Error fetching packages:', error);
+      }finally {
+        setIsLoading(false); 
       }
     }
     fetchPackages();
@@ -53,7 +58,9 @@ export default function Packages() {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
+  if (isLoading) {
+    return <Spinner />; 
+  }
   return (
     <div>
       <Navbar />

@@ -5,23 +5,26 @@ import Footer from '../Footer';
 import axios from '../../../api';
 import LazyLoadComponent from './LazyLoadComponent';
 import { useNavigate } from 'react-router-dom';
-import Alldestinations from '../Destinations/Alldestinations';
+import Spinner from '../Spinner'; // Import your Spinner component
 
 export default function Homepage() {
   const [populardest, setPopularDest] = useState([]);
   const [latestPkgs, setLatestPackages] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchDatas = async () => {
       try {
         const response = await axios.get('/getdashboard');
-        console.log(response.data);
         setPopularDest(response.data.lastAddedDestinations);
         setLatestPackages(response.data.latestpackages);
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsLoading(false); // Set loading to false after data is fetched
       }
     };
     fetchDatas();
@@ -33,9 +36,6 @@ export default function Homepage() {
 
   const handleSearch = async () => {
     try {
-
-      console.log(searchQuery,'fdfdf');
-   
       const response = await axios.get(`/searchdestinations?query=${searchQuery}`);
       setSearchResults(response.data);
       navigate('/user/Alldestinations', { state: { results: response.data } });
@@ -43,6 +43,10 @@ export default function Homepage() {
       console.error(err);
     }
   };
+
+  if (isLoading) {
+    return <Spinner />; 
+  }
 
   return (
     <>
@@ -124,8 +128,6 @@ export default function Homepage() {
         <h1 className="font-bold firsth1">Latest Packages</h1>
       </div>
       <LazyLoadComponent importFunc={() => import('./LatestPackages')} latestpkgs={latestPkgs} />
-
-  
 
       <Footer />
     </>

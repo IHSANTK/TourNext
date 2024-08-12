@@ -143,7 +143,7 @@ export default function Signup() {
             toggleConfirmPasswordVisibility={toggleConfirmPasswordVisibility}
             error={errors.confirmPassword}
           />
-          <button type="submit" className='w-full py-2 bg-emerald-500 text-white rounded mb-4'>Sign Up</button>
+          <button type="submit" className='w-full py-2 bg-emerald-500 bg:hover-emerald-700 text-white rounded mb-4'>Sign Up</button>
         </form>
 
         <div className='flex items-center justify-center mb-4'>

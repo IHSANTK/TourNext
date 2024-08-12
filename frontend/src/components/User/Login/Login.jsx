@@ -202,7 +202,7 @@ export default function Login() {
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-emerald-500 font-bold text-white rounded mb-4"
+            className="w-full py-2 bg-emerald-500  bg:hover-emerald-700 font-bold text-white rounded mb-4"
           >
             Login
           </button>

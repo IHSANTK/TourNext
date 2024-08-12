@@ -57,6 +57,14 @@ const ChatBox = ({ user, onClose }) => {
     }
   }, [chatMessages]);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    document.body.classList.add('no-scroll');
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, []);
+
   const handleSend = () => {
     if (message.trim()) {
       const newMessage = { senderId: exactruser._id, receiverId: user._id, message, timestamp: new Date().toISOString() };
@@ -79,7 +87,7 @@ const ChatBox = ({ user, onClose }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-gray-200  lg:h-[550px] lg:rounded-3xl">
+    <div className="flex flex-col h-screen w-full bg-gray-200  lg:h-[550px] lg:rounded-3xl ">
       <div className='flex justify-between bg-white text-black lg:rounded-ss-3xl lg:rounded-se-3xl '>
         <button
           onClick={() => {
