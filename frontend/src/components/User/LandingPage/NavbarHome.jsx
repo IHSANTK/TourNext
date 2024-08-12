@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { clearTokens } from "../../../redux/userauthSlice";
@@ -18,11 +18,32 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isWishlistSidebarOpen, setIsWishlistSidebarOpen] = useState(false);
+  const [hasBackground, setHasBackground] = useState(false);
+
   const userisAuthenticated = useSelector(
     (state) => state.userauth.userisAuthenticated
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setHasBackground(true);
+      } else {
+        setHasBackground(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
 
   const handleLogout = async () => {
     try {
@@ -46,7 +67,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="absolute top-0 left-0 w-full z-10 bg-transparent">
+    <nav  className={`fixed top-0 left-0 w-full z-10 transition-colors duration-300 ${hasBackground ? 'bg-white shadow-md' : 'bg-transparent'}`}>
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-20 sm:h-24 items-center">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
