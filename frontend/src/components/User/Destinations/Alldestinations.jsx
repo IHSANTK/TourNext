@@ -16,7 +16,7 @@ const Alldestinations = () => {
   const [showDistrictDropdown, setShowDistrictDropdown] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(true); 
+    const [isLoading, setIsLoading] = useState(true); // Loading state
 
 
   const[states,setStates] =useState()
@@ -38,6 +38,8 @@ const Alldestinations = () => {
         setCategory(categoriesRes.data);
       } catch (error) {
         console.error(error);
+      }finally {
+        setIsLoading(false); 
       }
     };
     fetchData();
@@ -63,8 +65,6 @@ const Alldestinations = () => {
         setCurrentPage(response.data.currentPage);
       } catch (error) {
         console.error(error);
-      }finally {
-        setIsLoading(false); 
       }
     };
 
