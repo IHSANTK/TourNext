@@ -90,7 +90,7 @@ exports.adminLogin = async (req, res) => {
                 },
                 {
                     $match: {
-                        "bookings.status": { $ne: "cancelled" }
+                        "bookings.status": { $ne: "Cancelled" }
                     }
                 },
                 {
