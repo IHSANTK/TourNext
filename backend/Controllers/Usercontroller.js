@@ -9,6 +9,8 @@ const otpService = require("../services/otpService");
 const { response } = require('express');
 const nodemailer = require('nodemailer');
 const Admin = require('../models/Admin');
+const sendEmail = require('../services/sendEmail')
+const crypto = require("crypto");
 
 
 
@@ -80,7 +82,7 @@ exports.loginUser = async (req, res) => {
 };
 exports.forgottpassword = async (req,res)=>{
   const { email } = req.body;
-  console.log(email,"hloo");
+
   try {
     const user = await User.findOne({ email });
     if (!user) {
