@@ -31,10 +31,15 @@ router.post('/removedwishlist',authenticate,UserController.removedfromwishlist)
 router.get('/getwhishlistdata/:id',authenticate,UserController.getwhishlistdata)
    
 router.post('/addblog',authenticate,upload.array('images'),UserController.addBlog) 
-
+ 
  
 router.post('/editprofile/:userid', upload.single('profileImage'), UserController.editProfile);
 router.post('/deleteprofileimage/:userId',UserController.deleteprofailimage);
+
+router.post('/forgot-password',UserController.forgottpassword)
+router.get("/verify-token/:token",UserController.verifyToken);
+
+router.put("/reset-password",UserController.restpassword)
 
 router.post('/changepassword/:userid',UserController.changePassword);
  
