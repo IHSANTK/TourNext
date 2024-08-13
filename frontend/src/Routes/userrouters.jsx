@@ -14,6 +14,7 @@ import Alldestinations from '../components/User/Destinations/Alldestinations';
 import DestinationDetails from '../components/User/Destinations/Destinationditeils';
 import ChatList from '../components/User/Destinations/ChatList';
 import UserProfile from '../components/User/profail/UserProfile';
+import ResetPassword from '../components/User/Login/ResetPassword';
 
 
 
@@ -40,6 +41,10 @@ export default function userrouters() {
         <Route path='profialpage' element={<UserProtecterRoute restricted={false}><UserProfile/></UserProtecterRoute>}/>
        
         <Route path='destinationDetails/:destId' element={<DestinationDetails/>} />
+        <Route path='reset-password/:token' element={< ResetPassword/>} />
+
+       
+
 
 
  

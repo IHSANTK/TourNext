@@ -31,6 +31,8 @@ const userSchema = new mongoose.Schema({
     password: String,
     image: String,
     blocked: { type: Boolean, default: false },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
         
    
     wishlist: [{

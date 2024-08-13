@@ -1,3 +1,4 @@
+// Login.js
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../api";
@@ -7,6 +8,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import "./Login.css";
 import OtpModal from "./OtpModal";
 import TextInput from "./TextInput";
+import ForgotPassword from "./ForgotPassword"; // Import ForgotPassword component
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 
 export default function Login() {
@@ -19,6 +21,7 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false); // State for ForgotPassword modal
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -63,10 +66,8 @@ export default function Login() {
       if (response.data.message === 'Invalid email or password') {
         setErr(response.data.message);
       } else if(response.data.message === 'You are blocked and cannot log in'){ 
-          
         alert(response.data.message);
-
-      }else if(response.status === 200) {
+      } else if(response.status === 200) {
         navigate("/");
         dispatch(
           setTokens({
@@ -165,10 +166,10 @@ export default function Login() {
   };
 
   return (
-    <div className="maindiv flex justify-center items-center min-h-screen bg-gray-100 ">
-      <div className=" rounded-lg  ">
+    <div className="maindiv flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="rounded-lg">
         <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
-        <form onSubmit={handleSubmit} >
+        <form onSubmit={handleSubmit}>
           <TextInput
             type="email"
             name="email"
@@ -195,6 +196,12 @@ export default function Login() {
           <div className="flex justify-between items-center mb-3">
             <span
               className="text-sm text-blue-500 cursor-pointer"
+              onClick={() => setIsForgotPasswordModalOpen(true)} // Open Forgot Password modal
+            >
+              Forgot Password?
+            </span>
+            <span
+              className="text-sm text-blue-500 cursor-pointer"
               onClick={() => setIsOtpModalOpen(true)}
             >
               Login with OTP
@@ -202,7 +209,7 @@ export default function Login() {
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-emerald-500  bg:hover-emerald-700 font-bold text-white rounded mb-4"
+            className="w-full py-2 bg-emerald-500 font-bold text-white rounded mb-4"
           >
             Login
           </button>
@@ -230,11 +237,19 @@ export default function Login() {
           Sign Up
         </button>
       </div>
+
+      {isForgotPasswordModalOpen&&(
+      <ForgotPassword
+        isOpen={isForgotPasswordModalOpen}
+        onClose={() => setIsForgotPasswordModalOpen(false)}
+      />
+    )}
+
       <OtpModal
         isOpen={isOtpModalOpen}
         onClose={() => setIsOtpModalOpen(false)}
-        onSubmitEmail={handleOtpEmailSubmit}
-        onSubmitOtp={handleOtpVerify}
+        onSubmit={handleOtpEmailSubmit}
+        onVerify={handleOtpVerify}
       />
     </div>
   );
