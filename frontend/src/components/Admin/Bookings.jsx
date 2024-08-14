@@ -69,7 +69,7 @@ const Bookings = () => {
       <div className="flex-grow p-6 bg-gray-100 overflow-auto">
         <div className='flex justify-between'>
           <h2 className="text-lg font-bold mb-4">Bookings</h2>
-          <button className='btn bg-gray-700 text-white h-9'>Download</button>
+          {/* <button className='btn bg-gray-700 text-white h-9'>Download</button> */}
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full leading-normal shadow-md rounded-lg overflow-hidden bg-white">
