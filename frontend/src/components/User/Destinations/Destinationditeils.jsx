@@ -137,7 +137,7 @@ export default function DestinationDetails() {
   return (
     <>
       <Navbar />
-      <div className=" p-2 lg:p-5 mt-5 " >
+      <div className=" p-4 mt-5 " >
         {destination ? (
           <div>
             <div className="flex justify-center lg:w-[750px] mt-5">

@@ -95,7 +95,7 @@ export default function Packagedetails() {
     <>
      
         <Navbar />
-        <div className="p-2 lg:p-5">
+        <div className="p-4 ">
        
         <div className=" lg:ms-[300px] ms-[80px] md:ms-[250px]  mb-2 md:mt-[100px]  mt-[70px] lg:mt-[100px]"> <h1  className=" text-3xl lg:text-3xl font-bold" >
           {pkg.packageName}
@@ -113,7 +113,7 @@ export default function Packagedetails() {
                   alt={`Main image for ${pkg.packageName}`}
                 />
               </div>
-              <div className="mt-4 flex gap-4">
+              <div className="mt-4 mb-3 flex gap-4">
                 {pkg.images.slice(1).map((img, index) => (
                   <div
                     key={index}
