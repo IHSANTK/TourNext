@@ -151,9 +151,9 @@ const Admindashbord = () => {
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded shadow mb-6">
+        <div className=" p-4 rounded shadow mb-6">
           <h2 className="text-lg font-bold mb-4">Monthly Booking Data</h2>
-          <div className="h-full">
+          <div className="h-screen">
             <Bar data={chartData} options={chartOptions} />
           </div>
         </div>
