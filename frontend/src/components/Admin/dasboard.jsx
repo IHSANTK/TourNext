@@ -8,7 +8,6 @@ import Sidebar from './sidebar';
 import { Bar } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
-// Register the required components
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Admindashbord = () => {
@@ -154,7 +153,7 @@ const Admindashbord = () => {
 
         <div className="bg-white p-4 rounded shadow mb-6">
           <h2 className="text-lg font-bold mb-4">Monthly Booking Data</h2>
-          <div className="h-80">
+          <div className="h-full">
             <Bar data={chartData} options={chartOptions} />
           </div>
         </div>
