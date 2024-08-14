@@ -146,7 +146,7 @@ export default function DestinationDetails() {
             <div className="flex flex-col md:flex-row md:space-x-8">
               <div className="flex-1">
                 <div className="relative rounded shadow-lg shadow-black md:w-[500px] lg:w-[700px] xl:w-[800px] md:h-[300px] lg:h-[450px]">
-                  <img src={mainImage} alt={destination.name} className="w-full border border-gray-300 sm:h-[200px] md:h-[300px] lg:h-[400px] object-fill border-2 border-gray-500 rounded-lg shadow-lg" />
+                  <img src={mainImage} alt={destination.name} className="w-full border border-gray-300 sm:h-[200px] md:h-[300px] lg:h-[450px] object-fill border-2 border-gray-500 rounded-lg shadow-lg" />
                   <div className="absolute top-4 right-4 flex space-x-2">
                     <button onClick={handleAddToWishlist} className="text-white px-3 py-2 rounded-full shadow-md">
                       <FaHeart className={`text-xl ${isWishlist ? 'text-red-600' : 'text-gray-500'}`} />
