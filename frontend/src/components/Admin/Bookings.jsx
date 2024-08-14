@@ -44,7 +44,7 @@ const Bookings = () => {
       );
       setShowModal(false);
     } catch (error) {
-      console.log('Error updating status:', error);
+      console.log('Error updating :', error);
     }
   };
 
