@@ -74,7 +74,7 @@ const Bookings = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full leading-normal shadow-md rounded-lg overflow-hidden bg-white">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-blue-300">
                 <th className="px-4 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   ID
                 </th>
