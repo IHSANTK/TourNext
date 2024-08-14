@@ -85,7 +85,7 @@ export default function DestinationDetails() {
       }
     } catch (err) {
       console.error(err);
-      alert("Unable to update wishlist. Please try again.");
+      alert("Unable to update wishlist. Please try again");
     }
   };
 
