@@ -151,7 +151,7 @@ export default function BookingDetails() {
             >
               <div className="flex flex-col gap-5 md:flex-row">
                 {/* Booking Image */}
-                <div className="md:w-1/3 mt-4">
+                <div className="md:w-1/3 mt-4 object-fill">
                   <Link to={`/user/packagedetails/${booking.packageId}`}>
                     <img src={booking.image} className='w-full h-auto rounded-lg' alt="Package" />
                   </Link>
