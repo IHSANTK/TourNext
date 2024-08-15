@@ -37,7 +37,7 @@ export default function Packages() {
         setPackages(response.data.packages);
         setTotalPages(response.data.totalPages);
       } catch (error) {
-        console.error('Error fetching :', error);
+        console.error('Error fetching data :', error);
       }finally {
         setIsLoading(false); 
       }
