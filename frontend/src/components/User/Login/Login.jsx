@@ -137,6 +137,8 @@ export default function Login() {
   };
 
   const handleOtpVerify = async (otp, email) => {
+    console.log('ok');
+    
     try {
       const response = await axios.post(
         "/verify-otp",
