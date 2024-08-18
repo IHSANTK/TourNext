@@ -249,7 +249,7 @@ export default function Login() {
         isOpen={isOtpModalOpen}
         onClose={() => setIsOtpModalOpen(false)}
         onSubmit={handleOtpEmailSubmit}
-        onVerify={handleOtpVerify}
+        onSubmitOtp={handleOtpVerify}
       />
     </div>
   );
