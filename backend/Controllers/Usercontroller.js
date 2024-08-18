@@ -682,7 +682,7 @@ exports.addtowishlist = async (req, res) => {
        user.wishlist = user.wishlist.filter(item => item._id.toString() !== destinationId.toString());
       await user.save();
 
-      console.log('backend called');  
+      console.log('backend ');  
       res.status(200).json({ message: 'Removed from wishlist' });
     } else {
       user.wishlist.push(destinationId);
