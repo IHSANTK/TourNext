@@ -13,7 +13,7 @@ export default function OtpModal({ isOpen, onClose, onSubmitEmail, onSubmitOtp }
   };
 
   const handleEmailSubmit = () => {
-    console.log('kkk');
+   
     
     if (!email) {
       setEmailError('Email is required');
