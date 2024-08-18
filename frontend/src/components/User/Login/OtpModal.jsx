@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function OtpModal({ isOpen, onClose, onSubmit, onSubmitOtp }) {
+export default function OtpModal({ isOpen, onClose, onSubmitEmail, onSubmitOtp }) {
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState(1);
@@ -22,7 +22,7 @@ export default function OtpModal({ isOpen, onClose, onSubmit, onSubmitOtp }) {
       return;
     }
     setEmailError('');
-    if(onSubmit(email)){
+    if(onSubmitEmail(email)){
         setStep(2);
     };
    

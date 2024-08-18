@@ -238,6 +238,7 @@ export default function Login() {
         </button>
       </div>
 
+      {/* Forgot Password Modal */}
       {isForgotPasswordModalOpen&&(
       <ForgotPassword
         isOpen={isForgotPasswordModalOpen}
@@ -245,10 +246,11 @@ export default function Login() {
       />
     )}
 
+      {/* OTP Modal */}
       <OtpModal
         isOpen={isOtpModalOpen}
         onClose={() => setIsOtpModalOpen(false)}
-        onSubmit={handleOtpEmailSubmit}
+        onSubmitEmail={handleOtpEmailSubmit}
         onSubmitOtp={handleOtpVerify}
       />
     </div>
